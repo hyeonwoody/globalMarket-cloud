@@ -1,0 +1,59 @@
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+### Web Configuration ###
+/src/main/java/com/toyproject/crave/configuration/web/WebConfig.java
+/src/main/fronted/src/configuration/web/webConfig.ts
+
+### Special ###
+#/src/main/frontend/src/configuration/special/SpecialConfig.ts
+
+### Various properties ###
+*.properties
+
+/src/main/frontend/tsconfig.json
+
+/src/main/frontend/nohup.out
+
+### Test ###
+/src/test/*
+
+### special scripts
+scripts/*
+app.sh
+react.log
