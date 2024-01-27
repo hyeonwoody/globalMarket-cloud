@@ -7,7 +7,7 @@ function BreadCrumb() {
         <div className="Container">
 
             <div className="border-gray-200 bg-green-400 dark:bg-gray-800 dark:border-gray-700 flex flex-wrap items-center justify-between mx-auto">
-                <p className="text-white">{pageState.page.join(" > ")}</p>
+                <a className="text-white">{pageState.page.join(" > ")}</a>
             </div>
         </div>
 

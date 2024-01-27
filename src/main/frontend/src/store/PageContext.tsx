@@ -3,7 +3,7 @@ import React, { createContext, useReducer, useContext, ReactNode } from 'react';
 // Initial state
 type PageState = {
     page: string[],
-
+    level: number,
 };
 
 // Action types
@@ -15,6 +15,7 @@ type PageAction =
 
 const initialState: PageState = {
     page: ["로그인"],
+    level: 1
 };
 
 type PageContextType = {
@@ -38,23 +39,27 @@ const pageReducer: React.Reducer<PageState, PageAction> = (state, action) => {
             console.log("CLEAR")
             return {
                 ...state,
-                page: []
+                page: [],
+                level: 0
             }
         case 'MOVE':
             console.log("MOVE" + action.payload.target)
             return {
                 ...state,
-                page: [...state.page, action.payload.target]
+                page: [...state.page, action.payload.target],
+                level: state.page.length
             };
         case 'BACK':
             return {
                 ...state,
-                page: state.page.slice(0, -1) // Create a new array without the last element
+                page: state.page.slice(0, -1), // Create a new array without the last element
+                level: --state.level
             };
         case 'FORWARD':
             return {
                 ...state,
-                page: [...state.page, action.payload.target]
+                page: [...state.page, action.payload.target],
+                level: ++state.level
             };
         default:
             // Ensure that the default case returns the current state

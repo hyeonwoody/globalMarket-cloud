@@ -2,14 +2,17 @@ import React, {useEffect, useState} from 'react';
 import RootAxios from "./RootAPI"
 
 import {useAuth} from "../../store/AuthContext";
+import Auth from "./part/Auth"
 
 import NavBar_SearchBar from "./part/NavBar_SearchBar"
 import NavBar_User from "./part/NavBar_User";
 
-import Auth from "./part/Auth"
-import Home from "./home/Home"
 import BreadCrumb from "./part/BreadCrumb";
+
 import {usePage} from "../../store/PageContext";
+import Home from "./home/Home"
+import ProductRegister from "./product/register/ProductRegister"
+
 
 interface MenuItem {
     label: string;
@@ -44,6 +47,7 @@ const menuItems: MenuItem[] = [
 ];
 const Root: React.FC = () => {
     const { authState, login, logout } = useAuth();
+    const [pageIndex, setPage] = useState({ index: -1, subIndex: -1});
     const [isDropdownOpen, setIsDropdownOpen] = useState(-1);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const {pageState, clear, move, back, forward} =usePage();
@@ -81,10 +85,23 @@ const Root: React.FC = () => {
         }
     }
 
-    const onClickSubMenu = (index: number, subindex: number) =>{
+    const onClickSubMenu = (index: number, subIndex: number) =>{
+        setPage({ ...pageIndex, index: index, subIndex: subIndex });
         console.log("SUBmen")
-        // @ts-ignore
-        console.log (menuItems[index].label + menuItems[subindex].submenu[subindex].label || undefined)
+        if (index !== -1 && subIndex !== -1 && menuItems[index]?.submenu?.[subIndex]) {
+            console.log ("PAGE LEVEL "+ pageState.level)
+            clear()
+
+            forward("홈")
+            // @ts-ignore
+            forward (menuItems[index].label)
+            // @ts-ignore
+            forward (menuItems[index].submenu[subIndex].label)
+
+            // @ts-ignore
+            console.log(menuItems[index].label + menuItems[index].submenu[subIndex]?.label);
+            console.log(pageIndex.index + pageIndex.subIndex);
+        }
     }
 
 
@@ -92,10 +109,10 @@ const Root: React.FC = () => {
         <div className="Container">
             <nav className="bg-green-500 border-gray-200 dark:bg-gray-900 dark:border-gray-700">
                 <div className="flex flex-wrap items-center justify-between mx-auto p-4">
-                    <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
+                    <button className="flex items-center space-x-3 rtl:space-x-reverse" onClick={ ()=>onClickSubMenu(-1,-1)}>
                         <span
-                            className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">세계장터 </span>
-                    </a>
+                            className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white" >세계장터</span>
+                    </button>
                     <NavBar_SearchBar/>
                     <NavBar_User/>
                 </div>
@@ -105,6 +122,7 @@ const Root: React.FC = () => {
             <div>
 
                 {authState.isLoggedIn ?
+
                     <>
                         <button
                             className="fixed bottom-4 left-4 z-50 flex text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
@@ -154,10 +172,13 @@ const Root: React.FC = () => {
                                 </ul>
                             </div>
                         </aside>
-                        <Home onClickButton={onClickButton}/></>
+                        { (pageIndex.index == -1 && pageIndex.subIndex == -1) ? <Home onClickButton={onClickButton}/> :
+                            (pageIndex.index == 0 && pageIndex.subIndex == 0) ? <ProductRegister /> : null
+                        }
+                    </>
+
             :
             <Auth authLogin={onClickLogin} authLogout={logout}/>
-
             }
         </div>
 

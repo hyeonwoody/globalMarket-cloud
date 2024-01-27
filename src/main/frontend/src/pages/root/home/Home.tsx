@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {usePage} from "../../../store/PageContext";
-
+import Notice from "./part/Notice"
 interface HomeProps{
     onClickButton: (event: React.MouseEvent<HTMLButtonElement>) => void,
 }
@@ -24,11 +24,7 @@ function Home (props:HomeProps) {
 
             <div className="p-4 sm:ml-64">
                 <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
-                    <p>vcvcv</p>
-                    <button
-                        onClick={props.onClickButton}>
-                        ffdfdf
-                    </button>
+                    <Notice />
                 </div>
             </div>
 
