@@ -8,8 +8,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+import com.google.gson.JsonObject;
 public interface Store {
-    abstract void parseHtml(ProductVO productVO, String html);
+    abstract JsonObject parseHtml(String html);
     default String getHtml(String url){
         try{
             HttpClient httpClient = HttpClient.newHttpClient();
@@ -24,7 +25,5 @@ public interface Store {
             throw new RuntimeException(e);
         }
     }
-    abstract void getProductInfo(ProductVO productVO, String url);
-
-
+    abstract ProductVO getProductInfo(String url);
 }

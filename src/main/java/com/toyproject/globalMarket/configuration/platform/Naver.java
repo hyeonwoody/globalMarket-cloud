@@ -1,8 +1,12 @@
 package com.toyproject.globalMarket.configuration.platform;
 
+import com.google.gson.JsonObject;
 import com.toyproject.globalMarket.configuration.PlatformConfig;
+import com.toyproject.globalMarket.libs.BCrypt;
+import com.toyproject.globalMarket.libs.EventManager;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
+
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -10,13 +14,27 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.time.Instant;
-@Component
+import java.util.Base64;
+
+
+
+
+@Configuration
 public class Naver extends PlatformConfig {
 
     public Naver(@Value("${naver.clientId}") String clientId,
                  @Value("${naver.clientSecret}") String clientSecret) {
         super(clientId, clientSecret, "https://api.commerce.naver.com/external/v1/oauth2/token");
+        int a = 0;
+    }
+
+    public static String generateSignature(String clientId, String clientSecret, Long timestamp) {
+        // 밑줄로 연결하여 password 생성
+        String password = clientId + "_" + timestamp;
+        // bcrypt 해싱
+        String hashedPw = BCrypt.hashpw(password, clientSecret);
+        // base64 인코딩
+        return Base64.getUrlEncoder().encodeToString(hashedPw.getBytes(StandardCharsets.UTF_8));
     }
 
     @Override
@@ -29,16 +47,18 @@ public class Naver extends PlatformConfig {
 
             // Set request headers
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            long currentTimeMillis = Instant.now().toEpochMilli();
-            String timestamp = String.valueOf(currentTimeMillis);
+            Long timestamp = System.currentTimeMillis();
+            this.clientSecret = generateSignature (clientId, clientSecret, timestamp);
             // Set request body
             String requestBody = "client_id="+ this.clientId +
                     "&timestamp=" + timestamp +
-                    "&client_secret_sign" + this.clientSecret +
+                    "&client_secret_sign=" + this.clientSecret +
                     "&grant_type=client_credentials" +
-                    "&type=SELF" +
-                    "&account_id";
+                    "&type=SELF";
 
+
+
+            EventManager.logOutput(2, this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 0, "Request Code : {0}", requestBody);
             connection.setDoOutput(true);
             try (OutputStream outputStream = connection.getOutputStream()) {
                 byte[] input = requestBody.getBytes(StandardCharsets.UTF_8);
@@ -63,11 +83,9 @@ public class Naver extends PlatformConfig {
             reader.close();
 
             // Print response
-            System.out.println("Response Code: " + responseCode);
-            System.out.println("Response Body: " + response.toString());
+            EventManager.logOutput(2, this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 0, "Response Code : {0}", responseCode);
+            EventManager.logOutput(2, this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 0, "Response Body : {0}", response.toString());
 
-            // Disconnect the HttpURLConnection
-            connection.disconnect();
         } catch (Exception e) {
             e.printStackTrace();
         }

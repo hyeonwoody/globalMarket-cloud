@@ -1,9 +1,10 @@
 package com.toyproject.globalMarket.configuration;
 
 public abstract class PlatformConfig {
-    protected String clientId;
-    protected String clientSecret;
-    protected String url;
+    public String clientId;
+    public String clientSecret;
+    public String url;
+
 
     public PlatformConfig(String clientId, String clientSecret, String url) {
         this.clientId = clientId;
@@ -12,5 +13,5 @@ public abstract class PlatformConfig {
     }
 
 
-    protected abstract void getOAuth();
+    public abstract void getOAuth();
 }

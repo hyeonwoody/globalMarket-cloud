@@ -1,5 +1,7 @@
 package com.toyproject.globalMarket.VO;
 
+import com.google.gson.JsonObject;
+import com.toyproject.globalMarket.libs.EventManager;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -295,7 +297,9 @@ public class ProductVO {
         }
     }
 
-
+    public void JSonObjectToVO (JsonObject jsonObject){
+        JsonObject productInfo = jsonObject.getAsJsonObject("productInfo");
+    }
 
 
 

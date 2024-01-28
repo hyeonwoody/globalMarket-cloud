@@ -4,3 +4,4 @@ react-router-dom
 tailwindcss
 
 JSoup
+Gson

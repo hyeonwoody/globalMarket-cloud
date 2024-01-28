@@ -23,7 +23,7 @@ const ProductRegister: React.FC = () => {
         toggleDropdown();
         setInput((prevInput) => ({
             ...prevInput,
-            ["platForm"]: result,
+            ["platform"]: result,
         }));
     }
 

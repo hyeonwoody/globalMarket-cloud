@@ -23,6 +23,9 @@ repositories {
 
 dependencies {
 	implementation 'org.jsoup:jsoup:1.17.2' // parseHtml
+	implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.12.0'
+
+	implementation group: 'com.google.code.gson', name: 'gson', version: '2.10.1'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'javax.servlet:javax.servlet-api:4.0.1' // Use the appropriate version
