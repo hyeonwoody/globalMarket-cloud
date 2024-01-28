@@ -1,12 +1,12 @@
 package com.toyproject.globalMarket.configuration.platform;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.toyproject.globalMarket.configuration.PlatformConfig;
 import com.toyproject.globalMarket.libs.BCrypt;
 import com.toyproject.globalMarket.libs.EventManager;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -38,7 +38,8 @@ public class Naver extends PlatformConfig {
     }
 
     @Override
-    public void getOAuth() {
+    public String getOAuth() {
+        String accessToken = null;
         try {
             // Construct URL and HttpURLConnection
             URL url = new URL("https://api.commerce.naver.com/external/v1/oauth2/token");
@@ -82,12 +83,23 @@ public class Naver extends PlatformConfig {
             }
             reader.close();
 
+
+
+            String jsonString = response.toString();
+
+            // Parse the JSON string using Gson
+                        JsonObject jsonObject = JsonParser.parseString(jsonString).getAsJsonObject();
+
+            // Get the value of the "access_token" field as a string
+            accessToken = jsonObject.get("access_token").getAsString();
+
             // Print response
             EventManager.logOutput(2, this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 0, "Response Code : {0}", responseCode);
             EventManager.logOutput(2, this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 0, "Response Body : {0}", response.toString());
-
+            return accessToken;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return accessToken;
     }
 }

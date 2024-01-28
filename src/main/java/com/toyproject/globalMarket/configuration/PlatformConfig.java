@@ -13,5 +13,5 @@ public abstract class PlatformConfig {
     }
 
 
-    public abstract void getOAuth();
+    public abstract String getOAuth();
 }

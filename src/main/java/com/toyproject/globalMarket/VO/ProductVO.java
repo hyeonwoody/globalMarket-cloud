@@ -1,6 +1,7 @@
 package com.toyproject.globalMarket.VO;
 
 import com.google.gson.JsonObject;
+import com.google.gson.annotations.SerializedName;
 import com.toyproject.globalMarket.libs.EventManager;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import java.util.List;
 
 public class ProductVO {
 
+    @SerializedName("originProduct")
     public OriginProduct originProduct;
     public static class OriginProduct {
         public enum StatusType {
@@ -16,7 +18,10 @@ public class ProductVO {
         }
 
 
-        private StatusType statusType;
+        @SerializedName("statusTypeccc")
+        @Setter
+        private StatusType statusTypedddd;
+
 
         public enum SaleType {
             NEW, OLD

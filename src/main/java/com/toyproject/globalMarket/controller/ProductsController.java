@@ -8,7 +8,7 @@ import com.toyproject.globalMarket.configuration.platform.Naver;
 import com.toyproject.globalMarket.VO.ProductRegisterVO;
 import com.toyproject.globalMarket.VO.ProductVO;
 import com.toyproject.globalMarket.libs.EventManager;
-import com.toyproject.globalMarket.service.product.ProductManager;
+import com.toyproject.globalMarket.service.product.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,9 @@ import java.util.stream.Collectors;
 @RequestMapping("/products")
 public class ProductsController {
     PlatformConfig platform;
-    ProductManager productManager;
+    ProductService productService;
+
+    ProductVO productVO;
 
     @Autowired
     Naver naver;
@@ -44,24 +46,29 @@ public class ProductsController {
             productReact = objectMapper.readValue(requestBody, ProductRegisterVO.class);
 
             if (productReact.areMembersNotNull()){
-                ProductVO productVO = new ProductVO();
-                productManager = new ProductManager(productReact);
-                productVO = productManager.getNewProductInfo();
+                productVO = new ProductVO();
+                productService = new ProductService(productReact);
+                productVO = productService.getNewProductInfo();
+                switch (productReact.getPlatform()){
+                    case 네이버:
+                        platform = naver;
+                        break;
+                    case 알리익스프레스:
+                        break;
+                    default:
+                        break;
+                }
 
+
+                productService.register(platform.getOAuth(), productVO);
+
+                //productService.search(platform.getOAuth());
+            }
+            else {
+                EventManager.logOutput(2, this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 0, "product inputs are null.");
             }
 
-            switch (productReact.getPlatform()){
-                case 네이버:
-                    platform = naver;
-                    break;
-                case 알리익스프레스:
-                    break;
-                default:
-                    break;
-            }
-            platform.getOAuth();
 
-            productManager.register();
 
         } catch (IOException e) {
             e.printStackTrace();;
