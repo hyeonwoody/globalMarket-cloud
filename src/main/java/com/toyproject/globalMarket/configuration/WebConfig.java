@@ -26,14 +26,10 @@ public class WebConfig implements WebMvcConfigurer{
                 .allowCredentials(true)
                 .allowedOrigins("http://" + this.ipAddress + ":" + this.frontEndPort);
 
-        registry.addMapping("/config/main")
-                .allowedMethods("PUT")
+        registry.addMapping("/products/register")
+                .allowedMethods("POST")
                 .allowCredentials(true)
                 .allowedOrigins("http://" + this.ipAddress + ":" + this.frontEndPort);
 
-        registry.addMapping("/textarea/created")
-                .allowedMethods("PUT", "GET")
-                .allowCredentials(true)
-                .allowedOrigins("http://" + this.ipAddress + ":" + this.frontEndPort);
     }
 }
