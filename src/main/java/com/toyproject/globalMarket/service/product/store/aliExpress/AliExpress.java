@@ -16,6 +16,12 @@ import org.jsoup.select.Elements;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 
 public class AliExpress implements StoreInterface {
@@ -109,7 +115,7 @@ public class AliExpress implements StoreInterface {
         return null;
     }
     @Override
-    public ProductRegisterVO translate(JsonObject jsonObject){
+    public ProductRegisterVO translate(JsonObject jsonObject) {
         ProductRegisterVO productRegisterVO = new ProductRegisterVO();
         ProductInfo productInfo = new Gson().fromJson(jsonObject.get("productInfo"), ProductInfo.class);
         PriceInfo priceInfo = new Gson().fromJson(jsonObject.get("priceInfo"), PriceInfo.class);
@@ -119,14 +125,61 @@ public class AliExpress implements StoreInterface {
         if (descInfo.has("productDescUrl")) {
             productInfo.detailContent = descInfo.get("productDescUrl").getAsString();
         }
+        productInfo.detailContent = parseDetailContent(productInfo.detailContent);
+
+        System.out.println(productInfo.detailContent);
+        return productRegisterVO;
+    }
+
+    private String parseDetailContent(String detailContent) {
+        URL url = null;
+        String ret = null;
+        try {
+            url = new URL(detailContent);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Open a connection to the URL
+        URLConnection connection = null;
+        try {
+            connection = url.openConnection();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Set up a BufferedReader to read from the connection's input stream
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Read the HTML content line by line and store it in a StringBuilder
+        StringBuilder htmlContent = new StringBuilder();
+        String line;
+        while (true) {
+            try {
+                if (!((line = reader.readLine()) != null)) break;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            htmlContent.append(line);
+            htmlContent.append("\n"); // Add newline character as BufferedReader.readLine() removes newline characters
+        }
+        ret = htmlContent.toString();
+        // Close the BufferedReader
+        try {
+            reader.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return ret;
+    }
 
 // Checking if the JsonElement is not null and is a primitive type
 
-
-
-
-        return productRegisterVO;
-    }
     @Override
     public ProductRegisterVO getProductInfo(String url){
         String html = getHtml(url);

@@ -88,7 +88,11 @@ public class ProductService {
         }
 
         if (store != null){
-            productRegisterVO = store.getProductInfo(url);
+            try {
+                productRegisterVO = store.getProductInfo(url);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
         if (productRegisterVO != null){
             productRegisterVO.setName(productRegisterVO.getName());
