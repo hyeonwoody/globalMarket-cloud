@@ -57,3 +57,5 @@ out/
 scripts/*
 app.sh
 react.log
+
+lib/*

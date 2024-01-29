@@ -1,6 +1,5 @@
 package com.toyproject.globalMarket.service.product.store;
 
-import com.toyproject.globalMarket.VO.ProductVO;
 
 import java.io.IOException;
 import java.net.URI;
@@ -9,7 +8,9 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 import com.google.gson.JsonObject;
-public interface Store {
+import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
+
+public interface StoreInterface {
     abstract JsonObject parseHtml(String html);
     default String getHtml(String url){
         try{
@@ -25,5 +26,6 @@ public interface Store {
             throw new RuntimeException(e);
         }
     }
-    abstract ProductVO getProductInfo(String url);
+    abstract ProductRegisterVO translate (JsonObject jsonObject);
+    abstract ProductRegisterVO getProductInfo(String url);
 }

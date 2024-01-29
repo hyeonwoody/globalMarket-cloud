@@ -1,8 +1,11 @@
 package com.toyproject.globalMarket.service.product.store.aliExpress;
 
-import com.toyproject.globalMarket.VO.ProductVO;
+import com.google.gson.JsonElement;
+import com.google.gson.annotations.SerializedName;
+import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 import com.toyproject.globalMarket.libs.EventManager;
-import com.toyproject.globalMarket.service.product.store.Store;
+import com.toyproject.globalMarket.service.product.store.StoreInterface;
+
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.DataNode;
@@ -12,9 +15,59 @@ import org.jsoup.select.Elements;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-public class AliExpress implements Store {
+
+import java.util.List;
+
+public class AliExpress implements StoreInterface {
 
     JsonObject jsonObject;
+
+    public class SpecificationInfo {
+        @SerializedName("propertyList")
+        private List<Property> propertyList;
+
+        @SerializedName("i18n")
+        private I18n i18n;
+
+        static class Property {
+            @SerializedName("attrValue")
+            private String attrValue;
+
+            @SerializedName("attrName")
+            private String attrName;
+        }
+
+        static class I18n {
+            @SerializedName("title")
+            private String title;
+
+        }
+    }
+    class PriceInfo {
+        @SerializedName("saleMaxPrice")
+        private Price saleMaxPrice;
+
+        @SerializedName("saleMinPrice")
+        private Price saleMinPrice;
+        static class Price {
+            private String currency;
+            private String formatedAmount;
+            private double value;
+        }
+    }
+    class ProductInfo {
+        @SerializedName("productId")
+        private String productId;
+
+        @SerializedName("subject")
+        private String subject;
+
+        @SerializedName("imageList")
+        private List<String> imageList;
+
+        private String detailContent;
+    }
+
     @Override
     public JsonObject parseHtml(String html) {
         Document doc = Jsoup.parse(html);
@@ -55,14 +108,30 @@ public class AliExpress implements Store {
         }
         return null;
     }
-
     @Override
-    public ProductVO getProductInfo(String url){
+    public ProductRegisterVO translate(JsonObject jsonObject){
+        ProductRegisterVO productRegisterVO = new ProductRegisterVO();
+        ProductInfo productInfo = new Gson().fromJson(jsonObject.get("productInfo"), ProductInfo.class);
+        PriceInfo priceInfo = new Gson().fromJson(jsonObject.get("priceInfo"), PriceInfo.class);
+        SpecificationInfo specificationInfo = new Gson().fromJson(jsonObject.get("priceInfo"), SpecificationInfo.class);
+
+        JsonObject descInfo = jsonObject.getAsJsonObject("descInfo");
+        if (descInfo.has("productDescUrl")) {
+            productInfo.detailContent = descInfo.get("productDescUrl").getAsString();
+        }
+
+// Checking if the JsonElement is not null and is a primitive type
+
+
+
+
+        return productRegisterVO;
+    }
+    @Override
+    public ProductRegisterVO getProductInfo(String url){
         String html = getHtml(url);
         JsonObject jsonObject = parseHtml(html);
-        ProductVO productVO = new ProductVO();
-        productVO.JSonObjectToVO(jsonObject);
-        return productVO;
+        return translate(jsonObject);
     }
 
 }

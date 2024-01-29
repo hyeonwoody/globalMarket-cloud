@@ -1,22 +1,25 @@
 package com.toyproject.globalMarket.service.product;
 
 import com.google.gson.Gson;
-import com.toyproject.globalMarket.VO.ProductRegisterVO;
-import com.toyproject.globalMarket.VO.ProductVO;
+import com.toyproject.globalMarket.DTO.Product;
+import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
+
+
 import com.toyproject.globalMarket.libs.EventManager;
-import com.toyproject.globalMarket.service.product.store.Store;
+import com.toyproject.globalMarket.service.product.store.StoreInterface;
 import com.toyproject.globalMarket.service.product.store.aliExpress.AliExpress;
 import okhttp3.*;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
-
 public class ProductService {
-    ProductVO productVO;
-    private ProductRegisterVO productRegister;
-    public ProductService(ProductRegisterVO productRegister){
-        this.productRegister = productRegister;
+    private ProductRegisterVO productRegisterVO;
+
+    public ProductService(ProductRegisterVO productRegisterVO) {
+        this.productRegisterVO = productRegisterVO;
     }
+
 
     public void search(String accessToken) throws IOException {
 
@@ -41,16 +44,16 @@ public class ProductService {
         int a = 0;
     }
 
-    public int register(String accessToken, ProductVO productVO) {
-        productVO.originProduct = new ProductVO.OriginProduct();
-        productVO.originProduct.setName("fdfd");
-        productVO.originProduct.setStatusTypedddd(ProductVO.OriginProduct.StatusType.SALE);
+
+    public int register(String accessToken) {
+        Product product = new Product (this.productRegisterVO.getPlatform().ordinal());
+        product.setDTO(this.productRegisterVO);
 
         OkHttpClient client = new OkHttpClient();
         try {
             MediaType mediaType = MediaType.parse("application/json");
             Gson gson = new Gson();
-            String jsonBody = gson.toJson(productVO);
+            String jsonBody = gson.toJson(product.getDTO());
             System.out.println(jsonBody);
             RequestBody body = RequestBody.create(mediaType, jsonBody);
             Request request = new Request.Builder()
@@ -76,20 +79,22 @@ public class ProductService {
         }
 
     }
-    public ProductVO getNewProductInfo (){
-        String url = productRegister.getUrl();
-        Store store = null;
+    public ProductRegisterVO getNewProductInfo (){
+        String url = productRegisterVO.getUrl();
+        StoreInterface store = null;
         if (url.contains("aliexpress")){
             EventManager.logOutput(2, this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 0, "aaaREGISTER: " + "HERE");
             store = new AliExpress();
         }
 
         if (store != null){
-            productVO = store.getProductInfo(url);
+            productRegisterVO = store.getProductInfo(url);
         }
-        if (productVO.originProduct != null)
-            productVO.originProduct.setName(productRegister.getName());
-        return productVO;
+        if (productRegisterVO != null){
+            productRegisterVO.setName(productRegisterVO.getName());
+        }
+        return null;
+
     }
 
 

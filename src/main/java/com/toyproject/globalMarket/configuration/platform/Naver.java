@@ -25,6 +25,7 @@ public class Naver extends PlatformConfig {
     public Naver(@Value("${naver.clientId}") String clientId,
                  @Value("${naver.clientSecret}") String clientSecret) {
         super(clientId, clientSecret, "https://api.commerce.naver.com/external/v1/oauth2/token");
+        this.kind = PlatformList.NAVER.ordinal();
         int a = 0;
     }
 
