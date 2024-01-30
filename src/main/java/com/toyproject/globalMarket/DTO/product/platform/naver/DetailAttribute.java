@@ -1,12 +1,17 @@
 package com.toyproject.globalMarket.DTO.product.platform.naver;
 
+import org.aspectj.weaver.ast.Or;
+
 import java.util.ArrayList;
 
 public class DetailAttribute{
     DetailAttribute (){
         this.afterServiceInfo = new AfterServiceInfo();
         this.minorPurchasable = true;
+
+        this.originAreaInfo = new OriginAreaInfo();
         this.seoInfo = new SeoInfo();
+
     }
     public NaverShoppingSearchInfo naverShoppingSearchInfo;
     public class NaverShoppingSearchInfo{
@@ -136,7 +141,7 @@ public class DetailAttribute{
         public boolean restrictCart;
         public String siteName;
     }
-    //public ProductInfoProvidedNotice productInfoProvidedNotice;
+    public ProductInfoProvidedNotice productInfoProvidedNotice;
     public ArrayList<ProductAttribute> productAttributes;
     public class ProductAttribute{
         public int attributeSeq;
@@ -144,7 +149,7 @@ public class DetailAttribute{
         public String attributeRealValue;
         public String attributeRealValueUnitCode;
     }
-    public boolean cultureCostIncomeDeductionYn;
+    //public boolean cultureCostIncomeDeductionYn;
     public boolean customProductYn;
     public boolean itselfProductionProductYn;
     public boolean brandCertificationYn;

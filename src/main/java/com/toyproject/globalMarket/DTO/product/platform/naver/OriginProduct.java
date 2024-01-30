@@ -8,13 +8,15 @@ import java.util.ArrayList;
 @Getter @Setter
 public class OriginProduct {
 
-    OriginProduct() {
+    public OriginProduct() {
         this.statusType = StatusType.SALE.name();
         this.saleType = SaleType.NEW.name();
         this.saleEndDate = "2100-12-31T23:59:00Z";
-        this.salePrice = 9999999;
+        this.salePrice = 9999990;
+        this.stockQuantity = 99999999;
         this.deliveryInfo = new DeliveryInfo();
         this.detailAttribute = new DetailAttribute();
+        this.images = new Images();
     }
     public enum StatusType {
         WAIT, SALE, OUTOFSTOCK, UNADMISSION, REJECTION, SUSPENSION, CLOSE, PROHIBITION, DELETE
@@ -38,6 +40,7 @@ public class OriginProduct {
     private String name;
     private String detailContent;
     private Images images;
+
     private String saleStartDate; //'yyyy-MM-dd'T'HH:mm[:ss][.SSS]XXX' 형식으로 입력합니다.
     private String saleEndDate; //'yyyy-MM-dd'T'HH:mm[:ss][.SSS]XXX' 형식으로 입력합니다.
     private int salePrice;
@@ -49,9 +52,10 @@ public class OriginProduct {
         public int attributeValueSeq;
         public String attributeRealValue;
         public String attributeRealValueUnitCode;
+
     }
 
-    private DetailAttribute detailAttribute;
+    public DetailAttribute detailAttribute;
     private CustomerBenefit customerBenefit;
 }
 

@@ -3,6 +3,7 @@ package com.toyproject.globalMarket.DTO;
 import com.toyproject.globalMarket.DTO.product.Platform;
 import com.toyproject.globalMarket.DTO.product.platform.Naver;
 
+import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
 import com.toyproject.globalMarket.libs.BaseObject;
 
 public class Product extends BaseObject {
@@ -20,12 +21,21 @@ public class Product extends BaseObject {
                 break;
         }
     }
-
+    public void setDTO(String leafCategoryId){
+        this.platform.setDTO(leafCategoryId);
+    }
     public void setDTO(Object object){
         this.platform.setDTO(object);
     }
     public Object getDTO(){
-        return this.platform.getDTO();
+        return this.platform;
     }
 
+    public void setTime(String time) {
+        this.platform.setTime(time);
+    }
+
+    public void setImage(Images images) {
+        this.platform.setImage(images);
+    }
 }

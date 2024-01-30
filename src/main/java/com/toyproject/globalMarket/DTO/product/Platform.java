@@ -1,6 +1,7 @@
 package com.toyproject.globalMarket.DTO.product;
 
 import com.google.gson.JsonObject;
+import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
 
 
 public interface Platform {
@@ -8,4 +9,8 @@ public interface Platform {
     abstract Object getDTO();
 
     abstract void setDTO(Object object);
+
+    void setDTO(String leafCategoryId);
+    abstract void setTime(String time);
+    abstract void setImage(Images images);
 }

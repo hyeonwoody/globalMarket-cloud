@@ -52,7 +52,11 @@ public class ProductService extends BaseObject {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
         String time = dateFormat.format(now);
         productRegisterVO.setCurrentTime (time);
-        product.setDTO(productRegisterVO);
+
+        product.setDTO("50002628");
+        product.setTime (time);
+        product.setImage (productRegisterVO.getImages());
+
 
         OkHttpClient client = new OkHttpClient();
         try {
@@ -65,15 +69,17 @@ public class ProductService extends BaseObject {
                     .url("https://api.commerce.naver.com/external/v2/products")
                     .post(body)
                     .addHeader("Authorization", "Bearer " + accessToken)
-                    .addHeader("content-type", "application/json")
+                    .addHeader("content-type", "image/jpeg")
                     .build();
 
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()) {
                 LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Request is Successful with code : {0}", response.code());
             } else {
-                // If the response is not successful
                 LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Request is Failed with code : {0}", response.code());
+                LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Response message : {0}", response.message());
+                LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Response body : {0}", response.body().string());
+
             }
             return response.code();
         } catch (IOException e) {
