@@ -14,6 +14,8 @@ package com.toyproject.globalMarket.libs;
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
+import org.hibernate.event.spi.EventManager;
+
 import java.io.UnsupportedEncodingException;
 
 import java.security.SecureRandom;

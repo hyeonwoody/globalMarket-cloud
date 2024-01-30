@@ -2,7 +2,7 @@ package com.toyproject.globalMarket.configuration.platform;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.toyproject.globalMarket.configuration.PlatformConfig;
+import com.toyproject.globalMarket.configuration.AuthConfig;
 import com.toyproject.globalMarket.libs.BCrypt;
 import com.toyproject.globalMarket.libs.EventManager;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +20,7 @@ import java.util.Base64;
 
 
 @Configuration
-public class Naver extends PlatformConfig {
+public class Naver extends AuthConfig {
 
     public Naver(@Value("${naver.clientId}") String clientId,
                  @Value("${naver.clientSecret}") String clientSecret) {
@@ -60,7 +60,7 @@ public class Naver extends PlatformConfig {
 
 
 
-            EventManager.logOutput(2, this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 0, "Request Code : {0}", requestBody);
+            EventManager.LogOutput(LOG_LEVEL.INFO, this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 0, "Product Register Request Body : {0}", requestBody);
             connection.setDoOutput(true);
             try (OutputStream outputStream = connection.getOutputStream()) {
                 byte[] input = requestBody.getBytes(StandardCharsets.UTF_8);
@@ -95,8 +95,8 @@ public class Naver extends PlatformConfig {
             accessToken = jsonObject.get("access_token").getAsString();
 
             // Print response
-            EventManager.logOutput(2, this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 0, "Response Code : {0}", responseCode);
-            EventManager.logOutput(2, this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 0, "Response Body : {0}", response.toString());
+            LogOutput(LOG_LEVEL.INFO, this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 0, "Response Code : {0}", responseCode);
+            LogOutput(LOG_LEVEL.INFO, ObjectName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 0, "Response Body : {0}", response.toString());
             return accessToken;
         } catch (Exception e) {
             e.printStackTrace();

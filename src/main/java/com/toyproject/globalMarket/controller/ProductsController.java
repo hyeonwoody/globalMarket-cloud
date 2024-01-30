@@ -3,11 +3,11 @@ package com.toyproject.globalMarket.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.toyproject.globalMarket.DTO.Product;
-import com.toyproject.globalMarket.configuration.PlatformConfig;
+import com.toyproject.globalMarket.configuration.AuthConfig;
 import com.toyproject.globalMarket.configuration.platform.Naver;
 
 import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
-import com.toyproject.globalMarket.libs.EventManager;
+import com.toyproject.globalMarket.libs.BaseObject;
 import com.toyproject.globalMarket.service.product.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,21 +23,23 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/products")
-public class ProductsController {
-    PlatformConfig platform;
+public class ProductsController extends BaseObject {
+    AuthConfig platform;
     ProductService productService;
 
-
-    Product product;
-
+    private static int objectId;
 
     @Autowired
     Naver naver;
 
+    protected ProductsController() {
+        super("ProductController", objectId++);
+    }
+
     @PostMapping("/register")
-    public ResponseEntity<Integer> register (HttpServletRequest request) {
+    public ResponseEntity<Integer> Register (HttpServletRequest request) {
         // 요청을 보낸 클라이언트의 IP주소를 반환합니다.
-        int ret = -1;
+        int responseCode = -1;
 
 
         try {
@@ -47,10 +49,11 @@ public class ProductsController {
             ObjectMapper objectMapper = new ObjectMapper();
             ProductRegisterVO productSource = new ProductRegisterVO();
             productSource = objectMapper.readValue(requestBody, ProductRegisterVO.class);
+            LogOutput(LOG_LEVEL.DEBUG, ObjectName(),MethodName(),0, " productRegister detailContent:  {0}", productSource.getDetailContent());
 
             if (productSource.areMembersNotNull()){
                 productService = new ProductService(productSource);
-                productSource.setVO(productService.getNewProductInfo());
+                productService.getNewProductInfo(productSource);
                 switch (productSource.getPlatform()){
                     case 네이버:
                         platform = naver;
@@ -60,14 +63,20 @@ public class ProductsController {
                     default:
                         break;
                 }
+                do {
+                    responseCode = productService.register(productSource, platform.getOAuth());
+                    LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 2, "ResponseCode : {0}", responseCode);
+                } while (responseCode == 401);
 
 
-                productService.register(platform.getOAuth());
+
+
+
 
                 //productService.search(platform.getOAuth());
             }
             else {
-                EventManager.logOutput(2, this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 0, "product inputs are null.");
+                LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "product inputs are null.");
             }
 
         } catch (IOException e) {
@@ -77,7 +86,7 @@ public class ProductsController {
 
 
 
-        return ResponseEntity.ok(ret);
+        return ResponseEntity.ok(responseCode);
     }
 
 

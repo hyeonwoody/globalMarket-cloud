@@ -3,6 +3,11 @@ package com.toyproject.globalMarket.DTO.product.platform.naver;
 import java.util.ArrayList;
 
 public class DetailAttribute{
+    DetailAttribute (){
+        this.afterServiceInfo = new AfterServiceInfo();
+        this.minorPurchasable = true;
+        this.seoInfo = new SeoInfo();
+    }
     public NaverShoppingSearchInfo naverShoppingSearchInfo;
     public class NaverShoppingSearchInfo{
         public int modelId;
@@ -12,7 +17,11 @@ public class DetailAttribute{
         public String brandName;
     }
     public AfterServiceInfo afterServiceInfo;
-    private class AfterServiceInfo{
+    public class AfterServiceInfo{
+        AfterServiceInfo (){
+            afterServiceTelephoneNumber = "000-000-0000";
+            afterServiceGuideContent = "평일 오전10시 ~ 오후 5시";
+        }
         public String afterServiceTelephoneNumber;
         public String afterServiceGuideContent;
     }
@@ -25,6 +34,10 @@ public class DetailAttribute{
 
     public OriginAreaInfo originAreaInfo;
     public class OriginAreaInfo{
+        OriginAreaInfo() {
+            originAreaCode = "04";
+            content = "국내 및 기타국가";
+        }
         public String originAreaCode;
         public String importer;
         public String content;
@@ -55,13 +68,13 @@ public class DetailAttribute{
     }
     public PurchaseReviewInfo purchaseReviewInfo;
     public IsbnInfo isbnInfo;
-    private class IsbnInfo{
+    public class IsbnInfo{
         public String isbn13;
         public String issn;
         public boolean independentPublicationYn;
     }
     public BookInfo bookInfo;
-    private class BookInfo {
+    public class BookInfo {
             public String publishDay;
             public Publisher publisher;
             public class Publisher{
@@ -136,15 +149,5 @@ public class DetailAttribute{
     public boolean itselfProductionProductYn;
     public boolean brandCertificationYn;
     public SeoInfo seoInfo;
-
-    public class SeoInfo{
-        public String pageTitle;
-        public String metaDescription;
-        public ArrayList<SellerTag> sellerTags;
-        public class SellerTag{
-            public int code;
-            public String text;
-        }
-    }
 
 }

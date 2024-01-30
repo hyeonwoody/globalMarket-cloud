@@ -1,6 +1,9 @@
 package com.toyproject.globalMarket.configuration;
 
-public abstract class PlatformConfig {
+import com.toyproject.globalMarket.libs.BaseObject;
+
+public abstract class AuthConfig extends BaseObject {
+    private static int objectId;
     public String clientId;
     public String clientSecret;
     public String url;
@@ -12,7 +15,8 @@ public abstract class PlatformConfig {
     }
     public int kind;
 
-    public PlatformConfig(String clientId, String clientSecret, String url) {
+    public AuthConfig(String clientId, String clientSecret, String url) {
+        super("PlatformConfig", objectId++);
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.url = url;

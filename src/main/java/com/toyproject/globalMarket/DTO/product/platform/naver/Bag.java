@@ -1,6 +1,6 @@
 package com.toyproject.globalMarket.DTO.product.platform.naver;
 
-public class Bag extends ProductPolicy{
+public class Bag extends BaseProduct {
         public String returnCostReason;
         public String noRefundReason;
         public String qualityAssuranceStandard;

@@ -1,6 +1,6 @@
 package com.toyproject.globalMarket.DTO.product.platform.naver;
 
-public class OfficeAppliances extends ProductPolicy{
+public class OfficeAppliances extends BaseProduct {
 
     public String itemName;
     public String modelName;

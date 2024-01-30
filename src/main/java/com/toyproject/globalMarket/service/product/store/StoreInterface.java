@@ -26,6 +26,6 @@ public interface StoreInterface {
             throw new RuntimeException(e);
         }
     }
-    abstract ProductRegisterVO translate (JsonObject jsonObject) throws IOException;
-    abstract ProductRegisterVO getProductInfo(String url) throws IOException;
+    abstract int convert (ProductRegisterVO productRegisterVO, JsonObject jsonObject) throws IOException;
+    abstract int getProductInfo(ProductRegisterVO productRegisterVO, String url) throws IOException;
 }

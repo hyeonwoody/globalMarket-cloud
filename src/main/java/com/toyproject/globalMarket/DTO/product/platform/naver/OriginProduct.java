@@ -7,6 +7,15 @@ import java.util.ArrayList;
 
 @Getter @Setter
 public class OriginProduct {
+
+    OriginProduct() {
+        this.statusType = StatusType.SALE.name();
+        this.saleType = SaleType.NEW.name();
+        this.saleEndDate = "2100-12-31T23:59:00Z";
+        this.salePrice = 9999999;
+        this.deliveryInfo = new DeliveryInfo();
+        this.detailAttribute = new DetailAttribute();
+    }
     public enum StatusType {
         WAIT, SALE, OUTOFSTOCK, UNADMISSION, REJECTION, SUSPENSION, CLOSE, PROHIBITION, DELETE
     }

@@ -1,6 +1,6 @@
 package com.toyproject.globalMarket.DTO.product.platform.naver;
 
-public class FashionItems extends ProductPolicy{
+public class FashionItems extends BaseProduct{
     public String type;
     public String material;
     public String size;

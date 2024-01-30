@@ -1,6 +1,6 @@
 package com.toyproject.globalMarket.DTO.product.platform.naver;
 
-public class DigitalContents extends ProductPolicy{
+public class DigitalContents extends BaseProduct {
     public String producer;
     public String termsOfUse;
     public String usePeriod;

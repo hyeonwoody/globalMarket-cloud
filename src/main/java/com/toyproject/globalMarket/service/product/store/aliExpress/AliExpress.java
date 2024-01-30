@@ -1,12 +1,13 @@
 package com.toyproject.globalMarket.service.product.store.aliExpress;
 
-import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
+import com.toyproject.globalMarket.DTO.product.platform.naver.SeoInfo;
 import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
-import com.toyproject.globalMarket.libs.EventManager;
+import com.toyproject.globalMarket.libs.BaseObject;
 import com.toyproject.globalMarket.service.product.store.StoreInterface;
 
 
+import lombok.Getter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.DataNode;
 import org.jsoup.nodes.Document;
@@ -22,12 +23,22 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class AliExpress implements StoreInterface {
+public class AliExpress extends BaseObject implements StoreInterface {
 
+    private static int objectId;
     JsonObject jsonObject;
 
+
+    public AliExpress() {
+        super("AlieExpress", objectId++);
+    }
+
+    @Getter
     public class SpecificationInfo {
         @SerializedName("propertyList")
         private List<Property> propertyList;
@@ -35,6 +46,7 @@ public class AliExpress implements StoreInterface {
         @SerializedName("i18n")
         private I18n i18n;
 
+        @Getter
         static class Property {
             @SerializedName("attrValue")
             private String attrValue;
@@ -44,33 +56,38 @@ public class AliExpress implements StoreInterface {
         }
 
         static class I18n {
-            @SerializedName("title")
+
             private String title;
 
         }
     }
-    class PriceInfo {
-        @SerializedName("saleMaxPrice")
+    @Getter
+    private class PriceInfo {
+
         private Price saleMaxPrice;
 
-        @SerializedName("saleMinPrice")
+
+        private Details details;
+        static class Details {
+
+            private Price maxAmount;
+
+            private Price minAmount;
+        }
+
         private Price saleMinPrice;
         static class Price {
             private String currency;
             private String formatedAmount;
-            private double value;
+            private int value;
         }
     }
-    class ProductInfo {
-        @SerializedName("productId")
+
+    @Getter
+    private class ProductInfo {
         private String productId;
-
-        @SerializedName("subject")
         private String subject;
-
-        @SerializedName("imageList")
         private List<String> imageList;
-
         private String detailContent;
     }
 
@@ -102,33 +119,57 @@ public class AliExpress implements StoreInterface {
                         return jsonObject;
                         // Access the properties of the JsonObject as needed
                     } else {
-                        EventManager.logOutput(2, this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 0, "No JSON data found in the script content.");
+                        LogOutput(LOG_LEVEL.ERROR, this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 0, "No JSON data found in the script content.");
                     }
                 } else {
-                    EventManager.logOutput(2, this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 1, "The first child node is not a DataNode.");
+                    LogOutput(LOG_LEVEL.ERROR, this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 1, "The first child node is not a DataNode.");
                 }
             }
 
         } else {
-            EventManager.logOutput(2, this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 2, "No <script> elements found in the document.");
+            LogOutput(LOG_LEVEL.ERROR, this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 2, "No <script> elements found in the document.");
         }
         return null;
     }
+
+
+
     @Override
-    public ProductRegisterVO translate(JsonObject jsonObject) {
-        ProductRegisterVO productRegisterVO = new ProductRegisterVO();
+    public int convert(ProductRegisterVO productRegisterVO, JsonObject jsonObject) {
+
+
         ProductInfo productInfo = new Gson().fromJson(jsonObject.get("productInfo"), ProductInfo.class);
         PriceInfo priceInfo = new Gson().fromJson(jsonObject.get("priceInfo"), PriceInfo.class);
-        SpecificationInfo specificationInfo = new Gson().fromJson(jsonObject.get("priceInfo"), SpecificationInfo.class);
+        SpecificationInfo specificationInfo = new Gson().fromJson(jsonObject.get("specificationInfo"), SpecificationInfo.class);
+
 
         JsonObject descInfo = jsonObject.getAsJsonObject("descInfo");
-        if (descInfo.has("productDescUrl")) {
+        if (descInfo.has("productDescUrl"))
             productInfo.detailContent = descInfo.get("productDescUrl").getAsString();
-        }
         productInfo.detailContent = parseDetailContent(productInfo.detailContent);
 
-        System.out.println(productInfo.detailContent);
-        return productRegisterVO;
+        if (productRegisterVO.getName().isEmpty())
+            productRegisterVO.setName(productInfo.getSubject() == null ? "알 수 없는 상품": productInfo.getSubject());
+        if (productRegisterVO.getDetailContent().isEmpty())
+            productRegisterVO.setDetailContent(productInfo.getDetailContent() == null ? "세계장터": productInfo.getDetailContent());
+        productRegisterVO.setPrice(priceInfo.getSaleMaxPrice().value);
+
+
+
+        //SEO
+
+
+
+        if (specificationInfo == null){
+            Map<String, String> propertyMap = new HashMap<>();
+
+            for (SpecificationInfo.Property property : specificationInfo.getPropertyList()) {
+                propertyMap.put(property.getAttrName(), property.getAttrValue());
+                productRegisterVO.getSeoInfo().sellerTags.add(new SeoInfo.SellerTag(property.getAttrValue()));
+            }
+            //productRegisterVO.getSeoInfo().setPageTitle(productInfo.getSubject());
+        }
+        return 0;
     }
 
     private String parseDetailContent(String detailContent) {
@@ -181,10 +222,11 @@ public class AliExpress implements StoreInterface {
 // Checking if the JsonElement is not null and is a primitive type
 
     @Override
-    public ProductRegisterVO getProductInfo(String url){
+    public int getProductInfo(ProductRegisterVO productRegisterVO, String url){
         String html = getHtml(url);
         JsonObject jsonObject = parseHtml(html);
-        return translate(jsonObject);
+        convert (productRegisterVO, jsonObject);
+        return 0;
     }
 
 }

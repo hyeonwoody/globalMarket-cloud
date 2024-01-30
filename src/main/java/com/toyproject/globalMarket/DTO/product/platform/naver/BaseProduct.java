@@ -1,6 +1,6 @@
 package com.toyproject.globalMarket.DTO.product.platform.naver;
 
-public class ProductPolicy {
+public class BaseProduct {
     public String returnCostReason;
     public String noRefundReason;
     public String qualityAssuranceStandard;
