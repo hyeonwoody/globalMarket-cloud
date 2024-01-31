@@ -11,6 +11,8 @@ public abstract class AuthConfig extends BaseObject {
     public String clientSecret;
     public String url;
 
+
+
     public enum PlatformList {
         NAVER,
         ALIEXPRESS,
@@ -18,13 +20,19 @@ public abstract class AuthConfig extends BaseObject {
     }
     public int kind;
 
+    public AuthConfig(String objectName, int objectId, String clientId, String clientSecret, String url) {
+        super(objectName, objectId);
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
+        this.url = url;
+    }
+
     public AuthConfig(String clientId, String clientSecret, String url) {
         super("PlatformConfig", objectId++);
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.url = url;
     }
-
 
     public abstract String getOAuth();
 }

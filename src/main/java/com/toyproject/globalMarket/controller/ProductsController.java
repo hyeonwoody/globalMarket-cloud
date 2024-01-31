@@ -27,13 +27,11 @@ public class ProductsController extends BaseObject {
     AuthConfig platform;
     ProductService productService;
 
-    private static int objectId;
-
     @Autowired
     Naver naver;
 
     protected ProductsController() {
-        super("ProductController", objectId++);
+        super("ProductController", 0);
     }
 
     @PostMapping("/register")
