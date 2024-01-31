@@ -2,7 +2,6 @@ package com.toyproject.globalMarket.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import com.toyproject.globalMarket.DTO.Product;
 import com.toyproject.globalMarket.configuration.AuthConfig;
 import com.toyproject.globalMarket.configuration.platform.Naver;
 
@@ -35,9 +34,9 @@ public class ProductsController extends BaseObject {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Integer> Register (HttpServletRequest request) {
+    public ResponseEntity<ProductRegisterVO> Register (HttpServletRequest request) {
         // 요청을 보낸 클라이언트의 IP주소를 반환합니다.
-        int responseCode = -1;
+        ProductRegisterVO productSource = new ProductRegisterVO();
 
 
         try {
@@ -45,7 +44,6 @@ public class ProductsController extends BaseObject {
             String requestBody = reader.lines().collect(Collectors.joining(System.lineSeparator()));
 
             ObjectMapper objectMapper = new ObjectMapper();
-            ProductRegisterVO productSource = new ProductRegisterVO();
             productSource = objectMapper.readValue(requestBody, ProductRegisterVO.class);
             LogOutput(LOG_LEVEL.DEBUG, ObjectName(),MethodName(),0, " productRegister detailContent:  {0}", productSource.getDetailContent());
 
@@ -61,15 +59,11 @@ public class ProductsController extends BaseObject {
                     default:
                         break;
                 }
+                int responseCode =401;
                 do {
                     responseCode = productService.register(productSource, platform.getOAuth());
                     LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 2, "ResponseCode : {0}", responseCode);
                 } while (responseCode == 401);
-
-
-
-
-
 
                 //productService.search(platform.getOAuth());
             }
@@ -81,10 +75,7 @@ public class ProductsController extends BaseObject {
             e.printStackTrace();;
         }
 
-
-
-
-        return ResponseEntity.ok(responseCode);
+        return ResponseEntity.ok(productSource);
     }
 
 

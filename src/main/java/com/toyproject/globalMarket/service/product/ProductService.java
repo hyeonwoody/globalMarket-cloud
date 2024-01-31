@@ -4,27 +4,20 @@ import com.google.gson.Gson;
 import com.toyproject.globalMarket.DTO.Product;
 import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 
-import com.toyproject.globalMarket.configuration.platform.Naver;
 import com.toyproject.globalMarket.libs.BaseObject;
-import com.toyproject.globalMarket.libs.EventManager;
 import com.toyproject.globalMarket.service.product.store.StoreInterface;
 import com.toyproject.globalMarket.service.product.store.aliExpress.AliExpress;
 import okhttp3.*;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ProductService extends BaseObject {
-    private final ProductRegisterVO productRegisterVO;
     private static int objectId = 0;
 
     public ProductService(ProductRegisterVO productRegisterVO) {
-
         super("ProductService", objectId++);
-        LogOutput(LOG_LEVEL.DEBUG, ObjectName(),MethodName(),0, " productRegister platform {0}", productRegisterVO.getPlatform());
-        this.productRegisterVO = productRegisterVO;
     }
 
 
