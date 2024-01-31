@@ -156,6 +156,7 @@ public class AliExpress extends BaseObject implements StoreInterface {
         productRegisterVO.setPrice(priceInfo.getSaleMaxPrice().value);
 
         productRegisterVO.setImages(productInfo.getImageList());
+        //Converting Images
 
         //SEO
 
