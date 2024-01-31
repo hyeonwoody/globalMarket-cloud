@@ -50,8 +50,8 @@ public class Naver extends AuthConfig {
             // Set request headers
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             Long timestamp = System.currentTimeMillis();
+            EventManager.LogOutput(LOG_LEVEL.DEBUG, ObjectName(), MethodName(), 0, "TimeStamp : {0}, id :{1}, secret:{2}", timestamp,clientId,clientSecret);
             this.clientSecret = generateSignature (clientId, clientSecret, timestamp);
-            // Set request body
             String requestBody = "client_id="+ this.clientId +
                     "&timestamp=" + timestamp +
                     "&client_secret_sign=" + this.clientSecret +
@@ -60,7 +60,7 @@ public class Naver extends AuthConfig {
 
 
 
-            EventManager.LogOutput(LOG_LEVEL.INFO, this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 0, "Product Register Request Body : {0}", requestBody);
+            EventManager.LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Product Register Request Body : {0}", requestBody);
             connection.setDoOutput(true);
             try (OutputStream outputStream = connection.getOutputStream()) {
                 byte[] input = requestBody.getBytes(StandardCharsets.UTF_8);
@@ -92,15 +92,16 @@ public class Naver extends AuthConfig {
                         JsonObject jsonObject = JsonParser.parseString(jsonString).getAsJsonObject();
 
             // Get the value of the "access_token" field as a string
-            accessToken = jsonObject.get("access_token").getAsString();
+            accessToken = jsonObject.has("access_token") ? jsonObject.get("access_token").getAsString() : null;
 
             // Print response
-            LogOutput(LOG_LEVEL.INFO, this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 0, "Response Code : {0}", responseCode);
-            LogOutput(LOG_LEVEL.INFO, ObjectName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 0, "Response Body : {0}", response.toString());
-            return accessToken;
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+        if (accessToken == null)
+            LogOutput(LOG_LEVEL.ERROR, ObjectName(), MethodName(), 0, "Access token not found in response.");
         return accessToken;
+
     }
 }

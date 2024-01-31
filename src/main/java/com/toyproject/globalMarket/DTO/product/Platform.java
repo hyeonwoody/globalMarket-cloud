@@ -13,4 +13,6 @@ public interface Platform {
     void setDTO(String leafCategoryId);
     abstract void setTime(String time);
     abstract void setImage(Images images);
+
+    abstract void setDetailContent(String detailContent);
 }

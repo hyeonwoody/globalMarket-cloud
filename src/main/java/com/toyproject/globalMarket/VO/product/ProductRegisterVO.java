@@ -41,11 +41,11 @@ public class ProductRegisterVO {
         this.images = new Images();
         this.images.representativeImage.url = imageList.get(0).replaceFirst("s", "");
         this.images.representativeImage.url = "http://shop1.phinf.naver.net/20231205_176/1701755146110mAklL_JPEG/704920915873314_63287095.jpg";
-//        for (String image : imageList) {
-//            Images.OptionalImage optionalImage = new Images.OptionalImage();
-//            optionalImage.url = image.replaceFirst("s", "");;
-//            this.images.optionalImages.add(optionalImage);
-//        }
+        for (String image : imageList) {
+            Images.OptionalImage optionalImage = new Images.OptionalImage();
+            optionalImage.url = "http://shop1.phinf.naver.net/20231205_176/1701755146110mAklL_JPEG/704920915873314_63287095.jpg";
+            this.images.optionalImages.add(optionalImage);
+        }
     }
 
     private String saleStartDate;

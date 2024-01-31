@@ -56,6 +56,7 @@ public class ProductService extends BaseObject {
         product.setDTO("50002628");
         product.setTime (time);
         product.setImage (productRegisterVO.getImages());
+        product.setDetailContent (productRegisterVO.getDetailContent());
 
 
         OkHttpClient client = new OkHttpClient();
@@ -88,16 +89,15 @@ public class ProductService extends BaseObject {
     }
 
     public int getNewProductInfo (ProductRegisterVO productRegisterVO){
-        String url = this.productRegisterVO.getUrl();
         StoreInterface store = null;
-        if (url.contains("aliexpress")){
+        if (productRegisterVO.getUrl().contains("aliexpress")){
             LogOutput(LOG_LEVEL.INFO, this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 0, "aaaREGISTER: " + "HERE");
             store = new AliExpress();
         }
 
         if (store != null){
             try {
-                store.getProductInfo(productRegisterVO, url);
+                store.getProductInfo(productRegisterVO);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

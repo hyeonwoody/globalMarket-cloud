@@ -223,8 +223,8 @@ public class AliExpress extends BaseObject implements StoreInterface {
 // Checking if the JsonElement is not null and is a primitive type
 
     @Override
-    public int getProductInfo(ProductRegisterVO productRegisterVO, String url){
-        String html = getHtml(url);
+    public int getProductInfo(ProductRegisterVO productRegisterVO){
+        String html = getHtml(productRegisterVO.getUrl());
         JsonObject jsonObject = parseHtml(html);
         convert (productRegisterVO, jsonObject);
         return 0;

@@ -69,4 +69,9 @@ public class Naver extends BaseObject implements Platform  {
     public void setImage (Images image){
         this.originProduct.setImages(image);
     }
+
+    @Override
+    public void setDetailContent(String detailContent) {
+        this.originProduct.setDetailContent(detailContent);
+    }
 }

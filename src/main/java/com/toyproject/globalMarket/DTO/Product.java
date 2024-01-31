@@ -38,4 +38,8 @@ public class Product extends BaseObject {
     public void setImage(Images images) {
         this.platform.setImage(images);
     }
+
+    public void setDetailContent(String detailContent) {
+        this.platform.setDetailContent(detailContent);
+    }
 }
