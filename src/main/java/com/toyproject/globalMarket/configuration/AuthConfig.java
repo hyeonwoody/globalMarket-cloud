@@ -1,7 +1,10 @@
 package com.toyproject.globalMarket.configuration;
 
 import com.toyproject.globalMarket.libs.BaseObject;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
 public abstract class AuthConfig extends BaseObject {
     private static int objectId;
     public String clientId;
