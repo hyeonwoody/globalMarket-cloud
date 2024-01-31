@@ -21,9 +21,6 @@ public class CategoryService extends BaseObject {
 
     public int getCategoryNaver (List<CateogryNaverDTO> cateogryNaverDTOList, String accessToken) {
         OkHttpClient client = new OkHttpClient();
-
-
-
         try {
             Request request = new Request.Builder()
                     .url("https://api.commerce.naver.com/external/v1/categories?last=false")

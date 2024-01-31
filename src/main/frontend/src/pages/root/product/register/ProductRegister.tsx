@@ -3,6 +3,7 @@ import ProductAxios, {RegisterState} from "../ProductAPI";
 import Dropdown from "../../part/Dropdown"
 import {platformList} from "../../../../configuration/platform";
 import Modal from "../../part/Modal";
+import ProductRegisterAPI, {ProductRegisterAxios} from "./ProductRegisterAPI";
 const ProductRegister: React.FC = () => {
     const [input, setInput] = useState<RegisterState>({platform: 0, detailContent: "", name: "", url: ""});
     const [platformState, setPlatform] = useState ("플랫폼");
@@ -25,6 +26,23 @@ const ProductRegister: React.FC = () => {
             ...prevInput,
             ["platform"]: result,
         }));
+
+        const  generateCategory = (data : any) => {
+            interface CategoryNaver{
+                wholeCategoryName: string,
+                id: string,
+                name: string,
+                last: boolean
+            }
+
+            let categoryNaverList: CategoryNaver[] = data as CategoryNaver[];
+            categoryNaverList.forEach((categoryNaver) => {
+                console.log(categoryNaver.wholeCategoryName);
+            });
+
+        }
+
+        ProductRegisterAPI(generateCategory, input.platform);
     }
 
     const isValid = (url : string) => {
@@ -46,9 +64,7 @@ const ProductRegister: React.FC = () => {
 
     };
 
-    const  resultCallback = (data : any) => {
 
-    }
     const generateOptions = () => {
         const options: any[] = [];
 
@@ -70,10 +86,14 @@ const ProductRegister: React.FC = () => {
         console.log("dropdown");
     }
 
+    const submitResultCallback = (data : number) => {
+
+    }
+
     const onClickSubmit = (event : React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         if (isValidUrl)
-            ProductAxios(resultCallback, "register", input);
+            ProductAxios(submitResultCallback, "register", input);
         else {
             console.log ("모달")
             setShowModal(true);

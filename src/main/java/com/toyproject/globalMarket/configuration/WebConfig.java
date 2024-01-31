@@ -16,8 +16,8 @@ public class WebConfig implements WebMvcConfigurer{
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/test/ip")
-                .allowedMethods("POST")
+        registry.addMapping("/categories/naver")
+                .allowedMethods("GET")
                 .allowCredentials(true)
                 .allowedOrigins("http://" + this.ipAddress + ":" + this.frontEndPort);
 

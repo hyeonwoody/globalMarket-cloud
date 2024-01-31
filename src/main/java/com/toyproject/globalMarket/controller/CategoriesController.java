@@ -5,6 +5,7 @@ import com.toyproject.globalMarket.configuration.platform.Naver;
 import com.toyproject.globalMarket.libs.BaseObject;
 import com.toyproject.globalMarket.service.category.CategoryService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,11 +22,13 @@ public class CategoriesController extends BaseObject {
         super("CategoriesController", 0);
     }
 
+    @Autowired
+    Naver naver;
+
     @GetMapping("/naver")
     public ResponseEntity<List<CateogryNaverDTO>> Naver (HttpServletRequest request) {
         List <CateogryNaverDTO> cateogryNaverDTOList = new ArrayList<CateogryNaverDTO>();
         CategoryService categoryService = new CategoryService();
-        Naver naver = new Naver("", "");
 
         int responseCode = 401;
         do {

@@ -46,8 +46,10 @@ public class Naver extends AuthConfig {
             // Set request headers
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             Long timestamp = System.currentTimeMillis();
-            EventManager.LogOutput(LOG_LEVEL.DEBUG, ObjectName(), MethodName(), 0, "TimeStamp : {0}, id :{1}, secret:{2}", timestamp,clientId,clientSecret);
+
             String cryptedSecret = generateSignature (clientId, clientSecret, timestamp);
+            
+            EventManager.LogOutput(LOG_LEVEL.DEBUG, ObjectName(), MethodName(), 0, "secret : {0}, crypted :{1}",clientSecret, cryptedSecret);
             String requestBody = "client_id="+ this.clientId +
                     "&timestamp=" + timestamp +
                     "&client_secret_sign=" + cryptedSecret +
