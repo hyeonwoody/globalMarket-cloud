@@ -8,23 +8,19 @@ import com.toyproject.globalMarket.libs.EventManager;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 
-
-
 @Configuration
 public class Naver extends AuthConfig {
-
+    private static int objectId = 0;
     public Naver(@Value("${naver.clientId}") String clientId,
                  @Value("${naver.clientSecret}") String clientSecret) {
-        super(clientId, clientSecret, "https://api.commerce.naver.com/external/v1/oauth2/token");
+        super("PlatformNaver", objectId++,clientId, clientSecret, "https://api.commerce.naver.com/external/v1/oauth2/token");
         this.kind = PlatformList.NAVER.ordinal();
         int a = 0;
     }
@@ -51,10 +47,10 @@ public class Naver extends AuthConfig {
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             Long timestamp = System.currentTimeMillis();
             EventManager.LogOutput(LOG_LEVEL.DEBUG, ObjectName(), MethodName(), 0, "TimeStamp : {0}, id :{1}, secret:{2}", timestamp,clientId,clientSecret);
-            this.clientSecret = generateSignature (clientId, clientSecret, timestamp);
+            String cryptedSecret = generateSignature (clientId, clientSecret, timestamp);
             String requestBody = "client_id="+ this.clientId +
                     "&timestamp=" + timestamp +
-                    "&client_secret_sign=" + this.clientSecret +
+                    "&client_secret_sign=" + cryptedSecret +
                     "&grant_type=client_credentials" +
                     "&type=SELF";
 

@@ -9,7 +9,7 @@ public abstract class BaseObject extends EventManager {
 
     protected BaseObject(String objectName, int objectId){
         LogOutput(LOG_LEVEL.INFO,ObjectName(),MethodName(), 0, "new ObjectName: {0},objectId: {1}", objectName,objectId);
-        this.objectName = objectName == null ? objectName : "NoName";
+        this.objectName = objectName == null ?  "NoName" : objectName;
         this.objectId = objectId;
     }
     protected String ObjectName() {return this.objectName;}
