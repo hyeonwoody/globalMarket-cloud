@@ -1,5 +1,7 @@
 package com.toyproject.globalMarket.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.toyproject.globalMarket.configuration.AuthConfig;
@@ -11,6 +13,7 @@ import com.toyproject.globalMarket.service.product.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,8 +36,37 @@ public class ProductsController extends BaseObject {
         super("ProductController", 0);
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<ProductRegisterVO> Register (HttpServletRequest request) {
+
+    @GetMapping("/register/information")
+    public ResponseEntity<ProductRegisterVO> RegisterInformation (HttpServletRequest request) {
+        // 요청을 보낸 클라이언트의 IP주소를 반환합니다.
+        ProductRegisterVO productSource = new ProductRegisterVO();
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
+            String requestBody = reader.lines().collect(Collectors.joining(System.lineSeparator()));
+            String requestParam = request.getParameter("url");
+            LogOutput(LOG_LEVEL.DEBUG, ObjectName(), MethodName(), 0, " requestBody :  {0}", requestParam);
+
+            productSource.setName("");
+            productSource.setDetailContent("");
+            productSource.setUrl(requestParam);
+
+            LogOutput(LOG_LEVEL.DEBUG, ObjectName(), MethodName(), 0, " productRegister URL:  {0}", productSource.getUrl());
+
+            productService = new ProductService(productSource);
+            productService.getNewProductInfo(productSource);
+        } catch (JsonMappingException e) {
+            throw new RuntimeException(e);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return ResponseEntity.ok(productSource);
+    }
+
+        @PostMapping("/register/confirm")
+    public ResponseEntity<ProductRegisterVO> RegisterConfirm (HttpServletRequest request) {
         // 요청을 보낸 클라이언트의 IP주소를 반환합니다.
         ProductRegisterVO productSource = new ProductRegisterVO();
 

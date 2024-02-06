@@ -26,7 +26,12 @@ public class WebConfig implements WebMvcConfigurer{
                 .allowCredentials(true)
                 .allowedOrigins("http://" + this.ipAddress + ":" + this.frontEndPort);
 
-        registry.addMapping("/products/register")
+        registry.addMapping("/products/register/information")
+                .allowedMethods("GET")
+                .allowCredentials(true)
+                .allowedOrigins("http://" + this.ipAddress + ":" + this.frontEndPort);
+
+        registry.addMapping("/products/register/confirm")
                 .allowedMethods("POST")
                 .allowCredentials(true)
                 .allowedOrigins("http://" + this.ipAddress + ":" + this.frontEndPort);

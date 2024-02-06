@@ -6,9 +6,7 @@ interface ModalProps {
     children : ReactNode
 }
 const Modal = (props : ModalProps) => {
-    console.log ("HERE")
-    console.log (props.show)
-    console.log (props.children)
+
     if (!props.show) return null;
 
     const modalStyle : React.CSSProperties = {

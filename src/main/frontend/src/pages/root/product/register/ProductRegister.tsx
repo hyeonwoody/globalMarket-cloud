@@ -1,23 +1,26 @@
-import React, {ChangeEvent, useEffect, useState} from 'react';
+import React, {ChangeEvent, useState} from 'react';
 import ProductAxios, {RegisterState} from "../ProductAPI";
-import Dropdown from "../../part/Dropdown"
 import {platformList} from "../../../../configuration/platform";
 import Modal from "../../part/Modal";
-import ProductRegisterAPI, {ProductRegisterAxios} from "./ProductRegisterAPI";
+import ProductRegisterAPI from "./ProductRegisterAPI";
+
+
+
 const ProductRegister: React.FC = () => {
     const [input, setInput] = useState<RegisterState>({platform: 0, detailContent: "", name: "", url: ""});
-    const [platformState, setPlatform] = useState ("플랫폼");
+    const [platformState, setPlatform] = useState ("네이버");
     const [isValidUrl, setValidUrl] = useState (false);
     const [dropdown, setDropdown] = useState (false);
     const [showModal, setShowModal] = useState(false);
+    const [showInfo, setShowInfo] = useState(false);
 
     const inputClassName = `appearance-none block w-full bg-gray-200 text-gray-700 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white ${isValidUrl ? '' : 'border border-red-500'}`;
 
     const toggleDropdown = () => {
-
         setDropdown(!dropdown);
-
     }
+
+
 
     const handleOption = (result : number) => {
         setPlatform(platformList[result])
@@ -39,7 +42,6 @@ const ProductRegister: React.FC = () => {
             categoryNaverList.forEach((categoryNaver) => {
                 console.log(categoryNaver.wholeCategoryName);
             });
-
         }
 
         ProductRegisterAPI(generateCategory, input.platform);
@@ -50,6 +52,14 @@ const ProductRegister: React.FC = () => {
         return urlRegex.test(url);
     }
 
+    const handlePasteChange = (field: keyof RegisterState) => (event: React.ClipboardEvent<HTMLInputElement>) => {
+        setInput((prevInput) => ({
+            ...prevInput,
+            [field]: event.clipboardData.getData('text')
+        }));
+        console.log ("aaa"+input);
+
+    };
     const handleInputChange = (field: keyof RegisterState) => (
         event: ChangeEvent<HTMLInputElement>
     ) => {
@@ -82,18 +92,25 @@ const ProductRegister: React.FC = () => {
 
         return options;
     }
-    const dropdownResultCallback = (result : number) => {
-        console.log("dropdown");
-    }
 
-    const submitResultCallback = (data : number) => {
-
+    const submitResultCallback = (data : RegisterState) => {
+        setInput((prevInput) => ({
+            ...prevInput,
+            ["name"]: data.name,
+            ["detailContent"]:data.detailContent,
+        }));
+        setShowInfo(true);
     }
 
     const onClickSubmit = (event : React.MouseEvent<HTMLButtonElement>) => {
+        console.log("bbCCCCCCCC");
         event.preventDefault();
-        if (isValidUrl)
-            ProductAxios(submitResultCallback, "register", input);
+
+        if (isValidUrl){
+            console.log("aa");
+            ProductAxios(submitResultCallback, "register/information", input.url);
+        }
+
         else {
             console.log ("모달")
             setShowModal(true);
@@ -146,11 +163,12 @@ const ProductRegister: React.FC = () => {
                                     className={inputClassName}
                                     id="grid-product-url" type="text"
                                     placeholder="https://ko.aliexpress.com/item/XXXXXX.html"
+                                    onPaste={handlePasteChange("url")}
                                     onChange={handleInputChange("url")}/>
                                 {!isValidUrl && <p className="text-red-500 text-xs italic">형식에 맞게 제출해주세요</p>}
                             </div>
                         </div>
-                        <div className="flex flex-wrap -mx-3 mb-2" id={"product-info"}>
+                        {showInfo && <div className="flex flex-wrap -mx-3 mb-2" id={"product-info"}>
                             <div className="w-full md:w-full px-3 mb-0 md:mb-2" id={"product-name"}>
                                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                        htmlFor="grid-product-name">
@@ -178,7 +196,8 @@ const ProductRegister: React.FC = () => {
                                     placeholder="이 상품은 해외구매대행 상품으로 7일 ~ 21일 (주말/공휴일 제외)의 배송기간이 소요됩니다."
                                     onChange={handleInputChange("detailContent")}/>
                             </div>
-                        </div>
+                        </div>}
+
                         <button
                             className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full mx-auto block "
                             onClick={onClickSubmit}>

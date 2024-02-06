@@ -9,15 +9,27 @@ export interface RegisterState {
     name : string,
     detailContent : string
 }
-export function ProductAxios(resultCallback: (data: any) => void, type : string, payload : any) {
+export function ProductAxios(resultCallback: (data: any) => void, type : string, data : any) {
     switch (type){
-        case "register":
+
+        case "register/information":
+            console.log ("FFFFFF, "+ data)
+            axios({
+                url: `products/${type}?url=${encodeURIComponent(data)}`,
+                method: 'get',
+                baseURL: `http://${my.ipAddress}:${my.backEndPort}`,
+                withCredentials: true,
+            }).then(function (response) {
+                resultCallback(response.data);
+            });
+            break;
+        case "register/confirm":
             axios({
                 url: "products/" + type,
                 method: 'post',
                 baseURL: `http://${my.ipAddress}:${my.backEndPort}`,
                 withCredentials: true,
-                data: payload,
+                data: data,
             }).then(function (response) {
                 resultCallback(response.data);
             });
