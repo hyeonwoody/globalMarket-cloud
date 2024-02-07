@@ -153,7 +153,8 @@ public class AliExpress extends BaseObject implements StoreInterface {
         if (productRegisterVO.getDetailContent().isEmpty())
             productRegisterVO.setDetailContent(productInfo.getDetailContent() == null ? "세계장터": productInfo.getDetailContent());
 
-        productRegisterVO.setPrice(priceInfo.getSaleMaxPrice().value);
+        productRegisterVO.setSalePrice(priceInfo.getDetails().maxAmount.value);
+
 
         productRegisterVO.setImages(productInfo.getImageList());
         //Converting Images

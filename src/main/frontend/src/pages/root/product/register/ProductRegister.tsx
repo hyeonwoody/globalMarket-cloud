@@ -124,6 +124,8 @@ const ProductRegister: React.FC = () => {
             ...prevInput,
             ["name"]: data.name,
             ["detailContent"]:data.detailContent,
+            ["salePrice"]:data.salePrice,
+            ["stockQuantity"]:data.stockQuantity
         }));
         setShowInfo(true);
         console.log("DDDD");

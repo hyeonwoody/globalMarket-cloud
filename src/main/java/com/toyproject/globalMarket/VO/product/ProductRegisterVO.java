@@ -33,7 +33,8 @@ public class ProductRegisterVO {
     private String detailContent;
 
 
-    private int price;
+    private int salePrice;
+    private int saleQuantity;
 
     public Images images;
 
