@@ -65,7 +65,7 @@ const ProductRegister: React.FC = () => {
 
     };
     const handleInputChange = (field: keyof RegisterState) => (
-        event: ChangeEvent<HTMLInputElement>
+        event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>
     ) => {
             setInput((prevInput) => ({
                 ...prevInput,
@@ -128,6 +128,9 @@ const ProductRegister: React.FC = () => {
             ["stockQuantity"]:data.stockQuantity
         }));
         setShowInfo(true);
+        var preview = document.getElementById('preview');
+        if (preview != null)
+            preview.innerHTML = data.detailContent;
         console.log("DDDD");
         console.log(input);
     }
@@ -261,11 +264,13 @@ const ProductRegister: React.FC = () => {
                                     className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                     name="detailContent"
                                     value={input.detailContent}
-
+                                    onChange={handleInputChange("detailContent")}
                                     placeholder="이 상품은 해외구매대행 상품으로 7일 ~ 21일 (주말/공휴일 제외)의 배송기간이 소요됩니다."
                                     rows={Math.max(3, input.detailContent.split('\n').length)}
                                 />
-                            </div>}
+                                <div dangerouslySetInnerHTML={{__html: input.detailContent}}/>
+                            </div>
+                        }
 
                         {showInfo ?
                             <button
@@ -279,6 +284,7 @@ const ProductRegister: React.FC = () => {
                                 분석
                             </button>}
                     </div>
+
 
                 </form>
 
