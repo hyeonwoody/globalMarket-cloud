@@ -7,7 +7,11 @@ import ProductRegisterAPI from "./ProductRegisterAPI";
 
 
 const ProductRegister: React.FC = () => {
-    const [input, setInput] = useState<RegisterState>({platform: 0, detailContent: "", name: "", url: ""});
+    const [input, setInput] = useState<RegisterState>({
+        salePrice: 0,
+        stockQuantity: 0,
+        platform: 0, detailContent: "", name: "", url: ""
+    });
     const [platformState, setPlatform] = useState ("네이버");
     const [isValidUrl, setValidUrl] = useState (false);
     const [dropdown, setDropdown] = useState (false);
@@ -93,22 +97,18 @@ const ProductRegister: React.FC = () => {
         return options;
     }
 
-    const submitResultCallback = (data : RegisterState) => {
-        setInput((prevInput) => ({
-            ...prevInput,
-            ["name"]: data.name,
-            ["detailContent"]:data.detailContent,
-        }));
-        setShowInfo(true);
+    const ResultCallback = (data : number) => {
+        console.log (data);
     }
 
-    const onClickSubmit = (event : React.MouseEvent<HTMLButtonElement>) => {
+    const onClickConfirm = (event : React.MouseEvent<HTMLButtonElement>) => {
         console.log("bbCCCCCCCC");
         event.preventDefault();
 
+
         if (isValidUrl){
             console.log("aa");
-            ProductAxios(submitResultCallback, "register/information", input.url);
+            ProductAxios(ResultCallback, "register/confirm", input.url);
         }
 
         else {
@@ -116,6 +116,35 @@ const ProductRegister: React.FC = () => {
             setShowModal(true);
         }
     }
+
+    const parseResultCallback = (data : RegisterState) => {
+        console.log(data);
+        console.log("FFF"+data.name)
+        setInput((prevInput) => ({
+            ...prevInput,
+            ["name"]: data.name,
+            ["detailContent"]:data.detailContent,
+        }));
+        setShowInfo(true);
+        console.log("DDDD");
+        console.log(input);
+    }
+
+    const onClickParse = (event : React.MouseEvent<HTMLButtonElement>) => {
+        console.log("bbCCCCCCCC");
+        event.preventDefault();
+
+        if (isValidUrl){
+            console.log("aa");
+            ProductAxios(parseResultCallback, "register/information", input.url);
+        }
+
+        else {
+            console.log ("모달")
+            setShowModal(true);
+        }
+    }
+
 
     return (
         <div className="Container">
@@ -178,31 +207,75 @@ const ProductRegister: React.FC = () => {
                                     className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                     id="grid-last-name"
                                     type="text"
+                                    value={input.name}
                                     placeholder="도수없는 안경"
                                     onChange={handleInputChange("name")}/>
 
 
                             </div>
 
+
+                        </div>}
+
+                        {showInfo && <div className="flex flex-wrap -mx-3 mb-2" id={"product-number"}>
+                            <div className="md:w-1/2 px-3 mb-0 md:mb-2" id={"product-price"}>
+                                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                                       htmlFor="grid-product-name">
+                                    상품 가격
+                                </label>
+                                <input
+                                    className="appearance-none block bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                    id="grid-last-name"
+                                    type="text"
+                                    value={input.salePrice}
+                                    placeholder="20000"
+                                    onChange={handleInputChange("salePrice")}/>
+
+
+                            </div>
+
+                            <div className="md:w-1/2 px-3" id={"product-stock"}>
+                                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                                       htmlFor="grid-product-detail">
+                                    상품 재고
+                                </label>
+                                <input
+                                    className="appearance-none block bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                    name="detailContent"
+                                    value={input.stockQuantity}
+
+                                    placeholder="이 상품은 해외구매대행 상품으로 7일 ~ 21일 (주말/공휴일 제외)의 배송기간이 소요됩니다."
+                                />
+                            </div>
+                        </div>}
+
+                        {showInfo &&
                             <div className="w-full px-3" id={"product-detail"}>
                                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                        htmlFor="grid-product-detail">
                                     상품 설명
                                 </label>
-                                <input
+                                <textarea
                                     className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                    id="grid-last-name"
-                                    type="text"
-                                    placeholder="이 상품은 해외구매대행 상품으로 7일 ~ 21일 (주말/공휴일 제외)의 배송기간이 소요됩니다."
-                                    onChange={handleInputChange("detailContent")}/>
-                            </div>
-                        </div>}
+                                    name="detailContent"
+                                    value={input.detailContent}
 
-                        <button
-                            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full mx-auto block "
-                            onClick={onClickSubmit}>
-                            제출
-                        </button>
+                                    placeholder="이 상품은 해외구매대행 상품으로 7일 ~ 21일 (주말/공휴일 제외)의 배송기간이 소요됩니다."
+                                    rows={Math.max(3, input.detailContent.split('\n').length)}
+                                />
+                            </div>}
+
+                        {showInfo ?
+                            <button
+                                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full mx-auto block "
+                                onClick={onClickConfirm}>
+                                확정
+                            </button> :
+                            <button
+                                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full mx-auto block "
+                                onClick={onClickParse}>
+                                분석
+                            </button>}
                     </div>
 
                 </form>
@@ -217,6 +290,6 @@ const ProductRegister: React.FC = () => {
 
     )
         ;
-}
+            }
 
-export default React.memo(ProductRegister);
+            export default React.memo(ProductRegister);

@@ -8,6 +8,8 @@ export interface RegisterState {
     url : string,
     name : string,
     detailContent : string
+    salePrice : number,
+    stockQuantity : number
 }
 export function ProductAxios(resultCallback: (data: any) => void, type : string, data : any) {
     switch (type){
@@ -31,7 +33,9 @@ export function ProductAxios(resultCallback: (data: any) => void, type : string,
                 withCredentials: true,
                 data: data,
             }).then(function (response) {
-                resultCallback(response.data);
+                console.log ("ProductAPI + ProductAxios"+response.status);
+                if (response.status == 200)
+                    resultCallback(response.data);
             });
             break;
         default:
