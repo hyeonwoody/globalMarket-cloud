@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/categories")
@@ -26,15 +28,20 @@ public class CategoriesController extends BaseObject {
     Naver naver;
 
     @GetMapping("/naver")
-    public ResponseEntity<List<CateogryNaverDTO>> Naver (HttpServletRequest request) {
-        List <CateogryNaverDTO> cateogryNaverDTOList = new ArrayList<CateogryNaverDTO>();
+    public ResponseEntity<Map<String, List<String>>> Naver (HttpServletRequest request) {
+        Map<String, List<String>> categoryNaver = new HashMap<>();
+        List <CateogryNaverDTO> categoryNaverDTOList = new ArrayList<CateogryNaverDTO>();
         CategoryService categoryService = new CategoryService();
 
         int responseCode = 401;
         do {
-            responseCode = categoryService.getCategoryNaver(cateogryNaverDTOList, naver.getOAuth());
+            responseCode = categoryService.getCategoryNaver(categoryNaverDTOList, naver.getOAuth());
         } while (responseCode == 401);
 
-        return ResponseEntity.ok(cateogryNaverDTOList);
+        do {
+            responseCode = categoryService.getNaverMap(categoryNaver);
+        }while (responseCode == 401);
+
+        return ResponseEntity.ok(categoryNaver);
     }
 }

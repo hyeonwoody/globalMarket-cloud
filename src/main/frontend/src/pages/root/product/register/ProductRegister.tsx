@@ -3,11 +3,15 @@ import ProductAxios, {RegisterState} from "../ProductAPI";
 import {platformList} from "../../../../configuration/platform";
 import Modal from "../../part/Modal";
 import ProductRegisterAPI from "./ProductRegisterAPI";
+import Category from "./part/Category";
+import category from "./part/Category";
 
 
 
 const ProductRegister: React.FC = () => {
+    const [category, setCategory] = useState(new Map<string, string[]>());
     const [input, setInput] = useState<RegisterState>({
+        category: "",
         salePrice: 0,
         stockQuantity: 0,
         platform: 0, detailContent: "", name: "", url: ""
@@ -15,6 +19,7 @@ const ProductRegister: React.FC = () => {
     const [platformState, setPlatform] = useState ("네이버");
     const [isValidUrl, setValidUrl] = useState (false);
     const [dropdown, setDropdown] = useState (false);
+    const [showCategory, setShowCategory] = useState (false);
     const [showModal, setShowModal] = useState(false);
     const [showInfo, setShowInfo] = useState(false);
 
@@ -24,7 +29,13 @@ const ProductRegister: React.FC = () => {
         setDropdown(!dropdown);
     }
 
-
+    const categoryCallback = (result : string) => {
+        setInput((prevInput) => ({
+            ...prevInput,
+            ["category"]: result,
+        }));
+        console.log ("category: "+ input.category);
+    }
 
     const handleOption = (result : number) => {
         setPlatform(platformList[result])
@@ -35,6 +46,8 @@ const ProductRegister: React.FC = () => {
         }));
 
         const  generateCategory = (data : any) => {
+
+            const categoryMap = new Map();
             interface CategoryNaver{
                 wholeCategoryName: string,
                 id: string,
@@ -42,12 +55,24 @@ const ProductRegister: React.FC = () => {
                 last: boolean
             }
 
-            let categoryNaverList: CategoryNaver[] = data as CategoryNaver[];
-            categoryNaverList.forEach((categoryNaver) => {
-                console.log(categoryNaver.wholeCategoryName);
-            });
-        }
 
+            let categoryNaverList: CategoryNaver[] = data as CategoryNaver[];
+            Object.entries(data).map(([key , value]) =>{
+                if (Array.isArray(value) && key == "FIRST"){
+                    console.log (key, value);
+                }
+
+
+                categoryMap.set (key, value);
+            });
+
+            console.log (categoryMap);
+            setCategory(categoryMap);
+            // categoryNaverList.forEach((categoryNaver) => {
+            //     console.log(categoryNaver.wholeCategoryName, categoryNaver.name);
+            // });
+        }
+        setShowCategory(true);
         ProductRegisterAPI(generateCategory, input.platform);
     }
 
@@ -108,7 +133,7 @@ const ProductRegister: React.FC = () => {
 
         if (isValidUrl){
             console.log("aa");
-            ProductAxios(ResultCallback, "register/confirm", input.url);
+            ProductAxios(ResultCallback, "register/confirm", input);
         }
 
         else {
@@ -141,7 +166,7 @@ const ProductRegister: React.FC = () => {
 
         if (isValidUrl){
             console.log("aa");
-            ProductAxios(parseResultCallback, "register/information", input.url);
+            ProductAxios(parseResultCallback, "register/information", input);
         }
 
         else {
@@ -180,13 +205,11 @@ const ProductRegister: React.FC = () => {
                                     <div
                                         className="absolute z-10 top-full left-0 mt-1 bg-green-400 rounded-lg shadow w-44 dark:bg-gray-700">
                                         {generateOptions()}
-
-
                                     </div>
-
                                 )}
                             </div>
                         </div>
+                        {showCategory && <Category category={category} callback={categoryCallback}/>}
                         <div className="flex flex-wrap -mx-3 mb-2" id={"product-url"}>
                             <div className="w-full md:w-full px-3 mb-6 md:mb-3">
                                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
@@ -249,7 +272,7 @@ const ProductRegister: React.FC = () => {
                                     name="detailContent"
                                     value={input.stockQuantity}
 
-                                    placeholder="이 상품은 해외구매대행 상품으로 7일 ~ 21일 (주말/공휴일 제외)의 배송기간이 소요됩니다."
+                                    placeholder="0 ~ 29999"
                                 />
                             </div>
                         </div>}

@@ -5,19 +5,21 @@ const my = new My();
 
 export interface RegisterState {
     platform : Platform,
+    category: string,
     url : string,
     name : string,
     detailContent : string
     salePrice : number,
     stockQuantity : number
 }
-export function ProductAxios(resultCallback: (data: any) => void, type : string, data : any) {
+export function ProductAxios(resultCallback: (data: any) => void, type : string, data : RegisterState) {
+    console.log ("Axios"+data);
     switch (type){
 
         case "register/information":
             console.log ("FFFFFF, "+ data)
             axios({
-                url: `products/${type}?url=${encodeURIComponent(data)}`,
+                url: `products/${type}?url=${encodeURIComponent(data.url)}&category=${encodeURIComponent(data.category)}`,
                 method: 'get',
                 baseURL: `http://${my.ipAddress}:${my.backEndPort}`,
                 withCredentials: true,
