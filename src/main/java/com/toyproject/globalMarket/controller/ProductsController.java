@@ -9,6 +9,7 @@ import com.toyproject.globalMarket.configuration.platform.Naver;
 
 import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 import com.toyproject.globalMarket.libs.BaseObject;
+import com.toyproject.globalMarket.service.category.CategoryService;
 import com.toyproject.globalMarket.service.product.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,10 @@ import java.util.stream.Collectors;
 @RequestMapping("/products")
 public class ProductsController extends BaseObject {
     AuthConfig platform;
+
+    CategoryService categoryService;
     ProductService productService;
+
 
     @Autowired
     Naver naver;
@@ -83,7 +87,9 @@ public class ProductsController extends BaseObject {
 
             if (productSource.areMembersNotNull()){
                 productService = new ProductService(productSource);
+                categoryService = new CategoryService();
                 productService.getNewProductInfo(productSource);
+                productSource.setLeafCategoryId(categoryService.findNaverLeafCategoryId (productSource.getCategory()));
                 switch (productSource.getPlatform()){
                     case 네이버:
                         platform = naver;

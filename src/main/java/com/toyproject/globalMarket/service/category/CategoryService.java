@@ -18,6 +18,10 @@ public class CategoryService extends BaseObject {
     private static int objectId = 0;
     private static List <CateogryNaverDTO> m_cateogryNaverDTOList;
 
+    public static List<CateogryNaverDTO> getCateogryNaverDTOList() {
+        return m_cateogryNaverDTOList;
+    }
+
     public CategoryService() {
         super("CategoryService", objectId++);
     }
@@ -74,6 +78,14 @@ public class CategoryService extends BaseObject {
             categoryNaver.put(key, tmp);
         }
         return 0;
+    }
+
+    public String findNaverLeafCategoryId(String category) {
+        for (CateogryNaverDTO cateogryNaverDTO : m_cateogryNaverDTOList){
+            if (category.equals(cateogryNaverDTO.getName()))
+                return cateogryNaverDTO.getId();
+        }
+        return "50000000";
     }
 }
 

@@ -32,6 +32,7 @@ public class ProductRegisterVO {
     private String name;
     private String detailContent;
 
+    private String category;
 
     private int salePrice;
     private int saleQuantity;
@@ -44,8 +45,8 @@ public class ProductRegisterVO {
         this.images.representativeImage.url = "http://shop1.phinf.naver.net/20231205_176/1701755146110mAklL_JPEG/704920915873314_63287095.jpg";
         for (String image : imageList) {
             Images.OptionalImage optionalImage = new Images.OptionalImage();
-            optionalImage.url = image.replaceFirst("s", "");
-            //optionalImage.url = "http://shop1.phinf.naver.net/20231205_176/1701755146110mAklL_JPEG/704920915873314_63287095.jpg";
+            //optionalImage.url = image.replaceFirst("s", "");
+            optionalImage.url = "http://shop1.phinf.naver.net/20231205_176/1701755146110mAklL_JPEG/704920915873314_63287095.jpg";
             this.images.optionalImages.add(optionalImage);
         }
     }
