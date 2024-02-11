@@ -1,6 +1,6 @@
 package com.toyproject.globalMarket.controller;
 
-import com.toyproject.globalMarket.DTO.category.CateogryNaverDTO;
+import com.toyproject.globalMarket.DTO.category.CategoryNaverDTO;
 import com.toyproject.globalMarket.configuration.platform.Naver;
 import com.toyproject.globalMarket.libs.BaseObject;
 import com.toyproject.globalMarket.service.category.CategoryService;
@@ -20,8 +20,13 @@ import java.util.Map;
 @RequestMapping("/categories")
 public class CategoriesController extends BaseObject {
 
-    protected CategoriesController() {
+    private final CategoryService categoryService;
+
+
+    @Autowired
+    protected CategoriesController(CategoryService categoryService) {
         super("CategoriesController", 0);
+        this.categoryService = categoryService;
     }
 
     @Autowired
@@ -30,8 +35,7 @@ public class CategoriesController extends BaseObject {
     @GetMapping("/naver")
     public ResponseEntity<Map<String, List<String>>> Naver (HttpServletRequest request) {
         Map<String, List<String>> categoryNaver = new HashMap<>();
-        List <CateogryNaverDTO> categoryNaverDTOList = new ArrayList<CateogryNaverDTO>();
-        CategoryService categoryService = new CategoryService();
+        List <CategoryNaverDTO> categoryNaverDTOList = new ArrayList<CategoryNaverDTO>();
 
         int responseCode = 401;
         do {

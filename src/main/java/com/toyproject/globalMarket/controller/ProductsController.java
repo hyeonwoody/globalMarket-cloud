@@ -29,15 +29,16 @@ import java.util.stream.Collectors;
 public class ProductsController extends BaseObject {
     AuthConfig platform;
 
-    CategoryService categoryService;
+    public final CategoryService categoryService;
     ProductService productService;
 
 
     @Autowired
     Naver naver;
 
-    protected ProductsController() {
+    protected ProductsController(CategoryService categoryService) {
         super("ProductController", 0);
+        this.categoryService = categoryService;
     }
 
 
@@ -87,7 +88,6 @@ public class ProductsController extends BaseObject {
 
             if (productSource.areMembersNotNull()){
                 productService = new ProductService(productSource);
-                categoryService = new CategoryService();
                 productService.getNewProductInfo(productSource);
                 productSource.setLeafCategoryId(categoryService.findNaverLeafCategoryId (productSource.getCategory()));
                 switch (productSource.getPlatform()){

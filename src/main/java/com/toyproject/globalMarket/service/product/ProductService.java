@@ -46,10 +46,8 @@ public class ProductService extends BaseObject {
         String time = dateFormat.format(now);
         productRegisterVO.setCurrentTime (time);
 
-        //product.setDTO("50002628");
-        product.setTime (time);
-        //product.setImage (productRegisterVO.getImages());
-        //product.setDetailContent (productRegisterVO.getDetailContent());
+        product.setDTO(productRegisterVO);
+
 
 
         OkHttpClient client = new OkHttpClient();

@@ -4,6 +4,7 @@ import com.toyproject.globalMarket.DTO.product.Platform;
 import com.toyproject.globalMarket.DTO.product.platform.Naver;
 
 import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
+import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 import com.toyproject.globalMarket.libs.BaseObject;
 
 public class Product extends BaseObject {
@@ -24,22 +25,11 @@ public class Product extends BaseObject {
     public void setDTO(String leafCategoryId){
         this.platform.setDTO(leafCategoryId);
     }
-    public void setDTO(Object object){
+    public void setDTO(ProductRegisterVO object){
         this.platform.setDTO(object);
     }
     public Object getDTO(){
         return this.platform;
     }
 
-    public void setTime(String time) {
-        this.platform.setTime(time);
-    }
-
-    public void setImage(Images images) {
-        this.platform.setImage(images);
-    }
-
-    public void setDetailContent(String detailContent) {
-        this.platform.setDetailContent(detailContent);
-    }
 }

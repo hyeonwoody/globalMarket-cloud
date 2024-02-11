@@ -7,6 +7,7 @@ import com.toyproject.globalMarket.DTO.product.platform.naver.Bag;
 import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
 import com.toyproject.globalMarket.DTO.product.platform.naver.OriginProduct;
 import com.toyproject.globalMarket.DTO.product.platform.naver.ProductInfoProvidedNotice;
+import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 import com.toyproject.globalMarket.libs.BaseObject;
 
 import java.awt.*;
@@ -35,8 +36,18 @@ public class Naver extends BaseObject implements Platform  {
 
 
     @Override
-    public void setDTO(Object object) {
-        this.originProduct = (OriginProduct) object;
+    public void setDTO(ProductRegisterVO object) {
+
+        this.originProduct.setLeafCategoryId(object.getLeafCategoryId());
+        this.originProduct.setName(object.getName());
+        this.originProduct.setDetailContent(object.getDetailContent());
+        this.originProduct.setSalePrice(object.getSalePrice());
+        this.originProduct.setStockQuantity(object.getSaleQuantity());
+        this.originProduct.setImages(object.getImages());
+        this.originProduct.setSaleStartDate(object.getSaleStartDate());
+
+        this.originProduct.getDetailAttribute().productInfoProvidedNotice = new ProductInfoProvidedNotice();
+
     }
     @Override
     public void setDTO(String leafCategoryId){
@@ -58,20 +69,9 @@ public class Naver extends BaseObject implements Platform  {
         this.originProduct.getDetailAttribute().productInfoProvidedNotice.bag.caution = "ff";
     }
 
-
-    public void setLeafCategoryId (String leafCategoryId){
-        this.originProduct.setLeafCategoryId(leafCategoryId);
-    }
-
-    public void setTime (String time){
-        this.originProduct.setSaleStartDate(time);
-    }
     public void setImage (Images image){
         this.originProduct.setImages(image);
     }
 
-    @Override
-    public void setDetailContent(String detailContent) {
-        this.originProduct.setDetailContent(detailContent);
-    }
+
 }
