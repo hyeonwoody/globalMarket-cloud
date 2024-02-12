@@ -12,7 +12,6 @@ public class DetailAttribute{
         this.originAreaInfo = new OriginAreaInfo();
 
         this.seoInfo = new SeoInfo();
-
     }
     public NaverShoppingSearchInfo naverShoppingSearchInfo;
     public class NaverShoppingSearchInfo{
@@ -111,12 +110,6 @@ public class DetailAttribute{
     public ArrayList<ProductCertificationInfo> productCertificationInfos;
 
     public CertificationTargetExcludeContent certificationTargetExcludeContent;
-    public class CertificationTargetExcludeContent{
-        public boolean childCertifiedProductExclusionYn;
-        public String kcExemptionType;
-        public String kcCertifiedProductExclusionYn;
-        public boolean greenCertifiedProductExclusionYn;
-    }
 
     public String sellerCommentContent;
     public boolean sellerCommentUsable;

@@ -3,6 +3,8 @@ package com.toyproject.globalMarket.DTO.product.platform.naver;
 import lombok.Setter;
 
 @Setter
-public class FashionItems extends BaseProduct{
-    public String type;
+public class Etc extends BaseProduct{
+    public String itemName;
+    public String modelName;
+
 }

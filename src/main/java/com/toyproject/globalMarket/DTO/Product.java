@@ -22,9 +22,6 @@ public class Product extends BaseObject {
                 break;
         }
     }
-    public void setDTO(String leafCategoryId){
-        this.platform.setDTO(leafCategoryId);
-    }
     public void setDTO(ProductRegisterVO object){
         this.platform.setDTO(object);
     }

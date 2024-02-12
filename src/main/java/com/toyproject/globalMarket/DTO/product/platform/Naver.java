@@ -48,6 +48,8 @@ public class Naver extends BaseObject implements Platform  {
         String[] productCategory = object.getCategory();
 
 
+
+
         BaseProduct product;
         switch (productCategory[0]) {
             case "패션의류":
@@ -57,9 +59,9 @@ public class Naver extends BaseObject implements Platform  {
                 product.setMaterial("가죽");
                 product.setColor("검정");
                 product.setSize("FREE");
-                product.setManufacturer("마음");
+                product.setManufacturer("제조자");
                 ((Wear) product).setPackDate ("2010-12");
-                product.setCaution("f");
+                product.setCaution("없음");
                 break;
             case "패션잡화":
                 if (productCategory[1].contains("신발")) {
@@ -68,17 +70,23 @@ public class Naver extends BaseObject implements Platform  {
                     this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = ProductInfoProvidedNotice.ProductCategory.BAG.name();
                     this.originProduct.getDetailAttribute().productInfoProvidedNotice.bag = new Bag();
                     product = this.originProduct.getDetailAttribute().productInfoProvidedNotice.bag;
-                    ((Bag) product).setType("");
-                    ((Bag) product).setType("");
-                    product.setMaterial("");
-                    product.setColor("");
-                    product.setSize("");
-                    product.setManufacturer("");
-                    product.setCaution("");
+                    ((Bag) product).setType("가방");
+                    product.setMaterial("가죽");
+                    product.setColor("검정");
+                    product.setSize("FREE");
+                    product.setManufacturer("제조자");
+                    product.setCaution("없음");
                 } else if (productCategory[1].contains("주얼리")) {
                     this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = ProductInfoProvidedNotice.ProductCategory.JEWELLERY.name();
                 } else {
                     this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = ProductInfoProvidedNotice.ProductCategory.FASHION_ITEMS.name();
+                    this.originProduct.getDetailAttribute().productInfoProvidedNotice.fashionItems = new FashionItems();
+                    product = this.originProduct.getDetailAttribute().productInfoProvidedNotice.fashionItems;
+                    ((FashionItems) product).setType("가방");
+                    product.setMaterial("가죽");
+                    product.setSize("FREE");
+                    product.setManufacturer("제조자");
+                    product.setCaution("없음");
                 }
                 break;
             case "가구/인테리어":
@@ -103,10 +111,7 @@ public class Naver extends BaseObject implements Platform  {
                     this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = ProductInfoProvidedNotice.ProductCategory.OFFICE_APPLIANCES.name();
                 }
                 else if (productCategory[1].contains("카메라")){
-                    ProductCertificationInfo productCertificationInfo = new ProductCertificationInfo();
-                    productCertificationInfo.setCertificationKindType("ETC");
-                    this.originProduct.getDetailAttribute().productCertificationInfos = new ArrayList<ProductCertificationInfo>();
-                    this.originProduct.getDetailAttribute().productCertificationInfos.add (productCertificationInfo);
+
 
                     this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = ProductInfoProvidedNotice.ProductCategory.OPTICS_APPLIANCES.name();
                     this.originProduct.getDetailAttribute().productInfoProvidedNotice.opticsAppliances = new OpticsAppliances();
@@ -132,6 +137,15 @@ public class Naver extends BaseObject implements Platform  {
                 else if (productCategory[1].contains("자동차")){
                     this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = ProductInfoProvidedNotice.ProductCategory.CAR_ARTICLES.name();
                 }
+                else {
+
+                    this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = ProductInfoProvidedNotice.ProductCategory.ETC.name();
+                    this.originProduct.getDetailAttribute().productInfoProvidedNotice.etc = new Etc();
+                    product = this.originProduct.getDetailAttribute().productInfoProvidedNotice.etc;
+                    ((Etc) product).setItemName("이름");
+                    ((Etc) product).setModelName("모델명");
+                    product.setManufacturer("제조자");
+                }
                 break;
             case "생활/건강":
                 if (productCategory[1].contains("자동차")){
@@ -145,6 +159,30 @@ public class Naver extends BaseObject implements Platform  {
                 }
                 else if (productCategory[1].contains("주방용품")){
                     this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = ProductInfoProvidedNotice.ProductCategory.KITCHEN_UTENSILS.name();
+                }
+                else if (productCategory[1].contains("생활용품")){
+//                    ProductCertificationInfo productCertificationInfo = new ProductCertificationInfo();
+//                    productCertificationInfo.setCertificationKindType("OVERSEAS");
+//                    this.originProduct.getDetailAttribute().productCertificationInfos = new ArrayList<ProductCertificationInfo>();
+//                    this.originProduct.getDetailAttribute().productCertificationInfos.add (productCertificationInfo);
+//                    this.originProduct.getDetailAttribute().certificationTargetExcludeContent = new CertificationTargetExcludeContent();
+//                    this.originProduct.getDetailAttribute().certificationTargetExcludeContent.setKcExemptionType("OVERSEAS");
+//                    this.originProduct.getDetailAttribute().certificationTargetExcludeContent.setKcCertifiedProductExclusionYn("KC_EXEMPTION_OBJECT");
+
+                    this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = ProductInfoProvidedNotice.ProductCategory.ETC.name();
+                    this.originProduct.getDetailAttribute().productInfoProvidedNotice.etc = new Etc();
+                    product = this.originProduct.getDetailAttribute().productInfoProvidedNotice.etc;
+                    ((Etc) product).setItemName("이름");
+                    ((Etc) product).setModelName("모델명");
+                    product.setManufacturer("제조자");
+                }
+                else {
+                    this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = ProductInfoProvidedNotice.ProductCategory.ETC.name();
+                    this.originProduct.getDetailAttribute().productInfoProvidedNotice.etc = new Etc();
+                    product = this.originProduct.getDetailAttribute().productInfoProvidedNotice.etc;
+                    ((Etc) product).setItemName("이름");
+                    ((Etc) product).setModelName("모델명");
+                    product.setManufacturer("제조자");
                 }
                 break;
             case "화장품/미용":
@@ -166,29 +204,14 @@ public class Naver extends BaseObject implements Platform  {
                 break;
             default:
                 this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = ProductInfoProvidedNotice.ProductCategory.ETC.name();
-                // Handle unknown category if necessary
+                this.originProduct.getDetailAttribute().productInfoProvidedNotice.etc = new Etc();
+                product = this.originProduct.getDetailAttribute().productInfoProvidedNotice.etc;
+                ((Etc) product).setItemName("이름");
+                ((Etc) product).setModelName("모델명");
+                product.setManufacturer("제조자");
                 break;
         }
 
-    }
-    @Override
-    public void setDTO(String leafCategoryId){
-        this.originProduct.setLeafCategoryId(leafCategoryId);
-        this.originProduct.setName (leafCategoryId);
-        this.originProduct.setDetailContent("ffffsd");
-        this.originProduct.setSalePrice(2220);
-        this.originProduct.setStockQuantity(99999999);
-        this.originProduct.getDetailAttribute().productInfoProvidedNotice = new ProductInfoProvidedNotice();
-        this.originProduct.getDetailAttribute().productInfoProvidedNotice.bag = new Bag();
-        this.originProduct.getDetailAttribute().productInfoProvidedNotice.bag.material = "ff";
-        this.originProduct.getDetailAttribute().productInfoProvidedNotice.bag.type = "ff";
-        this.originProduct.getDetailAttribute().productInfoProvidedNotice.bag.color = "ff";
-        this.originProduct.getDetailAttribute().productInfoProvidedNotice.bag.size = "ff";
-        this.originProduct.getDetailAttribute().productInfoProvidedNotice.bag.warrantyPolicy = "ff";
-        this.originProduct.getDetailAttribute().productInfoProvidedNotice.bag.manufacturer = "ff";
-        this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = "BAG";
-        this.originProduct.getDetailAttribute().productInfoProvidedNotice.bag.afterServiceDirector = "ff";
-        this.originProduct.getDetailAttribute().productInfoProvidedNotice.bag.caution = "ff";
     }
 
     public void setImage (Images image){

@@ -81,19 +81,18 @@ public class ProductService extends BaseObject {
 
     public int getNewProductInfo (ProductRegisterVO productRegisterVO){
         StoreInterface store = null;
-        if (productRegisterVO.getUrl().contains("aliexpress")){
-            LogOutput(LOG_LEVEL.INFO, this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 0, "aaaREGISTER: " + "HERE");
-            store = new AliExpress();
-        }
-
-        if (store != null){
-            try {
-                store.getProductInfo(productRegisterVO);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            if (productRegisterVO.getUrl().contains("aliexpress")){
+                LogOutput(LOG_LEVEL.INFO, this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 0, "aaaREGISTER: " + "HERE");
+                store = new AliExpress();
             }
-        }
 
+            if (store != null){
+                try {
+                    store.getProductInfo(productRegisterVO);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         return 0;
     }
 }

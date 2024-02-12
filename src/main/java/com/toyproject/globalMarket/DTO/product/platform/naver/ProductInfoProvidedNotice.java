@@ -84,5 +84,5 @@ public class ProductInfoProvidedNotice{
 //    public Biochemistry biochemistry;
 //    public Biocidal biocidal;
 //    public CellPhone cellPhone;
-//    public Etc etc;
+    public Etc etc;
 }

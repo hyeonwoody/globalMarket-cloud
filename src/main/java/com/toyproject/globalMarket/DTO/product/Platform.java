@@ -11,5 +11,4 @@ public interface Platform {
 
     abstract void setDTO(ProductRegisterVO object);
 
-    void setDTO(String leafCategoryId);
 }
