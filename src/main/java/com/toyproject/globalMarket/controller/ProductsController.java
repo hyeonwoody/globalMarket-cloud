@@ -88,8 +88,8 @@ public class ProductsController extends BaseObject {
 
             if (productSource.areMembersNotNull()){
                 productService = new ProductService(productSource);
+                categoryService.getNewCategoryInfo(productSource);
                 productService.getNewProductInfo(productSource);
-                productSource.setLeafCategoryId(categoryService.findNaverLeafCategoryId (productSource.getCategory()));
                 switch (productSource.getPlatform()){
                     case 네이버:
                         platform = naver;

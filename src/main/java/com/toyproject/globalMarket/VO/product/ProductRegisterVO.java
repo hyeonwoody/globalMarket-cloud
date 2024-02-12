@@ -27,12 +27,13 @@ public class ProductRegisterVO {
     }
 
     private Platform platform;
+    private String wholeCategoryName;
     private String leafCategoryId;
     private String url;
     private String name;
     private String detailContent;
 
-    private String category;
+    private String[] category;
 
     private int salePrice;
     private int saleQuantity;

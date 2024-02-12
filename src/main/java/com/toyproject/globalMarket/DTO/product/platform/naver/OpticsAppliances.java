@@ -5,9 +5,7 @@ import lombok.Setter;
 
 
 @Setter
-public class Bag extends BaseProduct {
-
-        public String type;
-
-
+public class OpticsAppliances extends BaseElectronicProduct{
+    public String weight;
+    public String specification;
 }

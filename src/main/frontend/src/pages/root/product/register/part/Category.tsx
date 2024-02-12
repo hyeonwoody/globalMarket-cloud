@@ -6,17 +6,13 @@ import categoryButton from "./CategoryButton";
 
 interface CategoryProps{
     category: Map<string, string[]>,
-    callback: (result: string) => void
+    callback: (result: string, level : number) => void
 }
 function Category(props:CategoryProps) {
-    const [dropdown, setDropdown] = useState (false);
     const [buttonList, setButtonList] = useState<CategoryButtonProps[]>([]);
 
     const [currentLevel, setLevel] = useState<number>(0);
 
-    const toggleDropdown = () => {
-        setDropdown(!dropdown);
-    }
     const deleteButton = (level: number) => {
         console.log("DELETE")
         setButtonList((prevButton) => {
@@ -60,11 +56,7 @@ function Category(props:CategoryProps) {
             deleteButton (level+1);
             addNewButton(result, level);
         }
-        if (props.category.get(result) == undefined){
-            props.callback (result);
-        }
-        console.log("FINAL")
-        console.log(buttonList)
+        props.callback (result, level);
     }
 
 

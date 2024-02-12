@@ -10,6 +10,7 @@ public class DetailAttribute{
         this.minorPurchasable = true;
 
         this.originAreaInfo = new OriginAreaInfo();
+
         this.seoInfo = new SeoInfo();
 
     }
@@ -108,15 +109,7 @@ public class DetailAttribute{
     public String validDate;
     public String taxType;
     public ArrayList<ProductCertificationInfo> productCertificationInfos;
-    public class ProductCertificationInfo{
-        public int certificationInfoId;
-        public String certificationKindType;
-        public String name;
-        public String certificationNumber;
-        public boolean certificationMark;
-        public String companyName;
-        public String certificationDate;
-    }
+
     public CertificationTargetExcludeContent certificationTargetExcludeContent;
     public class CertificationTargetExcludeContent{
         public boolean childCertifiedProductExclusionYn;

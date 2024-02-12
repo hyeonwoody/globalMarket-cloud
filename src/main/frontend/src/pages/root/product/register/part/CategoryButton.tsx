@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 
 
 export interface CategoryButtonProps{
@@ -11,6 +11,7 @@ function CategoryButton(props:CategoryButtonProps) {
     const [dropdown, setDropdown] = useState (false);
 
     console.log(props.category);
+
 
     const toggleDropdown = () => {
         setDropdown(!dropdown);

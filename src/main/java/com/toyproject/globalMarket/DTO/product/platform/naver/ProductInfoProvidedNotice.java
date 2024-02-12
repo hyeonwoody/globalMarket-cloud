@@ -1,5 +1,10 @@
 package com.toyproject.globalMarket.DTO.product.platform.naver;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class ProductInfoProvidedNotice{
 
     public enum ProductCategory {
@@ -45,17 +50,17 @@ public class ProductInfoProvidedNotice{
         ETC
     }
     public String productInfoProvidedNoticeType;
-//    public Wear wear;
-//    public Shoes shoes;
+    public Wear wear;
+    public Shoes shoes;
     public Bag bag;
     public FashionItems fashionItems;
-//    public SleepingGear sleepingGear;
+    public SleepingGear sleepingGear;
     public Furniture furniture;
-//    public ImageAppliances imageAppliances;
+    public ImageAppliances imageAppliances;
 //    public HomeAppliances homeAppliances;
 //    public SeasonAppliances seasonAppliances;
     public OfficeAppliances officeAppliances;
-//    public OpticsAppliances opticsAppliances;
+    public OpticsAppliances opticsAppliances;
 //    public MicroElectronics microElectronics;
 //    public Navigation navigation;
 //    public CarArticles carArticles;

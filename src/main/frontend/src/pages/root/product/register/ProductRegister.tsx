@@ -11,7 +11,7 @@ import category from "./part/Category";
 const ProductRegister: React.FC = () => {
     const [category, setCategory] = useState(new Map<string, string[]>());
     const [input, setInput] = useState<RegisterState>({
-        category: "",
+        category: [],
         salePrice: 0,
         stockQuantity: 0,
         platform: 0, detailContent: "", name: "", url: ""
@@ -29,12 +29,25 @@ const ProductRegister: React.FC = () => {
         setDropdown(!dropdown);
     }
 
-    const categoryCallback = (result : string) => {
-        setInput((prevInput) => ({
-            ...prevInput,
-            ["category"]: result,
-        }));
-        console.log ("category: "+ input.category);
+    const categoryCallback = (result : string, level : number) => {
+        if (level < input.category.length){
+            setInput((prevInput) => ({
+                ...prevInput,
+                category: prevInput.category.map((value, index) => index === level ? result : value),
+            }));
+        }
+        else {
+            setInput((prevInput) => ({
+                ...prevInput,
+                category: [...prevInput.category, result],
+            }));
+        }
+        if (category.get(result) == undefined){
+            setInput((prevInput) => ({
+                ...prevInput,
+                category: prevInput.category.slice(0, level+1),
+            }));
+        }
     }
 
     const handleOption = (result : number) => {

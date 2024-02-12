@@ -3,6 +3,7 @@ package com.toyproject.globalMarket.service.category;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toyproject.globalMarket.DTO.category.CategoryNaverDTO;
+import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 import com.toyproject.globalMarket.entity.CategoryNaverEntity;
 import com.toyproject.globalMarket.libs.BaseObject;
 import com.toyproject.globalMarket.repository.CategoryRepository;
@@ -89,6 +90,19 @@ public class CategoryService extends BaseObject {
                 return cateogryNaverDTO.getId();
         }
         return "50000000";
+    }
+
+    public void getNewCategoryInfo(ProductRegisterVO productSource) {
+        if (m_cateogryNaverDTOList == null)
+            m_cateogryNaverDTOList = categoryRepository.getCategoryNaverList();
+        if (!m_cateogryNaverDTOList.isEmpty()) {
+            for (CategoryNaverDTO categoryNaverDTO :m_cateogryNaverDTOList){
+                if (categoryNaverDTO.getWholeCategoryName().equals(String.join(">", productSource.getCategory()))){
+                    productSource.setWholeCategoryName(categoryNaverDTO.getWholeCategoryName());
+                    productSource.setLeafCategoryId(categoryNaverDTO.getId());
+                }
+            }
+        }
     }
 }
 
