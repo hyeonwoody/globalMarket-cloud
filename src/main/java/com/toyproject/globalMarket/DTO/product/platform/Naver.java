@@ -52,15 +52,14 @@ public class Naver extends BaseObject implements Platform  {
         switch (productCategory[0]) {
             case "패션의류":
                 this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = ProductInfoProvidedNotice.ProductCategory.WEAR.name();
-                this.originProduct.getDetailAttribute().productInfoProvidedNotice.bag = new Bag();
-                product = this.originProduct.getDetailAttribute().productInfoProvidedNotice.bag;
-                ((Bag) product).setType("");
-                ((Bag) product).setType("");
-                product.setMaterial("");
-                product.setColor("");
-                product.setSize("");
-                product.setManufacturer("");
-                product.setCaution("");
+                this.originProduct.getDetailAttribute().productInfoProvidedNotice.wear = new Wear();
+                product = this.originProduct.getDetailAttribute().productInfoProvidedNotice.wear;
+                product.setMaterial("가죽");
+                product.setColor("검정");
+                product.setSize("FREE");
+                product.setManufacturer("마음");
+                ((Wear) product).setPackDate ("2010-12");
+                product.setCaution("f");
                 break;
             case "패션잡화":
                 if (productCategory[1].contains("신발")) {
