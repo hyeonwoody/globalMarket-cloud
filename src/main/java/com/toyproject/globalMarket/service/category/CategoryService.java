@@ -22,11 +22,11 @@ import java.util.Map;
 @Service
 public class CategoryService extends BaseObject {
     private static int objectId = 0;
-    private static List <CategoryNaverDTO> m_cateogryNaverDTOList;
+    private static List <CategoryNaverDTO> m_categoryNaverDTOList;
     private final CategoryRepository categoryRepository;
 
     public static List<CategoryNaverDTO> getCateogryNaverDTOList() {
-        return m_cateogryNaverDTOList;
+        return m_categoryNaverDTOList;
     }
 
     public CategoryService(CategoryRepository categoryRepository) {
@@ -34,35 +34,40 @@ public class CategoryService extends BaseObject {
         this.categoryRepository = categoryRepository;
     }
 
-    public int getCategoryNaver(List<CategoryNaverDTO> cateogryNaverDTOList, String accessToken) {
+    public int getCategoryNaverDB (List<CategoryNaverDTO> categoryNaverDTOList){
+        m_categoryNaverDTOList = categoryRepository.getCategoryNaverList();
+        categoryNaverDTOList.addAll(m_categoryNaverDTOList);
+        return 0;
+    }
+
+    public int getCategoryNaverAPI(List<CategoryNaverDTO> categoryNaverDTOList, String accessToken) throws IOException {
         OkHttpClient client = new OkHttpClient();
         int ret = 200;
 
-        if (m_cateogryNaverDTOList == null || m_cateogryNaverDTOList.isEmpty()) {
-            m_cateogryNaverDTOList = categoryRepository.getCategoryNaverList();
-//                Request request = new Request.Builder()
-//                        .url("https://api.commerce.naver.com/external/v1/categories?last=false")
-//                        .get()
-//                        .addHeader("Authorization", "Bearer " + accessToken)
-//                        .build();
-//                Response response = client.newCall(request).execute();
-//                ObjectMapper objectMapper = new ObjectMapper();
-//                m_cateogryNaverDTOList = new ArrayList<>();
-//                m_cateogryNaverDTOList.addAll(objectMapper.readValue(response.body().string(), new TypeReference<List<CategoryNaverDTO>>() {
-//                }));
-//                ret = response.code();
+        if (m_categoryNaverDTOList == null || m_categoryNaverDTOList.isEmpty()) {
+                Request request = new Request.Builder()
+                        .url("https://api.commerce.naver.com/external/v1/categories?last=false")
+                        .get()
+                        .addHeader("Authorization", "Bearer " + accessToken)
+                        .build();
+                Response response = client.newCall(request).execute();
+                ObjectMapper objectMapper = new ObjectMapper();
+                m_categoryNaverDTOList = new ArrayList<>();
+                m_categoryNaverDTOList.addAll(objectMapper.readValue(response.body().string(), new TypeReference<List<CategoryNaverDTO>>() {
+                }));
+                ret = response.code();
         }
         //categoryRepository.APItoSave(m_cateogryNaverDTOList);
 
 
-        cateogryNaverDTOList.addAll(m_cateogryNaverDTOList);
+        categoryNaverDTOList.addAll(m_categoryNaverDTOList);
         return ret;
 
 
     }
 
-    public int getNaverMap(Map<String, List<String>> categoryNaver) {
-        for (CategoryNaverDTO cateogryNaverDTO : m_cateogryNaverDTOList) {
+    public int getNaverMap(Map<String, List<String>> categoryNaver, List <CategoryNaverDTO> categoryNaverDTOList) {
+        for (CategoryNaverDTO cateogryNaverDTO : categoryNaverDTOList) {
             String[] ret = cateogryNaverDTO.getWholeCategoryName().split(">");
             String key = null;
             String value = null;
@@ -86,7 +91,7 @@ public class CategoryService extends BaseObject {
     }
 
     public String findNaverLeafCategoryId(String category) {
-        for (CategoryNaverDTO cateogryNaverDTO : m_cateogryNaverDTOList){
+        for (CategoryNaverDTO cateogryNaverDTO : m_categoryNaverDTOList){
             if (category.equals(cateogryNaverDTO.getName()))
                 return cateogryNaverDTO.getId();
         }
@@ -94,10 +99,10 @@ public class CategoryService extends BaseObject {
     }
 
     public void getNewCategoryInfo(ProductRegisterVO productSource) {
-        if (m_cateogryNaverDTOList == null)
-            m_cateogryNaverDTOList = categoryRepository.getCategoryNaverList();
-        if (!m_cateogryNaverDTOList.isEmpty()) {
-            for (CategoryNaverDTO categoryNaverDTO :m_cateogryNaverDTOList){
+        if (m_categoryNaverDTOList == null)
+            m_categoryNaverDTOList = categoryRepository.getCategoryNaverList();
+        if (!m_categoryNaverDTOList.isEmpty()) {
+            for (CategoryNaverDTO categoryNaverDTO :m_categoryNaverDTOList){
                 if (categoryNaverDTO.getWholeCategoryName().equals(String.join(">", productSource.getCategory()))){
                     productSource.setWholeCategoryName(categoryNaverDTO.getWholeCategoryName());
                     productSource.setLeafCategoryId(categoryNaverDTO.getId());
@@ -106,49 +111,49 @@ public class CategoryService extends BaseObject {
         }
     }
 
-    public void getAdditionalInfo(ProductRegisterVO productSource) {
+    public void getAdditionalInfoList(ProductRegisterVO productSource) {
         String[] productCategory = productSource.getCategory();
+        productSource.setAdditionalInfoList(new ArrayList<>());
         switch (productCategory[0]) {
             case "패션의류":
-                productSource.setAdditionalInfo(new ArrayList<>());
-                productSource.getAdditionalInfo().add("제품 소재");
-                productSource.getAdditionalInfo().add("색상");
-                productSource.getAdditionalInfo().add("치수");
-                productSource.getAdditionalInfo().add("제조사");
-                productSource.getAdditionalInfo().add("세탁 방법 및 취급 시 주의사항");
-                productSource.getAdditionalInfo().add("제조연월 : YYYY-MM");
+                productSource.getAdditionalInfoList().add("제품 소재");
+                productSource.getAdditionalInfoList().add("색상");
+                productSource.getAdditionalInfoList().add("치수");
+                productSource.getAdditionalInfoList().add("제조사");
+                productSource.getAdditionalInfoList().add("세탁 방법 및 취급 시 주의사항");
+                productSource.getAdditionalInfoList().add("제조연월 : YYYY-MM");
                 break;
             case "패션잡화":
                 if (productCategory[1].contains("신발")) {
-                    productSource.getAdditionalInfo().add("제품 소재");
-                    productSource.getAdditionalInfo().add("색상");
-                    productSource.getAdditionalInfo().add("치수");
-                    productSource.getAdditionalInfo().add("제조사");
-                    productSource.getAdditionalInfo().add("세탁 방법 및 취급 시 주의사항");
+                    productSource.getAdditionalInfoList().add("제품 소재");
+                    productSource.getAdditionalInfoList().add("색상");
+                    productSource.getAdditionalInfoList().add("치수");
+                    productSource.getAdditionalInfoList().add("제조사");
+                    productSource.getAdditionalInfoList().add("세탁 방법 및 취급 시 주의사항");
 
                 } else if (productCategory[1].contains("가방")) {
-                    productSource.getAdditionalInfo().add("제품 소재");
-                    productSource.getAdditionalInfo().add("색상");
-                    productSource.getAdditionalInfo().add("치수");
-                    productSource.getAdditionalInfo().add("제조사");
-                    productSource.getAdditionalInfo().add("세탁 방법 및 취급 시 주의사항");
+                    productSource.getAdditionalInfoList().add("제품 소재");
+                    productSource.getAdditionalInfoList().add("색상");
+                    productSource.getAdditionalInfoList().add("치수");
+                    productSource.getAdditionalInfoList().add("제조사");
+                    productSource.getAdditionalInfoList().add("세탁 방법 및 취급 시 주의사항");
                 } else if (productCategory[1].contains("주얼리")) {
 
-                    productSource.getAdditionalInfo().add("소재");
-                    productSource.getAdditionalInfo().add("순도");
-                    productSource.getAdditionalInfo().add("중량");
-                    productSource.getAdditionalInfo().add("제조사");
-                    productSource.getAdditionalInfo().add("치수");
-                    productSource.getAdditionalInfo().add("착용 시 주의사항");
-                    productSource.getAdditionalInfo().add("주요 사양");
-                    productSource.getAdditionalInfo().add("보증서 제공 여부");
-                    productSource.getAdditionalInfo().add("착용 시 주의사항");
+                    productSource.getAdditionalInfoList().add("소재");
+                    productSource.getAdditionalInfoList().add("순도");
+                    productSource.getAdditionalInfoList().add("중량");
+                    productSource.getAdditionalInfoList().add("제조사");
+                    productSource.getAdditionalInfoList().add("치수");
+                    productSource.getAdditionalInfoList().add("착용 시 주의사항");
+                    productSource.getAdditionalInfoList().add("주요 사양");
+                    productSource.getAdditionalInfoList().add("보증서 제공 여부");
+                    productSource.getAdditionalInfoList().add("착용 시 주의사항");
                 } else {
-                    productSource.getAdditionalInfo().add("종류");
-                    productSource.getAdditionalInfo().add("소재");
-                    productSource.getAdditionalInfo().add("치수");
-                    productSource.getAdditionalInfo().add("제조사");
-                    productSource.getAdditionalInfo().add("취급 시 주의사항");
+                    productSource.getAdditionalInfoList().add("종류");
+                    productSource.getAdditionalInfoList().add("소재");
+                    productSource.getAdditionalInfoList().add("치수");
+                    productSource.getAdditionalInfoList().add("제조사");
+                    productSource.getAdditionalInfoList().add("취급 시 주의사항");
                 }
                 break;
             case "가구/인테리어":
@@ -220,7 +225,9 @@ public class CategoryService extends BaseObject {
 
                 }
                 else {
-
+                    productSource.getAdditionalInfoList().add("아이템 이름");
+                    productSource.getAdditionalInfoList().add("모델명");
+                    productSource.getAdditionalInfoList().add("제조사");
                 }
                 break;
             case "화장품/미용":

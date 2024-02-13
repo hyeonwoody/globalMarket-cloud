@@ -56,7 +56,7 @@ public class ProductsController extends BaseObject {
 
 
             LogOutput(LOG_LEVEL.DEBUG, ObjectName(), MethodName(), 0, " productSource :  {0}", productSource.toString());
-            categoryService.getAdditionalInfo(productSource);
+            categoryService.getAdditionalInfoList(productSource);
             productService = new ProductService(productSource);
             productService.getNewProductInfo(productSource);
         } catch (JsonMappingException e) {
@@ -78,10 +78,8 @@ public class ProductsController extends BaseObject {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
             String requestBody = reader.lines().collect(Collectors.joining(System.lineSeparator()));
-            //LogOutput(LOG_LEVEL.DEBUG, ObjectName(), MethodName(), 0, requestBody);
             ObjectMapper objectMapper = new ObjectMapper();
             productSource = objectMapper.readValue(requestBody, ProductRegisterVO.class);
-            LogOutput(LOG_LEVEL.DEBUG, ObjectName(),MethodName(),0, " productRegister detailContent:  {0}", productSource.getDetailContent());
 
             if (productSource.areMembersNotNull()){
                 productService = new ProductService(productSource);

@@ -54,7 +54,7 @@ public class Naver extends BaseObject implements Platform  {
         switch (productCategory[0]) {
             case "패션의류":
                 this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = ProductInfoProvidedNotice.ProductCategory.WEAR.name();
-                this.originProduct.getDetailAttribute().productInfoProvidedNotice.wear = new Wear(object.getAdditionalInfo());
+                this.originProduct.getDetailAttribute().productInfoProvidedNotice.wear = new Wear(object.getAdditionalInfoList());
                 break;
             case "패션잡화":
                 if (productCategory[1].contains("신발")) {
@@ -104,8 +104,6 @@ public class Naver extends BaseObject implements Platform  {
                     this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = ProductInfoProvidedNotice.ProductCategory.OFFICE_APPLIANCES.name();
                 }
                 else if (productCategory[1].contains("카메라")){
-
-
                     this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = ProductInfoProvidedNotice.ProductCategory.OPTICS_APPLIANCES.name();
                     this.originProduct.getDetailAttribute().productInfoProvidedNotice.opticsAppliances = new OpticsAppliances();
                     product = this.originProduct.getDetailAttribute().productInfoProvidedNotice.opticsAppliances;
@@ -116,7 +114,6 @@ public class Naver extends BaseObject implements Platform  {
                     product.setSize("");
                     ((OpticsAppliances) product).setWeight("");
                     ((OpticsAppliances) product).setSpecification("");
-                    
                 }
                 else if (productCategory[2].contains("MP3") || productCategory[2].contains("PMP")){
                     this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = ProductInfoProvidedNotice.ProductCategory.MICROELECTRONICS.name();
@@ -131,13 +128,8 @@ public class Naver extends BaseObject implements Platform  {
                     this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = ProductInfoProvidedNotice.ProductCategory.CAR_ARTICLES.name();
                 }
                 else {
-
                     this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = ProductInfoProvidedNotice.ProductCategory.ETC.name();
-                    this.originProduct.getDetailAttribute().productInfoProvidedNotice.etc = new Etc();
-                    product = this.originProduct.getDetailAttribute().productInfoProvidedNotice.etc;
-                    ((Etc) product).setItemName("이름");
-                    ((Etc) product).setModelName("모델명");
-                    product.setManufacturer("제조자");
+                    this.originProduct.getDetailAttribute().productInfoProvidedNotice.etc = new Etc(object.getAdditionalInfoList());
                 }
                 break;
             case "생활/건강":
@@ -163,19 +155,13 @@ public class Naver extends BaseObject implements Platform  {
 //                    this.originProduct.getDetailAttribute().certificationTargetExcludeContent.setKcCertifiedProductExclusionYn("KC_EXEMPTION_OBJECT");
 
                     this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = ProductInfoProvidedNotice.ProductCategory.ETC.name();
-                    this.originProduct.getDetailAttribute().productInfoProvidedNotice.etc = new Etc();
-                    product = this.originProduct.getDetailAttribute().productInfoProvidedNotice.etc;
-                    ((Etc) product).setItemName("이름");
-                    ((Etc) product).setModelName("모델명");
-                    product.setManufacturer("제조자");
+                    this.originProduct.getDetailAttribute().productInfoProvidedNotice.etc = new Etc(object.getAdditionalInfoList());
+
                 }
                 else {
                     this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = ProductInfoProvidedNotice.ProductCategory.ETC.name();
-                    this.originProduct.getDetailAttribute().productInfoProvidedNotice.etc = new Etc();
-                    product = this.originProduct.getDetailAttribute().productInfoProvidedNotice.etc;
-                    ((Etc) product).setItemName("이름");
-                    ((Etc) product).setModelName("모델명");
-                    product.setManufacturer("제조자");
+                    this.originProduct.getDetailAttribute().productInfoProvidedNotice.etc = new Etc(object.getAdditionalInfoList());
+
                 }
                 break;
             case "화장품/미용":
@@ -197,11 +183,7 @@ public class Naver extends BaseObject implements Platform  {
                 break;
             default:
                 this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = ProductInfoProvidedNotice.ProductCategory.ETC.name();
-                this.originProduct.getDetailAttribute().productInfoProvidedNotice.etc = new Etc();
-                product = this.originProduct.getDetailAttribute().productInfoProvidedNotice.etc;
-                ((Etc) product).setItemName("이름");
-                ((Etc) product).setModelName("모델명");
-                product.setManufacturer("제조자");
+                this.originProduct.getDetailAttribute().productInfoProvidedNotice.etc = new Etc(object.getAdditionalInfoList());
                 break;
         }
 

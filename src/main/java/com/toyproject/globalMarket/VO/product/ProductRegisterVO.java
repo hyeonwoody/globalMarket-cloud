@@ -34,7 +34,7 @@ public class ProductRegisterVO {
     private String detailContent;
 
     private String[] category;
-    private List<String> additionalInfo;
+    private List<String> additionalInfoList;
 
     private int salePrice;
     private int saleQuantity;
@@ -43,7 +43,7 @@ public class ProductRegisterVO {
 
     public void setImages(List<String> imageList) {
         this.images = new Images();
-        this.images.representativeImage.url = imageList.get(0).replaceFirst("s", "");
+        //this.images.representativeImage.url = imageList.get(0).replaceFirst("s", "");
         this.images.representativeImage.url = "http://shop1.phinf.naver.net/20231205_176/1701755146110mAklL_JPEG/704920915873314_63287095.jpg";
         for (String image : imageList) {
             Images.OptionalImage optionalImage = new Images.OptionalImage();

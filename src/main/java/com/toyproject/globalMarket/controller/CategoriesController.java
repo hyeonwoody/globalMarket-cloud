@@ -39,11 +39,11 @@ public class CategoriesController extends BaseObject {
 
         int responseCode = 401;
         do {
-            responseCode = categoryService.getCategoryNaver(categoryNaverDTOList, naver.getOAuth());
+            responseCode = categoryService.getCategoryNaverDB(categoryNaverDTOList);
         } while (responseCode == 401);
 
         do {
-            responseCode = categoryService.getNaverMap(categoryNaver);
+            responseCode = categoryService.getNaverMap(categoryNaver, categoryNaverDTOList);
         }while (responseCode == 401);
 
         return ResponseEntity.ok(categoryNaver);
