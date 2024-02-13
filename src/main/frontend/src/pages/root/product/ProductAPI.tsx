@@ -5,12 +5,13 @@ const my = new My();
 
 export interface RegisterState {
     platform : Platform,
-    category: string[],
+    category : string[],
     url : string,
     name : string,
     detailContent : string
     salePrice : number,
     stockQuantity : number
+    additionalInfo : string[]
 }
 export function ProductAxios(resultCallback: (data: any) => void, type : string, data : RegisterState) {
     console.log ("Axios"+data);

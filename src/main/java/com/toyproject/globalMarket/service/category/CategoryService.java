@@ -3,6 +3,7 @@ package com.toyproject.globalMarket.service.category;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toyproject.globalMarket.DTO.category.CategoryNaverDTO;
+import com.toyproject.globalMarket.DTO.product.platform.naver.*;
 import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 import com.toyproject.globalMarket.entity.CategoryNaverEntity;
 import com.toyproject.globalMarket.libs.BaseObject;
@@ -102,6 +103,145 @@ public class CategoryService extends BaseObject {
                     productSource.setLeafCategoryId(categoryNaverDTO.getId());
                 }
             }
+        }
+    }
+
+    public void getAdditionalInfo(ProductRegisterVO productSource) {
+        String[] productCategory = productSource.getCategory();
+        switch (productCategory[0]) {
+            case "패션의류":
+                productSource.setAdditionalInfo(new ArrayList<>());
+                productSource.getAdditionalInfo().add("제품 소재");
+                productSource.getAdditionalInfo().add("색상");
+                productSource.getAdditionalInfo().add("치수");
+                productSource.getAdditionalInfo().add("제조사");
+                productSource.getAdditionalInfo().add("세탁 방법 및 취급 시 주의사항");
+                productSource.getAdditionalInfo().add("제조연월 : YYYY-MM");
+                break;
+            case "패션잡화":
+                if (productCategory[1].contains("신발")) {
+                    productSource.getAdditionalInfo().add("제품 소재");
+                    productSource.getAdditionalInfo().add("색상");
+                    productSource.getAdditionalInfo().add("치수");
+                    productSource.getAdditionalInfo().add("제조사");
+                    productSource.getAdditionalInfo().add("세탁 방법 및 취급 시 주의사항");
+
+                } else if (productCategory[1].contains("가방")) {
+                    productSource.getAdditionalInfo().add("제품 소재");
+                    productSource.getAdditionalInfo().add("색상");
+                    productSource.getAdditionalInfo().add("치수");
+                    productSource.getAdditionalInfo().add("제조사");
+                    productSource.getAdditionalInfo().add("세탁 방법 및 취급 시 주의사항");
+                } else if (productCategory[1].contains("주얼리")) {
+
+                    productSource.getAdditionalInfo().add("소재");
+                    productSource.getAdditionalInfo().add("순도");
+                    productSource.getAdditionalInfo().add("중량");
+                    productSource.getAdditionalInfo().add("제조사");
+                    productSource.getAdditionalInfo().add("치수");
+                    productSource.getAdditionalInfo().add("착용 시 주의사항");
+                    productSource.getAdditionalInfo().add("주요 사양");
+                    productSource.getAdditionalInfo().add("보증서 제공 여부");
+                    productSource.getAdditionalInfo().add("착용 시 주의사항");
+                } else {
+                    productSource.getAdditionalInfo().add("종류");
+                    productSource.getAdditionalInfo().add("소재");
+                    productSource.getAdditionalInfo().add("치수");
+                    productSource.getAdditionalInfo().add("제조사");
+                    productSource.getAdditionalInfo().add("취급 시 주의사항");
+                }
+                break;
+            case "가구/인테리어":
+                if (productCategory[1].contains("침구") || productCategory[1].contains("솜류") || productCategory[1].contains("커튼/블라인드")) {
+
+                } else {
+
+                }
+                break;
+            case "디지털/가전":
+
+                if (productCategory[1].contains("영상가전")){
+
+                }
+                else if (productCategory[1].contains("주방가전") || productCategory[1].contains("생활가전")){
+
+                }
+                else if (productCategory[1].contains("계절가전")){
+
+                }
+                else if (productCategory[1].contains("PC") || productCategory[1].contains("노트북") || productCategory[1].contains("주변기기")){
+
+                }
+                else if (productCategory[1].contains("카메라")){
+
+
+
+
+                }
+                else if (productCategory[2].contains("MP3") || productCategory[2].contains("PMP")){
+
+                }
+                else if (productCategory[1].contains("휴대폰") || productCategory[1].contains("태블릿")){
+
+                }
+                else if (productCategory[2].contains("내비게이션")){
+
+                }
+                else if (productCategory[1].contains("자동차")){
+
+                }
+                else {
+
+
+                }
+                break;
+            case "생활/건강":
+                if (productCategory[1].contains("자동차")){
+
+                }
+                else if (productCategory[1].contains("악기")){
+
+                }
+                else if (productCategory[1].contains("의료") || productCategory[1].contains("재활")){
+
+                }
+                else if (productCategory[1].contains("주방용품")){
+
+                }
+                else if (productCategory[1].contains("생활용품")){
+//                    ProductCertificationInfo productCertificationInfo = new ProductCertificationInfo();
+//                    productCertificationInfo.setCertificationKindType("OVERSEAS");
+//                    this.originProduct.getDetailAttribute().productCertificationInfos = new ArrayList<ProductCertificationInfo>();
+//                    this.originProduct.getDetailAttribute().productCertificationInfos.add (productCertificationInfo);
+//                    this.originProduct.getDetailAttribute().certificationTargetExcludeContent = new CertificationTargetExcludeContent();
+//                    this.originProduct.getDetailAttribute().certificationTargetExcludeContent.setKcExemptionType("OVERSEAS");
+//                    this.originProduct.getDetailAttribute().certificationTargetExcludeContent.setKcCertifiedProductExclusionYn("KC_EXEMPTION_OBJECT");
+
+
+                }
+                else {
+
+                }
+                break;
+            case "화장품/미용":
+
+                break;
+            case "식품":
+                if (productCategory[1].contains("다이어트")){
+
+                }
+                else {
+
+                }
+                break;
+            case "스포츠/레저":
+
+                break;
+            case "도서":
+
+                break;
+            default:
+                break;
         }
     }
 }

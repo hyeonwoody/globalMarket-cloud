@@ -48,18 +48,15 @@ public class ProductsController extends BaseObject {
         ProductRegisterVO productSource = new ProductRegisterVO();
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
-            String requestBody = reader.lines().collect(Collectors.joining(System.lineSeparator()));
             String requestParamUrl = request.getParameter("url");
-            String requestParamCategory = request.getParameter("category");
+            String[] requestParamCategory = request.getParameter("category").split(">");
 
-
-            productSource.setName("");
-            productSource.setDetailContent("");
+            productSource.setCategory(requestParamCategory);
             productSource.setUrl(requestParamUrl);
 
 
-            LogOutput(LOG_LEVEL.DEBUG, ObjectName(), MethodName(), 0, " productRegister URL:  {0}", productSource.getUrl());
-
+            LogOutput(LOG_LEVEL.DEBUG, ObjectName(), MethodName(), 0, " productSource :  {0}", productSource.toString());
+            categoryService.getAdditionalInfo(productSource);
             productService = new ProductService(productSource);
             productService.getNewProductInfo(productSource);
         } catch (JsonMappingException e) {

@@ -5,12 +5,14 @@ import Modal from "../../part/Modal";
 import ProductRegisterAPI from "./ProductRegisterAPI";
 import Category from "./part/Category";
 import category from "./part/Category";
+import CategoryButton from "./part/CategoryButton";
 
 
 
 const ProductRegister: React.FC = () => {
     const [category, setCategory] = useState(new Map<string, string[]>());
     const [input, setInput] = useState<RegisterState>({
+        additionalInfo: [],
         category: [],
         salePrice: 0,
         stockQuantity: 0,
@@ -22,6 +24,7 @@ const ProductRegister: React.FC = () => {
     const [showCategory, setShowCategory] = useState (false);
     const [showModal, setShowModal] = useState(false);
     const [showInfo, setShowInfo] = useState(false);
+    const [additionalInfo, setAdditionalInfo] = useState<string[]>([]);
 
     const inputClassName = `appearance-none block w-full bg-gray-200 text-gray-700 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white ${isValidUrl ? '' : 'border border-red-500'}`;
 
@@ -102,15 +105,27 @@ const ProductRegister: React.FC = () => {
         console.log ("aaa"+input);
 
     };
-    const handleInputChange = (field: keyof RegisterState) => (
+
+    const handleInputChange = (field: keyof RegisterState, index? : number) => (
         event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>
-    ) => {
-            setInput((prevInput) => ({
-                ...prevInput,
-                [field]: event.target.value,
-            }));
-        if (field === "url"){
-            setValidUrl (isValid(event.target.value));
+        ) => {
+        switch (field){
+            case "additionalInfo":
+                setInput((prevInput) => ({
+                    ...prevInput,
+                    [field]: prevInput.additionalInfo.map((info, i) =>
+                        i === index ? event.target.value : info
+                    ),
+                }));
+                break;
+            case "url":
+                setValidUrl(isValid(event.target.value));
+            default :
+                setInput((prevInput) => ({
+                    ...prevInput,
+                    [field]: event.target.value,
+                }));
+                break;
         }
         console.log (input);
 
@@ -163,8 +178,11 @@ const ProductRegister: React.FC = () => {
             ["name"]: data.name,
             ["detailContent"]:data.detailContent,
             ["salePrice"]:data.salePrice,
-            ["stockQuantity"]:data.stockQuantity
+            ["stockQuantity"]:data.stockQuantity,
+            ["additionalInfo"]:data.additionalInfo
         }));
+
+        setAdditionalInfo(data.additionalInfo);
         setShowInfo(true);
         var preview = document.getElementById('preview');
         if (preview != null)
@@ -289,6 +307,31 @@ const ProductRegister: React.FC = () => {
                                 />
                             </div>
                         </div>}
+
+                        {showInfo && <div className="flex flex-wrap -mx-3 mb-2" id={"product-additionalInfo"}>
+                            {additionalInfo.map((info, index) => (
+                                <div className="md:w-1/2 px-3 mb-0 md:mb-2" id={"product-price"}>
+                                    <label
+                                        className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                                        htmlFor="grid-product-name">
+                                        {info}
+                                    </label>
+                                    <input
+                                        className="appearance-none block bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                        id="grid-last-name"
+                                        type="text"
+                                        value={input.additionalInfo[index]}
+                                        placeholder={info}
+                                        onChange={handleInputChange("additionalInfo", index)}/>
+
+
+                                </div>
+                            ))}
+
+                            </div>
+
+
+                        }
 
                         {showInfo &&
                             <div className="w-full px-3" id={"product-detail"}>

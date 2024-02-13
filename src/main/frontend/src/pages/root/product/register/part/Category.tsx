@@ -67,6 +67,7 @@ function Category(props:CategoryProps) {
                        htmlFor="grid-product-url">
                     카테고리
                 </label>
+                <p className="text-xs">(생활건강,수집품,코스튬플레이,소품)</p>
                 <CategoryButton category={props.category.get("FIRST")} callback={categorySelectionCallback} level={0}/>
                 {buttonList.map((button, index) =>(
                     <CategoryButton key={index} category={button.category} callback={categorySelectionCallback} level={button.level}/>

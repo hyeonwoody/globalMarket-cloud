@@ -2,14 +2,14 @@ package com.toyproject.globalMarket.VO.product;
 import com.google.gson.JsonObject;
 import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
 import com.toyproject.globalMarket.DTO.product.platform.naver.SeoInfo;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
 
 
-@Getter
-@Setter
+@Data
 public class ProductRegisterVO {
 
 
@@ -34,6 +34,7 @@ public class ProductRegisterVO {
     private String detailContent;
 
     private String[] category;
+    private List<String> additionalInfo;
 
     private int salePrice;
     private int saleQuantity;
