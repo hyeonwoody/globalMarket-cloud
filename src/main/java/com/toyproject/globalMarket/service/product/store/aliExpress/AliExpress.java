@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
 import com.toyproject.globalMarket.DTO.product.platform.naver.SeoInfo;
 import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
+import com.toyproject.globalMarket.configuration.platform.Github;
 import com.toyproject.globalMarket.configuration.platform.Google;
 import com.toyproject.globalMarket.libs.BaseObject;
 import com.toyproject.globalMarket.service.product.store.StoreInterface;
@@ -160,7 +161,7 @@ public class AliExpress extends BaseObject implements StoreInterface {
         if (productRegisterVO.getDetailContent() == null)
 
 
-            productRegisterVO.setDetailContent("<a href='https://ifh.cc/v-6Klwkr' target='_blank'><img src='https://ifh.cc/g/6Klwkr.jpg' border='0'></a>" + productInfo.getDetailContent());
+            productRegisterVO.setDetailContent("<img src=\"https://raw.githubusercontent.com/GlobalMarketKOR/Images/master/detail/0.png\"/>" + productInfo.getDetailContent());
         if (productRegisterVO.getSalePrice() == 0)
             productRegisterVO.setSalePrice(priceInfo.getDetails().minAmount.value - (priceInfo.getDetails().minAmount.value % 10));
 
@@ -190,7 +191,7 @@ public class AliExpress extends BaseObject implements StoreInterface {
     }
 
     private void downloadImages(ProductInfo productInfo) {
-        final String destinationDirectory = Google.uploadDirectory;
+        final String destinationDirectory = Github.uploadRepresentativeDirectory;
         for (int i = 0; i < productInfo.getImageList().size(); ++i){
             try {
                 URL url = new URL(productInfo.getImageList().get(i));
@@ -198,6 +199,7 @@ public class AliExpress extends BaseObject implements StoreInterface {
                 Path destinationPath = Paths.get(destinationDirectory, fileName);
                 try (InputStream inputStream = url.openStream()) {
                     Files.copy(inputStream, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+                    productInfo.getImageList().set(i, destinationPath.toString());
                     LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Image Downloaded successfully");
                 } catch (IOException e) {
                     e.printStackTrace();

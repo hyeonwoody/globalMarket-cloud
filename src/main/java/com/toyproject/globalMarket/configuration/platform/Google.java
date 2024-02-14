@@ -1,6 +1,7 @@
 package com.toyproject.globalMarket.configuration.platform;
 
 import com.google.api.client.http.FileContent;
+import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 import com.toyproject.globalMarket.configuration.AuthConfig;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -17,14 +18,12 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
-import com.google.api.services.drive.model.FileList;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.io.InputStream;
 
@@ -33,10 +32,10 @@ public class Google extends AuthConfig {
 
     private static int objectId = 0;
 
-    public static final String uploadDirectory = System.getProperty("user.dir") + "/src/main/resources/google/upload";
-    public Google(@Value("${naver.clientId}") String clientId,
-                 @Value("${naver.clientSecret}") String clientSecret) {
-        super("PlatformNaver", objectId++,clientId, clientSecret, "https://api.commerce.naver.com/external/v1/oauth2/token");
+    public static final String uploadRepresentativeDirectory = System.getProperty("user.dir") + "/src/main/resources/tmp/representative";
+    public Google(@Value("${google.clientId}") String clientId,
+                 @Value("${google.clientSecret}") String clientSecret) {
+        super("PlatformGoogle", objectId++,clientId, clientSecret, "");
         this.kind = PlatformList.GOOGLE.ordinal();
         int a = 0;
     }
@@ -84,7 +83,7 @@ public class Google extends AuthConfig {
                 DriveScopes.DRIVE_FILE,
                 DriveScopes.DRIVE_SCRIPTS
         );
-        final String CREDENTIALS_FILE_PATH = "/credentials.json";
+        final String CREDENTIALS_FILE_PATH = "/googleCredentials.json";
         InputStream in = Google.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
         if (in == null){
             try {

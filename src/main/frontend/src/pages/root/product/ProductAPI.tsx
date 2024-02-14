@@ -3,6 +3,10 @@ import {My} from '../../../configuration/web/webConfig';
 import {Platform} from '../../../configuration/platform';
 const my = new My();
 
+export interface Image {
+    representativeImage : {url : string},
+    optionalImages: [{url: string}]
+}
 export interface RegisterState {
     platform : Platform,
     category : string[],
@@ -11,7 +15,8 @@ export interface RegisterState {
     detailContent : string
     salePrice : number,
     stockQuantity : number
-    additionalInfoList : string[]
+    additionalInfoList : string[],
+    image : Image
 }
 export function ProductAxios(resultCallback: (data: any) => void, type : string, data : RegisterState) {
     console.log ("Axios"+data);

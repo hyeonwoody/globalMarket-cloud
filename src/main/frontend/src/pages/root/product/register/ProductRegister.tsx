@@ -4,8 +4,6 @@ import {platformList} from "../../../../configuration/platform";
 import Modal from "../../part/Modal";
 import ProductRegisterAPI from "./ProductRegisterAPI";
 import Category from "./part/Category";
-import category from "./part/Category";
-import CategoryButton from "./part/CategoryButton";
 
 
 
@@ -16,7 +14,11 @@ const ProductRegister: React.FC = () => {
         category: [],
         salePrice: 0,
         stockQuantity: 0,
-        platform: 0, detailContent: "", name: "", url: ""
+        platform: 0, detailContent: "", name: "", url: "",
+        image: {
+            representativeImage: { url: '' },
+            optionalImages: [{url: ''}]
+        }
     });
     const [platformState, setPlatform] = useState ("네이버");
     const [isValidUrl, setValidUrl] = useState (false);
