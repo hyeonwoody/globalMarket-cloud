@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.toyproject.globalMarket.configuration.AuthConfig;
+import com.toyproject.globalMarket.configuration.platform.Google;
 import com.toyproject.globalMarket.configuration.platform.Naver;
 
 import com.toyproject.globalMarket.VO.product.ProductRegisterVO;

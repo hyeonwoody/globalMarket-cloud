@@ -17,6 +17,7 @@ public abstract class AuthConfig extends BaseObject {
         NAVER,
         ALIEXPRESS,
         GMARKET,
+        GOOGLE,
     }
     public int kind;
 
