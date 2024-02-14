@@ -4,7 +4,7 @@ import {platformList} from "../../../../configuration/platform";
 import Modal from "../../part/Modal";
 import ProductRegisterAPI from "./ProductRegisterAPI";
 import Category from "./part/Category";
-
+import Image from "./part/images/Image"
 
 
 const ProductRegister: React.FC = () => {
@@ -32,6 +32,34 @@ const ProductRegister: React.FC = () => {
 
     const toggleDropdown = () => {
         setDropdown(!dropdown);
+    }
+    const ImageCallback = (index : number) => {
+        if (index == 0){
+            setInput((prevInput: RegisterState) => {
+                prevInput.images.representativeImage.url = prevInput.images.optionalImages[0].url;
+
+                let newImageOptional = prevInput.images.optionalImages;
+                prevInput.images.optionalImages = newImageOptional.filter((_, idx) => idx !== 0);
+
+                return {
+                    ...prevInput,
+                    ["images"] : prevInput.images
+                };
+            });
+        }
+        else {
+            setInput((prevInput: RegisterState) => {
+                    let newImageOptional = prevInput.images.optionalImages;
+                    prevInput.images.optionalImages = newImageOptional.filter((_, idx) => idx !== index-1);
+
+                    return {
+                        ...prevInput,
+                        ["images"] : prevInput.images
+                    };
+            });
+        }
+        console.log("HHHHH");
+        console.log(input);
     }
 
     const categoryCallback = (result : string, level : number) => {
@@ -104,8 +132,6 @@ const ProductRegister: React.FC = () => {
             ...prevInput,
             [field]: event.clipboardData.getData('text')
         }));
-        console.log ("aaa"+input);
-
     };
 
     const handleInputChange = (field: keyof RegisterState, index? : number) => (
@@ -260,19 +286,7 @@ const ProductRegister: React.FC = () => {
                             </div>
                         </div>
 
-                        {showInfo && <div className="flex flex-wrap -mx-3 mb-2" id={"product-images"}>
-                            <div className="w-full md:w-full px-3 mb-0 md:mb-2" id={"product-representative"}>
-                                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                                       htmlFor="grid-product-name">
-                                    대표 이미지
-                                </label>
-                                {
-                                    <img src={input.images?.representativeImage.url}/>
-                            }
-
-
-                        </div>
-                            </div>}
+                        {showInfo && <Image images={input.images} callback={ImageCallback}/>}
 
                         {showInfo && <div className="flex flex-wrap -mx-3 mb-2" id={"product-info"}>
                             <div className="w-full md:w-full px-3 mb-0 md:mb-2" id={"product-name"}>

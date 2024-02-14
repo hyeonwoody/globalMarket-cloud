@@ -167,7 +167,7 @@ public class AliExpress extends BaseObject implements StoreInterface {
 
         //downloadImages(productInfo);
         if (productRegisterVO.getImages() == null)
-            productRegisterVO.setImages(productInfo.getImageList());
+            productRegisterVO.setTmpImages(productInfo.getImageList());
 
 
 

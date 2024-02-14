@@ -79,8 +79,14 @@ public class ProductsController extends BaseObject {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
             String requestBody = reader.lines().collect(Collectors.joining(System.lineSeparator()));
+
+
             ObjectMapper objectMapper = new ObjectMapper();
+            LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "input {0}", requestBody);
             productSource = objectMapper.readValue(requestBody, ProductRegisterVO.class);
+
+
+
 
             if (productSource.areMembersNotNull()){
                 productService = new ProductService(productSource);

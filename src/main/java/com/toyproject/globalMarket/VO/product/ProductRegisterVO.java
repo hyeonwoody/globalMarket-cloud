@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -34,14 +35,14 @@ public class ProductRegisterVO {
     private String detailContent;
 
     private String[] category;
-    private List<String> additionalInfoList;
+    private ArrayList<String> additionalInfoList;
 
     private int salePrice;
     private int saleQuantity;
 
     public Images images;
 
-    public void setImages(List<String> imageList) {
+    public void setTmpImages(List<String> imageList) {
         this.images = new Images();
         this.images.representativeImage.url = imageList.get(0).replaceFirst("s", "");
         for (String image : imageList) {

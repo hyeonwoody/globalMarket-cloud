@@ -36,6 +36,8 @@ export function ProductAxios(resultCallback: (data: any) => void, type : string,
             });
             break;
         case "register/confirm":
+            //const {images, ...dataWitoutImages} = data
+
             axios({
                 url: "products/" + type,
                 method: 'post',
