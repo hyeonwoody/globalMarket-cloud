@@ -58,4 +58,10 @@ scripts/*
 app.sh
 react.log
 
+###Resources
+src/main/resources
+src/main/resources/*
+tokens/*
+
 lib/*
+

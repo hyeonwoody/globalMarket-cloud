@@ -165,7 +165,7 @@ public class AliExpress extends BaseObject implements StoreInterface {
         if (productRegisterVO.getSalePrice() == 0)
             productRegisterVO.setSalePrice(priceInfo.getDetails().minAmount.value - (priceInfo.getDetails().minAmount.value % 10));
 
-        downloadImages(productInfo);
+        //downloadImages(productInfo);
         if (productRegisterVO.getImages() == null)
             productRegisterVO.setImages(productInfo.getImageList());
 
@@ -199,7 +199,11 @@ public class AliExpress extends BaseObject implements StoreInterface {
                 Path destinationPath = Paths.get(destinationDirectory, fileName);
                 try (InputStream inputStream = url.openStream()) {
                     Files.copy(inputStream, destinationPath, StandardCopyOption.REPLACE_EXISTING);
-                    productInfo.getImageList().set(i, destinationPath.toString());
+
+                    String path = destinationPath.toString();
+                    int startIndex = path.indexOf("/detail");
+                    String result = path.substring(startIndex);
+                    productInfo.getImageList().set(i, result);
                     LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Image Downloaded successfully");
                 } catch (IOException e) {
                     e.printStackTrace();

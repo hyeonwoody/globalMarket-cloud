@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useState} from 'react';
-import ProductAxios, {RegisterState} from "../ProductAPI";
+import ProductAxios, {RegisterState, ProductImage} from "../ProductAPI";
 import {platformList} from "../../../../configuration/platform";
 import Modal from "../../part/Modal";
 import ProductRegisterAPI from "./ProductRegisterAPI";
@@ -12,13 +12,13 @@ const ProductRegister: React.FC = () => {
     const [input, setInput] = useState<RegisterState>({
         additionalInfoList: [],
         category: [],
-        salePrice: 0,
-        stockQuantity: 0,
-        platform: 0, detailContent: "", name: "", url: "",
-        image: {
-            representativeImage: { url: '' },
-            optionalImages: [{url: ''}]
-        }
+        detailContent: "",
+        name: "", platform: 0, salePrice: 0, stockQuantity: 0,
+        url: "",
+        images: {
+            representativeImage: { url: ""}, // Provide default URL or leave it empty
+            optionalImages: []   // Provide default alt text or leave it empty
+        },
     });
     const [platformState, setPlatform] = useState ("네이버");
     const [isValidUrl, setValidUrl] = useState (false);
@@ -181,7 +181,8 @@ const ProductRegister: React.FC = () => {
             ["detailContent"]:data.detailContent,
             ["salePrice"]:data.salePrice,
             ["stockQuantity"]:data.stockQuantity,
-            ["additionalInfoList"]:data.additionalInfoList
+            ["additionalInfoList"]:data.additionalInfoList,
+            ["images"]:data.images
         }));
 
         setAdditionalInfo(data.additionalInfoList);
@@ -258,6 +259,21 @@ const ProductRegister: React.FC = () => {
                                 {!isValidUrl && <p className="text-red-500 text-xs italic">형식에 맞게 제출해주세요</p>}
                             </div>
                         </div>
+
+                        {showInfo && <div className="flex flex-wrap -mx-3 mb-2" id={"product-images"}>
+                            <div className="w-full md:w-full px-3 mb-0 md:mb-2" id={"product-representative"}>
+                                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                                       htmlFor="grid-product-name">
+                                    대표 이미지
+                                </label>
+                                {
+                                    <img src={input.images?.representativeImage.url}/>
+                            }
+
+
+                        </div>
+                            </div>}
+
                         {showInfo && <div className="flex flex-wrap -mx-3 mb-2" id={"product-info"}>
                             <div className="w-full md:w-full px-3 mb-0 md:mb-2" id={"product-name"}>
                                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
