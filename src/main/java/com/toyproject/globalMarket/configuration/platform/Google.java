@@ -32,6 +32,8 @@ import java.io.InputStream;
 public class Google extends AuthConfig {
 
     private static int objectId = 0;
+
+    public static final String uploadDirectory = System.getProperty("user.dir") + "/src/main/resources/google/upload";
     public Google(@Value("${naver.clientId}") String clientId,
                  @Value("${naver.clientSecret}") String clientSecret) {
         super("PlatformNaver", objectId++,clientId, clientSecret, "https://api.commerce.naver.com/external/v1/oauth2/token");

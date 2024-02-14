@@ -1,8 +1,10 @@
 package com.toyproject.globalMarket.service.product.store.aliExpress;
 
 import com.google.gson.annotations.SerializedName;
+import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
 import com.toyproject.globalMarket.DTO.product.platform.naver.SeoInfo;
 import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
+import com.toyproject.globalMarket.configuration.platform.Google;
 import com.toyproject.globalMarket.libs.BaseObject;
 import com.toyproject.globalMarket.service.product.store.StoreInterface;
 
@@ -19,11 +21,15 @@ import com.google.gson.JsonObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -157,10 +163,10 @@ public class AliExpress extends BaseObject implements StoreInterface {
             productRegisterVO.setDetailContent("<a href='https://ifh.cc/v-6Klwkr' target='_blank'><img src='https://ifh.cc/g/6Klwkr.jpg' border='0'></a>" + productInfo.getDetailContent());
         if (productRegisterVO.getSalePrice() == 0)
             productRegisterVO.setSalePrice(priceInfo.getDetails().minAmount.value - (priceInfo.getDetails().minAmount.value % 10));
+
+        downloadImages(productInfo);
         if (productRegisterVO.getImages() == null)
             productRegisterVO.setImages(productInfo.getImageList());
-
-
 
 
 
@@ -181,6 +187,26 @@ public class AliExpress extends BaseObject implements StoreInterface {
             //productRegisterVO.getSeoInfo().setPageTitle(productInfo.getSubject());
         }
         return 0;
+    }
+
+    private void downloadImages(ProductInfo productInfo) {
+        final String destinationDirectory = Google.uploadDirectory;
+        for (int i = 0; i < productInfo.getImageList().size(); ++i){
+            try {
+                URL url = new URL(productInfo.getImageList().get(i));
+                String fileName = "image" + i + ".webp";
+                Path destinationPath = Paths.get(destinationDirectory, fileName);
+                try (InputStream inputStream = url.openStream()) {
+                    Files.copy(inputStream, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+                    LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Image Downloaded successfully");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     private String parseDetailContent(String detailContent) {
