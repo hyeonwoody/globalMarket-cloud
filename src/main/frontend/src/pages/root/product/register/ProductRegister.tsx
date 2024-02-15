@@ -1,6 +1,6 @@
 import React, {ChangeEvent, useState} from 'react';
 import ProductAxios, {RegisterState, ProductImage} from "../ProductAPI";
-import {platformList} from "../../../../configuration/platform";
+import {Platform, platformList} from "../../../../configuration/platform";
 import Modal from "../../part/Modal";
 import ProductRegisterAPI from "./ProductRegisterAPI";
 import Category from "./part/Category";
@@ -94,26 +94,32 @@ const ProductRegister: React.FC = () => {
         const  generateCategory = (data : any) => {
 
             const categoryMap = new Map();
-            interface CategoryNaver{
-                wholeCategoryName: string,
-                id: string,
-                name: string,
-                last: boolean
+
+            switch (result){
+                case 0:
+                    interface CategoryNaver{
+                        wholeCategoryName: string,
+                            id: string,
+                            name: string,
+                            last: boolean
+                    }
+                    let categoryNaverList: CategoryNaver[] = data as CategoryNaver[];
+                    Object.entries(data).map(([key , value]) =>{
+                        if (Array.isArray(value) && key == "FIRST"){
+                            console.log (key, value);
+                        }
+
+
+                        categoryMap.set (key, value);
+                    });
+
+                    console.log (categoryMap);
+                    setCategory(categoryMap);
+                    break;
+                default:
+                    break;
             }
 
-
-            let categoryNaverList: CategoryNaver[] = data as CategoryNaver[];
-            Object.entries(data).map(([key , value]) =>{
-                if (Array.isArray(value) && key == "FIRST"){
-                    console.log (key, value);
-                }
-
-
-                categoryMap.set (key, value);
-            });
-
-            console.log (categoryMap);
-            setCategory(categoryMap);
             // categoryNaverList.forEach((categoryNaver) => {
             //     console.log(categoryNaver.wholeCategoryName, categoryNaver.name);
             // });
