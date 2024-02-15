@@ -21,7 +21,7 @@ public class Github {
         processBuilder.command(Arrays.asList("sh", uploadDirectory+commit, params[0], params[1]));
 
         final String gitUrl = "https://raw.githubusercontent.com/GlobalMarketKOR/Images/" + id_nickname;
-        getRawGithubImageUrl (productSource.getImages(), gitUrl);
+        //getRawGithubImageUrl (productSource.getImages(), gitUrl);
 
         Process process = null;
         try {

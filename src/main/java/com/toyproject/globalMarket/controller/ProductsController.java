@@ -94,12 +94,13 @@ public class ProductsController extends BaseObject {
                 categoryService.getNewCategoryInfo(productSource);
                 productService.getNewProductInfo(productSource);
                 productService.downloadImages(productSource);
-                Github github = new Github();
-                github.uploadImages(productSource);
+
                 switch (productSource.getPlatform()){
                     case 네이버:
                         platform = naver;
-
+//                        Github github = new Github();
+//                        github.uploadImages(productSource);
+                        ((Naver) platform).uploadImages(productSource.getImages(), platform.getOAuth());
                         break;
                     case 알리익스프레스:
                         break;
@@ -107,6 +108,7 @@ public class ProductsController extends BaseObject {
                         break;
                 }
                 int responseCode =401;
+
                 do {
                     responseCode = productService.register(productSource, platform.getOAuth());
                     LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 2, "ResponseCode : {0}", responseCode);

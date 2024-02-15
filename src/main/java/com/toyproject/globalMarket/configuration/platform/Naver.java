@@ -2,9 +2,11 @@ package com.toyproject.globalMarket.configuration.platform;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
 import com.toyproject.globalMarket.configuration.AuthConfig;
 import com.toyproject.globalMarket.libs.BCrypt;
 import com.toyproject.globalMarket.libs.EventManager;
+import okhttp3.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
@@ -32,6 +34,38 @@ public class Naver extends AuthConfig {
         String hashedPw = BCrypt.hashpw(password, clientSecret);
         // base64 인코딩
         return Base64.getUrlEncoder().encodeToString(hashedPw.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public void uploadImages(Images images, String accessToken){
+            OkHttpClient client = new OkHttpClient();
+            File imageFile = new File("/zzz/programming/IntelliJ/globalMarket/src/main/resources/detail/thumbnail/image01.jpg");
+
+
+
+
+
+            RequestBody body = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("imageFiles", "image01.jpg",
+                            RequestBody.create(MediaType.parse("image/jpeg"), imageFile))
+                    .build();
+            Request request = new Request.Builder()
+                    .url("https://api.commerce.naver.com/external/v1/product-images/upload")
+                    .post(body)
+                    .addHeader("Authorization", "Bearer " + accessToken)
+                    .addHeader("content-type", "multipart/form-data")
+                    .addHeader("Content-Type", "multipart/form-data; boundary=" + ((MultipartBody) body).boundary())
+                    .build();
+
+        LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Imagefile : {0}", imageFile.toString());
+
+            try {
+                Response response = client.newCall(request).execute();
+                LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Response : {0}", response.body().string());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
     }
 
     @Override
