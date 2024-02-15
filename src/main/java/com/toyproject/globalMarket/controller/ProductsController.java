@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.toyproject.globalMarket.configuration.AuthConfig;
+import com.toyproject.globalMarket.configuration.platform.Github;
 import com.toyproject.globalMarket.configuration.platform.Google;
 import com.toyproject.globalMarket.configuration.platform.Naver;
 
@@ -92,9 +93,13 @@ public class ProductsController extends BaseObject {
                 productService = new ProductService(productSource);
                 categoryService.getNewCategoryInfo(productSource);
                 productService.getNewProductInfo(productSource);
+                productService.downloadImages(productSource);
+                Github github = new Github();
+                github.uploadImages(productSource);
                 switch (productSource.getPlatform()){
                     case 네이버:
                         platform = naver;
+
                         break;
                     case 알리익스프레스:
                         break;

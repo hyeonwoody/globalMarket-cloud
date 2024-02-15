@@ -2,14 +2,22 @@ package com.toyproject.globalMarket.service.product;
 
 import com.google.gson.Gson;
 import com.toyproject.globalMarket.DTO.Product;
+import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
 import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 
+import com.toyproject.globalMarket.configuration.platform.Github;
 import com.toyproject.globalMarket.libs.BaseObject;
 import com.toyproject.globalMarket.service.product.store.StoreInterface;
 import com.toyproject.globalMarket.service.product.store.aliExpress.AliExpress;
 import okhttp3.*;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -95,4 +103,61 @@ public class ProductService extends BaseObject {
             }
         return 0;
     }
+
+    private int downloadImagesNaver(Images images) {
+        final String destinationDirectory = Github.uploadThumbnailDirectory;
+        try {
+            URL url = new URL(images.representativeImage.url);
+            String fileName = "image" + 0 + ".webp";
+            Path destinationPath = Paths.get(destinationDirectory, fileName);
+            try (InputStream inputStream = url.openStream()) {
+                Files.copy(inputStream, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+
+                String path = destinationPath.toString();
+                int startIndex = path.indexOf("/detail");
+                String result = path.substring(startIndex);
+                images.representativeImage.setUrl(result);
+                LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Representative Image Downloaded successfully");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        for (int i = 0; i < images.optionalImages.size(); ++i){
+            try {
+                URL url = new URL(images.optionalImages.get(i).url);
+                String fileName = "image" + String.valueOf(i+1) + ".webp";
+                Path destinationPath = Paths.get(destinationDirectory, fileName);
+                try (InputStream inputStream = url.openStream()) {
+                    Files.copy(inputStream, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+
+                    String path = destinationPath.toString();
+                    int startIndex = path.indexOf("/detail");
+                    String result = path.substring(startIndex);
+                    images.optionalImages.get(i).setUrl(result);
+                    LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Image Downloaded successfully");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return 0;
+    }
+
+    public int downloadImages(ProductRegisterVO productSource) {
+        int ret = 0;
+        switch (productSource.getPlatform()){
+            case 네이버 -> {
+                ret = downloadImagesNaver(productSource.getImages());
+                break;
+            }
+        }
+
+        return 0;
+    }
+
+
 }

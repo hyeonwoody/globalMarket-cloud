@@ -3,8 +3,6 @@ import com.google.gson.JsonObject;
 import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
 import com.toyproject.globalMarket.DTO.product.platform.naver.SeoInfo;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +43,8 @@ public class ProductRegisterVO {
     public void setTmpImages(List<String> imageList) {
         this.images = new Images();
         this.images.representativeImage.url = imageList.get(0).replaceFirst("s", "");
-        for (String image : imageList) {
+        for (int i = 1; i < imageList.size(); i++) {
+            String image = imageList.get(i);
             Images.OptionalImage optionalImage = new Images.OptionalImage();
             optionalImage.url = image.replaceFirst("s", "");
             this.images.optionalImages.add(optionalImage);

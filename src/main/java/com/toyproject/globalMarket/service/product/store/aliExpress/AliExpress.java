@@ -1,11 +1,8 @@
 package com.toyproject.globalMarket.service.product.store.aliExpress;
 
 import com.google.gson.annotations.SerializedName;
-import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
 import com.toyproject.globalMarket.DTO.product.platform.naver.SeoInfo;
 import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
-import com.toyproject.globalMarket.configuration.platform.Github;
-import com.toyproject.globalMarket.configuration.platform.Google;
 import com.toyproject.globalMarket.libs.BaseObject;
 import com.toyproject.globalMarket.service.product.store.StoreInterface;
 
@@ -22,15 +19,10 @@ import com.google.gson.JsonObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -171,7 +163,6 @@ public class AliExpress extends BaseObject implements StoreInterface {
 
 
 
-
         //Converting Images
 
         //SEO
@@ -188,31 +179,6 @@ public class AliExpress extends BaseObject implements StoreInterface {
             //productRegisterVO.getSeoInfo().setPageTitle(productInfo.getSubject());
         }
         return 0;
-    }
-
-    private void downloadImages(ProductInfo productInfo) {
-        final String destinationDirectory = Github.uploadRepresentativeDirectory;
-        for (int i = 0; i < productInfo.getImageList().size(); ++i){
-            try {
-                URL url = new URL(productInfo.getImageList().get(i));
-                String fileName = "image" + i + ".webp";
-                Path destinationPath = Paths.get(destinationDirectory, fileName);
-                try (InputStream inputStream = url.openStream()) {
-                    Files.copy(inputStream, destinationPath, StandardCopyOption.REPLACE_EXISTING);
-
-                    String path = destinationPath.toString();
-                    int startIndex = path.indexOf("/detail");
-                    String result = path.substring(startIndex);
-                    productInfo.getImageList().set(i, result);
-                    LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Image Downloaded successfully");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
     }
 
     private String parseDetailContent(String detailContent) {
