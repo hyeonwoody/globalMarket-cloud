@@ -25,7 +25,7 @@ function Image (props : ImageProps) {
                     대표 이미지
                 </label>
 
-                    <img key={"image0"} className={"rounded-full max-w-full max-h-full"} src={props.images?.representativeImage.url}/>
+                    <img key={"image0"} className={"rounded-full max-w-full max-h-full"} src={props.images.representativeImage.url}/>
                     <button
                         key={"button0"}
                     className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full mx-auto block"
@@ -36,9 +36,9 @@ function Image (props : ImageProps) {
 
 
 
-                {props.images.optionalImages.map((value, index) => (
+                {props.images.optionalImages.length > 0? props.images.optionalImages.map((value, index) => (
                     <div className={"product-optional-image"}>
-                        <img key={"image"+index+1} className={"rounded-full max-w-full max-h-full"} src={value.url}/>
+                        <img key={"image"+index+1} className={"rounded-full max-w-full max-h-full"} src={value.url} />
                         <button
                             key={"button"+index+1}
                             className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full mx-auto block"
@@ -48,7 +48,7 @@ function Image (props : ImageProps) {
                         </button>
                     </div>
 
-                ))}
+                )) : null}
 
             </div>
         </div>
