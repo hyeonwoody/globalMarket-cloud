@@ -45,10 +45,11 @@ public class FileManager extends BaseObject {
             process = processBuilder.start();
             exitCode = process.waitFor();
             if (exitCode == 0) {
-                System.out.println("Script executed successfully.");
+                LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Convert executed successfully.");
                 images.representativeImage.setUrl(jpgFile);
             } else {
-                System.err.println("Script execution failed with exit code: " + exitCode);
+                LogOutput(LOG_LEVEL.ERROR, ObjectName(), MethodName(), 1, "Convert execution failed with exit code: {0}" + exitCode);
+                images.representativeImage.setUrl(null);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -64,11 +65,11 @@ public class FileManager extends BaseObject {
                 exitCode = 0;
                 exitCode = process.waitFor();
                 if (exitCode == 0){
-                    System.out.println("Script executed successfully.");
+                    LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 2, "Convert executed successfully.");
                     optionalImage.setUrl(jpgFile);
                 }
                 else {
-                    System.err.println("Script execution failed with exit code: " + exitCode);
+                    LogOutput(LOG_LEVEL.ERROR, ObjectName(), MethodName(), 3, "Convert execution failed with exit code: {0}" + exitCode);
                     optionalImage.setUrl(null);
                 }
             } catch (IOException e) {
