@@ -1,11 +1,10 @@
 package com.toyproject.globalMarket.configuration;
 
 import com.toyproject.globalMarket.libs.BaseObject;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public abstract class AuthConfig extends BaseObject {
+public abstract class APIConfig extends BaseObject {
     private static int objectId;
     public String clientId;
     public String clientSecret;
@@ -21,14 +20,14 @@ public abstract class AuthConfig extends BaseObject {
     }
     public int kind;
 
-    public AuthConfig(String objectName, int objectId, String clientId, String clientSecret, String url) {
+    public APIConfig(String objectName, int objectId, String clientId, String clientSecret, String url) {
         super(objectName, objectId);
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.url = url;
     }
 
-    public AuthConfig(String clientId, String clientSecret, String url) {
+    public APIConfig(String clientId, String clientSecret, String url) {
         super("PlatformConfig", objectId++);
         this.clientId = clientId;
         this.clientSecret = clientSecret;

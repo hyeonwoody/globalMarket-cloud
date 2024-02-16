@@ -4,9 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import com.toyproject.globalMarket.configuration.AuthConfig;
-import com.toyproject.globalMarket.configuration.platform.Github;
-import com.toyproject.globalMarket.configuration.platform.Google;
+import com.toyproject.globalMarket.configuration.APIConfig;
 import com.toyproject.globalMarket.configuration.platform.Naver;
 
 import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
@@ -29,7 +27,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/products")
 public class ProductsController extends BaseObject {
-    AuthConfig platform;
+    APIConfig platform;
 
     public final CategoryService categoryService;
     ProductService productService;

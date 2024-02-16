@@ -3,7 +3,7 @@ package com.toyproject.globalMarket.configuration.platform;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
-import com.toyproject.globalMarket.configuration.AuthConfig;
+import com.toyproject.globalMarket.configuration.APIConfig;
 import com.toyproject.globalMarket.libs.BCrypt;
 import com.toyproject.globalMarket.libs.EventManager;
 import okhttp3.*;
@@ -18,7 +18,7 @@ import java.util.Base64;
 
 
 @Configuration
-public class Naver extends AuthConfig {
+public class Naver extends APIConfig {
     private static int objectId = 0;
     public Naver(@Value("${naver.clientId}") String clientId,
                  @Value("${naver.clientSecret}") String clientSecret) {

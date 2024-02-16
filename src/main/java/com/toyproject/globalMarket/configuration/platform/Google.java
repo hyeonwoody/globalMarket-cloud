@@ -1,8 +1,7 @@
 package com.toyproject.globalMarket.configuration.platform;
 
 import com.google.api.client.http.FileContent;
-import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
-import com.toyproject.globalMarket.configuration.AuthConfig;
+import com.toyproject.globalMarket.configuration.APIConfig;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.google.api.client.auth.oauth2.Credential;
@@ -28,7 +27,7 @@ import java.util.List;
 import java.io.InputStream;
 
 
-public class Google extends AuthConfig {
+public class Google extends APIConfig {
 
     private static int objectId = 0;
 
