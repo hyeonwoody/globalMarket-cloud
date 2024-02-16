@@ -46,6 +46,7 @@ public class FileManager extends BaseObject {
             exitCode = process.waitFor();
             if (exitCode == 0) {
                 System.out.println("Script executed successfully.");
+                images.representativeImage.setUrl(jpgFile);
             } else {
                 System.err.println("Script execution failed with exit code: " + exitCode);
             }
@@ -54,14 +55,22 @@ public class FileManager extends BaseObject {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-
         for (Images.OptionalImage optionalImage : images.optionalImages) {
-            String webpFilePath = optionalImage.url;
+            webpFile = optionalImage.url;
+            jpgFile = webpFile.replace("webp", "jpg");
             processBuilder.command(Arrays.asList("sh", uploadDirectory+convert, webpFile, jpgFile));
             try {
                 process = processBuilder.start();
                 exitCode = 0;
                 exitCode = process.waitFor();
+                if (exitCode == 0){
+                    System.out.println("Script executed successfully.");
+                    optionalImage.setUrl(jpgFile);
+                }
+                else {
+                    System.err.println("Script execution failed with exit code: " + exitCode);
+                    optionalImage.setUrl(null);
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             } catch (InterruptedException e) {
