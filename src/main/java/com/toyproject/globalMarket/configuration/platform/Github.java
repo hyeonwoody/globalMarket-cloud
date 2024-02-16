@@ -7,20 +7,30 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class Github {
+    public final String uploadDirectory = System.getProperty("user.dir") + "/src/main/resources/";
+    public final String uploadThumbnailDirectory = System.getProperty("user.dir") + "/src/main/resources/detail/thumbnail";
 
-    public static final String uploadThumbnailDirectory = System.getProperty("user.dir") + "/src/main/resources/detail/thumbnail";
+    private String id;
+    private String nickname;
+    private String id_nickname;
+    private String[] params;
+    public Github(ProductRegisterVO productSource){
+        this.id = "unique"; //Product repository to get Id
+        this.nickname = "branch";
+        this.params = new String[]{id + "_" + nickname, productSource.getName()};
+    }
+    public void initBranch (){
+        final String init = "/init.sh";
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.command(Arrays.asList("sh", uploadDirectory+init, this.params[0], this.params[1]));
+    }
 
-    public void uploadImages(ProductRegisterVO productSource) {
-        final String uploadDirectory = System.getProperty("user.dir") + "/src/main/resources";
+    public void uploadImages() {
         final String commit = "/commit.sh";
         ProcessBuilder processBuilder = new ProcessBuilder();
-        String id = "unique";
-        String nickname = "branch";
-        String id_nickname = id + "_" + nickname;
-        String[] params = { id_nickname, productSource.getName()}; //unique branch messsage
-        processBuilder.command(Arrays.asList("sh", uploadDirectory+commit, params[0], params[1]));
+        processBuilder.command(Arrays.asList("sh", uploadDirectory+commit, this.params[0], this.params[1]));
 
-        final String gitUrl = "https://raw.githubusercontent.com/GlobalMarketKOR/Images/" + id_nickname;
+        //final String gitUrl = "https://raw.githubusercontent.com/GlobalMarketKOR/Images/" + branch;
         //getRawGithubImageUrl (productSource.getImages(), gitUrl);
 
         Process process = null;

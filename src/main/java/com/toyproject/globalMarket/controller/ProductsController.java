@@ -96,8 +96,6 @@ public class ProductsController extends BaseObject {
                 switch (productSource.getPlatform()){
                     case 네이버:
                         platform = naver;
-//                        Github github = new Github();
-//                        github.uploadImages(productSource);
                         ((Naver) platform).uploadImages(productSource.getImages(), platform.getOAuth());
                         break;
                     case 알리익스프레스:

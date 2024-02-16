@@ -5,3 +5,7 @@ tailwindcss
 
 JSoup
 Gson
+
+NaverAPI
+Google Drive API
+

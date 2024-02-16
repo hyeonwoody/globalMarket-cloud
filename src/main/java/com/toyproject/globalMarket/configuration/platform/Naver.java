@@ -6,6 +6,7 @@ import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
 import com.toyproject.globalMarket.configuration.APIConfig;
 import com.toyproject.globalMarket.libs.BCrypt;
 import com.toyproject.globalMarket.libs.EventManager;
+import com.toyproject.globalMarket.libs.FileManager;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.List;
 
 
 @Configuration
@@ -37,31 +39,36 @@ public class Naver extends APIConfig {
     }
 
     public void uploadImages(Images images, String accessToken){
-            OkHttpClient client = new OkHttpClient();
-            File imageFile = new File("/zzz/programming/IntelliJ/globalMarket/src/main/resources/detail/thumbnail/image01.jpg");
+            String workingDirectory = images.representativeImage.url.substring(0, images.representativeImage.url.lastIndexOf("/"));
+            FileManager fileManager = new FileManager();
+            List<File> imageFileList = fileManager.listImageFiles(workingDirectory);
+            MultipartBody.Builder builder = new MultipartBody.Builder();
+            builder.setType(MultipartBody.FORM);
 
-
-
-
-
-            RequestBody body = new MultipartBody.Builder()
-                    .setType(MultipartBody.FORM)
-                    .addFormDataPart("imageFiles", "image01.jpg",
-                            RequestBody.create(MediaType.parse("image/jpeg"), imageFile))
-                    .build();
+            // Add each image file to the builder
+            for (File imageFile : imageFileList) {
+                builder.addFormDataPart("imageFiles", imageFile.getName(),
+                        RequestBody.create(MediaType.parse("image/jpeg"), imageFile));
+            }
+            RequestBody body = builder.build();
             Request request = new Request.Builder()
                     .url("https://api.commerce.naver.com/external/v1/product-images/upload")
                     .post(body)
                     .addHeader("Authorization", "Bearer " + accessToken)
-                    .addHeader("content-type", "multipart/form-data")
                     .addHeader("Content-Type", "multipart/form-data; boundary=" + ((MultipartBody) body).boundary())
                     .build();
-
-        LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Imagefile : {0}", imageFile.toString());
+            LogOutput(LOG_LEVEL.DEBUG, ObjectName(), MethodName(), 0, "ImagefileList : {0}", imageFileList.toString());
 
             try {
+                OkHttpClient client = new OkHttpClient();
                 Response response = client.newCall(request).execute();
-                LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Response : {0}", response.body().string());
+                if (response.isSuccessful()){
+                    String responseBody = response.body().string();
+                    System.out.println("Successful upload: " + responseBody);
+                }
+                else {
+                    LogOutput(LOG_LEVEL.ERROR, ObjectName(), MethodName(), 2, "Error uploading files: {0} {1}",response.code(),  response.message());
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

@@ -7,9 +7,11 @@ import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 
 import com.toyproject.globalMarket.configuration.platform.Github;
 import com.toyproject.globalMarket.libs.BaseObject;
+import com.toyproject.globalMarket.libs.FileManager;
 import com.toyproject.globalMarket.service.product.store.StoreInterface;
 import com.toyproject.globalMarket.service.product.store.aliExpress.AliExpress;
 import okhttp3.*;
+import org.springframework.boot.autoconfigure.info.ProjectInfoProperties;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,25 +28,6 @@ public class ProductService extends BaseObject {
 
     public ProductService(ProductRegisterVO productRegisterVO) {
         super("ProductService", objectId++);
-    }
-
-
-    public void search(String accessToken) throws IOException {
-
-        OkHttpClient client = new OkHttpClient();
-
-        Request request = new Request.Builder()
-                .url("https://api.commerce.naver.com/external/v1/product-brands?name=나이키")
-                .get()
-                .addHeader("Authorization", "Bearer " + accessToken)
-                .build();
-
-        Response response = client.newCall(request).execute();
-        if (response.isSuccessful()) {
-        } else {
-            LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Request is Successful with code : {0}", response.code());
-        }
-        int a = 0;
     }
 
     public int register (ProductRegisterVO productRegisterVO, String accessToken){
@@ -104,54 +87,30 @@ public class ProductService extends BaseObject {
         return 0;
     }
 
-    private int downloadImagesNaver(Images images) {
-        final String destinationDirectory = Github.uploadThumbnailDirectory;
-        try {
-            URL url = new URL(images.representativeImage.url);
-            String fileName = "image" + 0 + ".webp";
-            Path destinationPath = Paths.get(destinationDirectory, fileName);
-            try (InputStream inputStream = url.openStream()) {
-                Files.copy(inputStream, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+    private int downloadAndConvertImageToJpeg(Images images, Github github) {;
+        final String destinationDirectory = github.uploadThumbnailDirectory;
+        FileManager fileManager = new FileManager();
+        fileManager.downloadImages(images, destinationDirectory);
+        //fileManager.convertImageToJpeg(images);
 
-                String path = destinationPath.toString();
-                int startIndex = path.indexOf("/detail");
-                String result = path.substring(startIndex);
-                images.representativeImage.setUrl(result);
-                LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Representative Image Downloaded successfully");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        for (int i = 0; i < images.optionalImages.size(); ++i){
-            try {
-                URL url = new URL(images.optionalImages.get(i).url);
-                String fileName = "image" + String.valueOf(i+1) + ".webp";
-                Path destinationPath = Paths.get(destinationDirectory, fileName);
-                try (InputStream inputStream = url.openStream()) {
-                    Files.copy(inputStream, destinationPath, StandardCopyOption.REPLACE_EXISTING);
-
-                    String path = destinationPath.toString();
-                    int startIndex = path.indexOf("/detail");
-                    String result = path.substring(startIndex);
-                    images.optionalImages.get(i).setUrl(result);
-                    LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Image Downloaded successfully");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
         return 0;
     }
+
+
 
     public int downloadImages(ProductRegisterVO productSource) {
         int ret = 0;
         switch (productSource.getPlatform()){
             case 네이버 -> {
-                ret = downloadImagesNaver(productSource.getImages());
+                Github github = new Github(productSource);
+                github.initBranch();
+                ret = downloadAndConvertImageToJpeg(productSource.getImages(), github);
+                github.uploadImages();
+                break;
+            }
+            case 지마켓 -> {
+            }
+            default ->{
                 break;
             }
         }
