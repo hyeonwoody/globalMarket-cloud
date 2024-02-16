@@ -91,7 +91,7 @@ public class ProductService extends BaseObject {
         final String destinationDirectory = github.uploadThumbnailDirectory;
         FileManager fileManager = new FileManager();
         fileManager.downloadImages(images, destinationDirectory);
-        //fileManager.convertImageToJpeg(images);
+          fileManager.convertImageToJpeg(images);
 
         return 0;
     }

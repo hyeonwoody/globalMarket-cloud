@@ -20,13 +20,13 @@ public class Github {
         this.params = new String[]{id + "_" + nickname, productSource.getName()};
     }
     public void initBranch (){
-        final String init = "/init.sh";
+        final String init = "init.sh";
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.command(Arrays.asList("sh", uploadDirectory+init, this.params[0], this.params[1]));
     }
 
     public void uploadImages() {
-        final String commit = "/commit.sh";
+        final String commit = "commit.sh";
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.command(Arrays.asList("sh", uploadDirectory+commit, this.params[0], this.params[1]));
 
