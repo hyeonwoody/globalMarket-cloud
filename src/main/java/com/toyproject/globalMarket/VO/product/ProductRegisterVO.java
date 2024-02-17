@@ -34,6 +34,7 @@ public class ProductRegisterVO {
 
     private String[] category;
     private ArrayList<String> additionalInfoList;
+    private ArrayList<String> keyword;
 
     private int salePrice;
     private int saleQuantity;

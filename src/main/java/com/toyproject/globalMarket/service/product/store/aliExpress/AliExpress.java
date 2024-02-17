@@ -20,9 +20,11 @@ import com.google.gson.JsonObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +39,18 @@ public class AliExpress extends BaseObject implements StoreInterface {
         super("AlieExpress", objectId++);
     }
 
+
+    @Getter
+    public class GeneralFreightInfo{
+        private String shippingFeeText;
+
+
+        public void setShippingFeeText() {
+            this.shippingFeeText = this.shippingFeeText.replaceAll("[^0-9]", "");
+        }
+    }
+
+
     @Getter
     public class SpecificationInfo {
         @SerializedName("propertyList")
@@ -44,15 +58,15 @@ public class AliExpress extends BaseObject implements StoreInterface {
 
         @SerializedName("i18n")
         private I18n i18n;
-
         @Getter
-        static class Property {
+        public class Property {
             @SerializedName("attrValue")
             private String attrValue;
 
             @SerializedName("attrName")
             private String attrName;
         }
+
 
         static class I18n {
 
@@ -83,8 +97,8 @@ public class AliExpress extends BaseObject implements StoreInterface {
     }
 
     @Getter
-    private class ProductInfo {
-        private String productId;
+    public class ProductInfo {
+        public String productId;
         private String subject;
         private List<String> imageList;
         private String detailContent;
@@ -118,16 +132,17 @@ public class AliExpress extends BaseObject implements StoreInterface {
                         return jsonObject;
                         // Access the properties of the JsonObject as needed
                     } else {
-                        LogOutput(LOG_LEVEL.ERROR, this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 0, "No JSON data found in the script content.");
+                        LogOutput(LOG_LEVEL.ERROR, ObjectName(), MethodName(), 0, "No JSON data found in the script content.");
                     }
                 } else {
-                    LogOutput(LOG_LEVEL.ERROR, this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 1, "The first child node is not a DataNode.");
+                    LogOutput(LOG_LEVEL.ERROR, ObjectName(), MethodName(), 1, "The first child node is not a DataNode.");
                 }
             }
 
         } else {
-            LogOutput(LOG_LEVEL.ERROR, this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 2, "No <script> elements found in the document.");
+            LogOutput(LOG_LEVEL.ERROR, ObjectName(), MethodName(), 2, "No <script> elements found in the document.");
         }
+
         return null;
     }
 
@@ -140,43 +155,31 @@ public class AliExpress extends BaseObject implements StoreInterface {
         ProductInfo productInfo = new Gson().fromJson(jsonObject.get("productInfo"), ProductInfo.class);
         PriceInfo priceInfo = new Gson().fromJson(jsonObject.get("priceInfo"), PriceInfo.class);
         SpecificationInfo specificationInfo = new Gson().fromJson(jsonObject.get("specificationInfo"), SpecificationInfo.class);
-
+        GeneralFreightInfo generalFreightInfo = new Gson().fromJson(jsonObject.get("generalFreightInfo"), GeneralFreightInfo.class);
+        generalFreightInfo.setShippingFeeText();
 
         JsonObject descInfo = jsonObject.getAsJsonObject("descInfo");
         if (descInfo.has("productDescUrl"))
             productInfo.detailContent = descInfo.get("productDescUrl").getAsString();
         productInfo.detailContent = parseDetailContent(productInfo.detailContent);
 
-
         if (productRegisterVO.getName() == null)
             productRegisterVO.setName(productInfo.getSubject() == null ? "알 수 없는 상품": productInfo.getSubject());
         if (productRegisterVO.getDetailContent() == null)
-
 
             productRegisterVO.setDetailContent("<img src=\"https://raw.githubusercontent.com/GlobalMarketKOR/Images/master/detail/0.png\"/>" + productInfo.getDetailContent());
         if (productRegisterVO.getSalePrice() == 0)
             productRegisterVO.setSalePrice(priceInfo.getDetails().minAmount.value - (priceInfo.getDetails().minAmount.value % 10));
 
-        //downloadImages(productInfo);
         if (productRegisterVO.getImages() == null)
             productRegisterVO.setTmpImages(productInfo.getImageList());
 
-
-
-        //Converting Images
-
         //SEO
-
-
-
         if (specificationInfo == null){
-            Map<String, String> propertyMap = new HashMap<>();
-
             for (SpecificationInfo.Property property : specificationInfo.getPropertyList()) {
-                propertyMap.put(property.getAttrName(), property.getAttrValue());
-                productRegisterVO.getSeoInfo().sellerTags.add(new SeoInfo.SellerTag(property.getAttrValue()));
+                productRegisterVO.getKeyword().add(property.getAttrName());
+                productRegisterVO.getKeyword().add(property.getAttrValue());
             }
-            //productRegisterVO.getSeoInfo().setPageTitle(productInfo.getSubject());
         }
         return 0;
     }
