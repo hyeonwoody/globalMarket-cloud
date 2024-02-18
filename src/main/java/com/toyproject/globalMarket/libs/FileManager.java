@@ -150,7 +150,7 @@ public class FileManager extends BaseObject {
 
     private boolean isValidImageFile(File file) {
         String[] validExtensions = new String[]{"jpg", "jpeg", "png"};
-        if (Arrays.asList(validExtensions).stream().anyMatch(extension -> file.getName().toUpperCase().endsWith(extension))) {
+        if (Arrays.asList(validExtensions).stream().anyMatch(extension -> file.getName().toLowerCase().endsWith(extension))) {
             return true;
         }
         return false;
