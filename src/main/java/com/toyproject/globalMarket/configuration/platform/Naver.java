@@ -1,9 +1,11 @@
 package com.toyproject.globalMarket.configuration.platform;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.toyproject.globalMarket.DTO.category.CategoryNaverDTO;
 import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
 import com.toyproject.globalMarket.VO.product.NaverImageVO;
 import com.toyproject.globalMarket.configuration.APIConfig;
@@ -20,6 +22,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
@@ -85,6 +88,30 @@ public class Naver extends APIConfig {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+    }
+
+    public int getCategory(List<CategoryNaverDTO> categoryNaverDTOList) {
+        String accessToken = getOAuth();
+        OkHttpClient client = new OkHttpClient();
+        int ret = 200;
+        try {
+            Request request = new Request.Builder()
+                    .url("https://api.commerce.naver.com/external/v1/categories?last=false")
+                    .get()
+                    .addHeader("Authorization", "Bearer " + accessToken)
+                    .build();
+            Response response = client.newCall(request).execute();
+            ObjectMapper objectMapper = new ObjectMapper();
+            categoryNaverDTOList.addAll(objectMapper.readValue(response.body().string(), new TypeReference<List<CategoryNaverDTO>>() {
+            }));
+            ret = response.code();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return ret;
+
 
     }
 

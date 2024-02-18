@@ -39,6 +39,7 @@ public class CategoriesController extends BaseObject {
 
         int responseCode = 401;
         do {
+            //responseCode = categoryService.getCategoryNaverAPI(categoryNaverDTOList);
             responseCode = categoryService.getCategoryNaverDB(categoryNaverDTOList);
         } while (responseCode == 401);
 

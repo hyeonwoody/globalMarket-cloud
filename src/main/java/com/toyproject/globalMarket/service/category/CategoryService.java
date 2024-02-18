@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toyproject.globalMarket.DTO.category.CategoryNaverDTO;
 import com.toyproject.globalMarket.DTO.product.platform.naver.*;
 import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
+import com.toyproject.globalMarket.configuration.platform.Naver;
 import com.toyproject.globalMarket.entity.CategoryNaverEntity;
 import com.toyproject.globalMarket.libs.BaseObject;
 import com.toyproject.globalMarket.repository.CategoryRepository;
@@ -35,35 +36,16 @@ public class CategoryService extends BaseObject {
     }
 
     public int getCategoryNaverDB (List<CategoryNaverDTO> categoryNaverDTOList){
-        m_categoryNaverDTOList = categoryRepository.getCategoryNaverList();
-        categoryNaverDTOList.addAll(m_categoryNaverDTOList);
+        List<CategoryNaverDTO> _categoryNaverDTOList = categoryRepository.getCategoryNaverList();
+        categoryNaverDTOList.addAll(_categoryNaverDTOList);
         return 0;
     }
 
-    public int getCategoryNaverAPI(List<CategoryNaverDTO> categoryNaverDTOList, String accessToken) throws IOException {
-        OkHttpClient client = new OkHttpClient();
-        int ret = 200;
-
-        if (m_categoryNaverDTOList == null || m_categoryNaverDTOList.isEmpty()) {
-                Request request = new Request.Builder()
-                        .url("https://api.commerce.naver.com/external/v1/categories?last=false")
-                        .get()
-                        .addHeader("Authorization", "Bearer " + accessToken)
-                        .build();
-                Response response = client.newCall(request).execute();
-                ObjectMapper objectMapper = new ObjectMapper();
-                m_categoryNaverDTOList = new ArrayList<>();
-                m_categoryNaverDTOList.addAll(objectMapper.readValue(response.body().string(), new TypeReference<List<CategoryNaverDTO>>() {
-                }));
-                ret = response.code();
-        }
-        //categoryRepository.APItoSave(m_cateogryNaverDTOList);
-
-
-        categoryNaverDTOList.addAll(m_categoryNaverDTOList);
-        return ret;
-
-
+    public int getCategoryNaverAPI(List<CategoryNaverDTO> categoryNaverDTOList) {
+        Naver naver =new Naver("", "");
+        naver.getCategory(categoryNaverDTOList);
+        categoryRepository.APItoSave(categoryNaverDTOList);
+        return 0;
     }
 
     public int getNaverMap(Map<String, List<String>> categoryNaver, List <CategoryNaverDTO> categoryNaverDTOList) {
