@@ -118,7 +118,7 @@ public class ProductService extends BaseObject {
         int ret = 0;
         switch (productSource.getPlatform()){
             case 네이버 -> {
-                String _id = String.valueOf(434);
+                String _id = String.valueOf(productRepository.findUpcommingId());
                 Github github = new Github(_id, productSource.getName());
                 github.initBranch();
                 ret = downloadAndConvertImageToJpeg(productSource.getImages(), github);

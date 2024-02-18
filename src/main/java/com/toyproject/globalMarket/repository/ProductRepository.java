@@ -10,14 +10,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
 
-    default Long findMostResentId() {
-        ProductEntity p = this.findTopByOrderByDescId();
-        return p==null? 33: p.getId();
+    default Long findUpcommingId() {
+        Long p = this.findLatestProductId();
+        return p==null? 0: p+1;
     }
 
-
     @Query(value = "SELECT product_id FROM product ORDER BY product_id DESC LIMIT 1", nativeQuery = true)
-    ProductEntity findTopByOrderByDescId();
-
+    Long findLatestProductId();
 
 }
