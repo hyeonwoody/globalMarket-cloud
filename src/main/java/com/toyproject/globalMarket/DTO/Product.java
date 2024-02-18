@@ -6,23 +6,28 @@ import com.toyproject.globalMarket.DTO.product.platform.Naver;
 import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
 import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 import com.toyproject.globalMarket.libs.BaseObject;
+import lombok.Data;
 
-public class Product extends BaseObject {
+@Data
+public class Product {
 
-    private Platform platform;
     private static int objectId;
-    public Product(int platform){
-        super("Product", objectId++);
-        switch (platform){
-            case 0 :
+
+
+    private ProductRegisterVO.Platform platformType;
+    private Platform platform;
+
+
+    public Product(){}
+    public void setDTO(ProductRegisterVO object){
+        this.platformType = object.getPlatform();
+        switch (this.platformType.toString()){
+            case "네이버" :
                 this.platform = new Naver();
                 break;
             default:
-                LogOutput(LOG_LEVEL.ERROR, ObjectName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 0, "Unknown platform. {0}", platform);
                 break;
         }
-    }
-    public void setDTO(ProductRegisterVO object){
         this.platform.setDTO(object);
     }
     public Object getDTO(){
