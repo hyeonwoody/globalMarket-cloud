@@ -166,10 +166,12 @@ public class AliExpress extends BaseObject implements StoreInterface {
         if (productRegisterVO.getName() == null)
             productRegisterVO.setName(productInfo.getSubject() == null ? "알 수 없는 상품": productInfo.getSubject());
         if (productRegisterVO.getDetailContent() == null)
-
             productRegisterVO.setDetailContent("<img src=\"https://raw.githubusercontent.com/GlobalMarketKOR/Images/master/detail/0.png\"/>" + productInfo.getDetailContent());
-        if (productRegisterVO.getSalePrice() == 0)
-            productRegisterVO.setSalePrice(priceInfo.getDetails().minAmount.value - (priceInfo.getDetails().minAmount.value % 10));
+        if (productRegisterVO.getSalePrice() == 0){
+            int price = Math.max(priceInfo.getSaleMaxPrice().value, priceInfo.getDetails().maxAmount.value);
+            productRegisterVO.setSalePrice(price - (price % 10));
+        }
+
 
         if (productRegisterVO.getImages() == null)
             productRegisterVO.setTmpImages(productInfo.getImageList());
