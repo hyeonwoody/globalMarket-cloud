@@ -186,6 +186,13 @@ public class CategoryService extends BaseObject {
                 else if (productCategory[2].contains("MP3") || productCategory[2].contains("PMP")){
 
                 }
+                else if (productCategory[1].contains("휴대폰액세서리")){
+                    if (productCategory[1].contains("휴대폰액세서리")){
+                        productSource.getAdditionalInfoList().add("아이템이름");
+                        productSource.getAdditionalInfoList().add("모델명");
+                        productSource.getAdditionalInfoList().add("제작사");
+                    }
+                }
                 else if (productCategory[1].contains("휴대폰") || productCategory[1].contains("태블릿")){
 
                 }
