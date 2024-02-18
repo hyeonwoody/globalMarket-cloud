@@ -48,7 +48,6 @@ public class Naver extends APIConfig {
 
     public void uploadImages(Images images, String accessToken){
 
-
         String workingDirectory = images.representativeImage.url.substring(0, images.representativeImage.url.lastIndexOf("/"));
         FileManager fileManager = new FileManager();
         List<File> imageFileList = fileManager.listImageFiles(workingDirectory);
@@ -78,8 +77,8 @@ public class Naver extends APIConfig {
                 mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
                 NaverImageVO naverImage = mapper.readValue(responseBody, NaverImageVO.class);
                 images.representativeImage.setUrl(naverImage.images.get(0).url);
-                for (int i = 1; i < naverImage.images.size(); ++i){
-                    images.optionalImages.get(i-1).setUrl(naverImage.images.get(i).url);
+                for (int i = 0; i < images.optionalImages.size(); ++i){
+                    images.optionalImages.get(i).setUrl(naverImage.images.get(i+1).url);
                 }
             }
             else {

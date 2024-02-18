@@ -42,7 +42,6 @@ public class ProductService extends BaseObject {
     }
 
     public int register (ProductRegisterVO productRegisterVO, String accessToken){
-
         Date now = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
         String time = dateFormat.format(now);

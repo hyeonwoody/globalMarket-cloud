@@ -99,7 +99,7 @@ public class ProductsController extends BaseObject {
                 switch (productSource.getPlatform()){
                     case 네이버:
                         platform = naver;
-                        ((Naver) platform).uploadImages(productSource.getImages(), platform.getOAuth());
+                        ((Naver) platform).uploadImages(productSource.getImages(), naver.getOAuth());
                         break;
                     case 알리익스프레스:
                         break;
@@ -109,7 +109,7 @@ public class ProductsController extends BaseObject {
                 int responseCode =401;
 
                 do {
-                    responseCode = productService.register(productSource, platform.getOAuth());
+                    responseCode = productService.register(productSource, naver.getOAuth());
                     LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 2, "ResponseCode : {0}", responseCode);
                 } while (responseCode == 401);
 
