@@ -33,5 +33,7 @@ public class Product {
     public Object getDTO(){
         return this.platform;
     }
-
+    public int getSalePrice(){
+        return this.platform.getSalePrice();
+    }
 }

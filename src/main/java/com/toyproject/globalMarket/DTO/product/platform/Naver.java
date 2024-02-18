@@ -6,20 +6,21 @@ import com.toyproject.globalMarket.DTO.product.platform.naver.*;
 
 import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 import com.toyproject.globalMarket.libs.BaseObject;
+import lombok.Getter;
 
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Naver extends BaseObject implements Platform  {
+@Getter
+public class Naver implements Platform  {
     private static int objectId;
     public Naver() {
-        super("Naver", objectId++);
         this.originProduct = new OriginProduct();
         this.smartstoreChannelProduct = new SmartstoreChannelProduct();
     }
 
-    private OriginProduct originProduct;
-    private SmartstoreChannelProduct smartstoreChannelProduct;
+    private final OriginProduct originProduct;
+    private final SmartstoreChannelProduct smartstoreChannelProduct;
 
     @Override
     public void JSonObjectToDTO(JsonObject jsonObject){
@@ -40,7 +41,7 @@ public class Naver extends BaseObject implements Platform  {
         this.originProduct.setName(object.getName());
         this.originProduct.setDetailContent(object.getDetailContent());
         this.originProduct.setSalePrice(object.getSalePrice());
-        this.originProduct.setStockQuantity(Math.max (1, object.getSaleQuantity()));
+        this.originProduct.setStockQuantity(Math.max (213, object.getSaleQuantity()));
         this.originProduct.setImages(object.getImages());
         this.originProduct.setSaleStartDate(object.getSaleStartDate());
 
@@ -118,6 +119,10 @@ public class Naver extends BaseObject implements Platform  {
                 else if (productCategory[2].contains("MP3") || productCategory[2].contains("PMP")){
                     this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = ProductInfoProvidedNotice.ProductCategory.MICROELECTRONICS.name();
                 }
+                else if (productCategory[1].contains("휴대폰액세서리")){
+                    this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = ProductInfoProvidedNotice.ProductCategory.ETC.name();
+                    this.originProduct.getDetailAttribute().productInfoProvidedNotice.etc = new Etc(object.getAdditionalInfoList());
+                }
                 else if (productCategory[1].contains("휴대폰") || productCategory[1].contains("태블릿")){
                     this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = ProductInfoProvidedNotice.ProductCategory.CELLPHONE.name();
                 }
@@ -187,6 +192,11 @@ public class Naver extends BaseObject implements Platform  {
                 break;
         }
 
+    }
+
+    @Override
+    public int getSalePrice() {
+        return this.originProduct.getSalePrice();
     }
 
     public void setImage (Images image){

@@ -11,4 +11,5 @@ public interface Platform {
 
     abstract void setDTO(ProductRegisterVO object);
 
+    abstract int getSalePrice();
 }
