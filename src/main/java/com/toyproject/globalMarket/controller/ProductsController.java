@@ -29,16 +29,20 @@ import java.util.stream.Collectors;
 public class ProductsController extends BaseObject {
     APIConfig platform;
 
-    public final CategoryService categoryService;
-    ProductService productService;
+    @Autowired
+    private final CategoryService categoryService;
+
+    @Autowired
+    private final ProductService productService;
 
 
     @Autowired
     Naver naver;
 
-    protected ProductsController(CategoryService categoryService) {
+    protected ProductsController(CategoryService categoryService, ProductService productService) {
         super("ProductController", 0);
         this.categoryService = categoryService;
+        this.productService = productService;
     }
 
 
@@ -57,7 +61,6 @@ public class ProductsController extends BaseObject {
 
             LogOutput(LOG_LEVEL.DEBUG, ObjectName(), MethodName(), 0, " productSource :  {0}", productSource.toString());
             categoryService.getAdditionalInfoList(productSource);
-            productService = new ProductService(productSource);
             productService.getNewProductInfo(productSource);
         } catch (JsonMappingException e) {
             throw new RuntimeException(e);
@@ -88,7 +91,7 @@ public class ProductsController extends BaseObject {
 
 
             if (productSource.areMembersNotNull()){
-                productService = new ProductService(productSource);
+
                 categoryService.getNewCategoryInfo(productSource);
                 productService.getNewProductInfo(productSource);
                 productService.downloadImages(productSource);

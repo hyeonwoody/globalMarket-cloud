@@ -6,12 +6,17 @@ import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
 import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 
 import com.toyproject.globalMarket.configuration.platform.Github;
+import com.toyproject.globalMarket.entity.ProductEntity;
 import com.toyproject.globalMarket.libs.BaseObject;
 import com.toyproject.globalMarket.libs.FileManager;
+import com.toyproject.globalMarket.repository.ProductRepository;
 import com.toyproject.globalMarket.service.product.store.StoreInterface;
 import com.toyproject.globalMarket.service.product.store.aliExpress.AliExpress;
 import okhttp3.*;
+import org.hibernate.service.spi.InjectService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.info.ProjectInfoProperties;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,20 +28,27 @@ import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+@Service
 public class ProductService extends BaseObject {
     private static int objectId = 0;
 
-    public ProductService(ProductRegisterVO productRegisterVO) {
+
+    private final ProductRepository productRepository;
+
+    @Autowired
+    public ProductService(ProductRepository productRepository) {
         super("ProductService", objectId++);
+        this.productRepository = productRepository;
     }
 
     public int register (ProductRegisterVO productRegisterVO, String accessToken){
-        Product product = new Product (productRegisterVO.getPlatform().ordinal());
+
         Date now = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
         String time = dateFormat.format(now);
         productRegisterVO.setCurrentTime (time);
 
+        Product product = new Product ();
         product.setDTO(productRegisterVO);
 
 
@@ -64,10 +76,14 @@ public class ProductService extends BaseObject {
                 LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Response body : {0}", response.body().string());
 
             }
+            ProductEntity productEntity = new ProductEntity();
+            productEntity.setEntity(product, productRegisterVO.getUrl());
+            productRepository.save(productEntity);
             return response.code();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
     }
 
     public int getNewProductInfo (ProductRegisterVO productRegisterVO){
@@ -102,7 +118,8 @@ public class ProductService extends BaseObject {
         int ret = 0;
         switch (productSource.getPlatform()){
             case 네이버 -> {
-                Github github = new Github(productSource);
+                String _id = String.valueOf(434);
+                Github github = new Github(_id, productSource.getName());
                 github.initBranch();
                 ret = downloadAndConvertImageToJpeg(productSource.getImages(), github);
                 github.uploadImages();
