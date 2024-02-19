@@ -1,31 +1,15 @@
 package com.toyproject.globalMarket.configuration.platform;
 
 import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
-import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
-import com.toyproject.globalMarket.entity.ProductEntity;
 import com.toyproject.globalMarket.libs.BaseObject;
-import com.toyproject.globalMarket.repository.ProductRepository;
-import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.repository.query.FluentQuery;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
 
-public class Github extends BaseObject {
+public class APIGithub extends BaseObject {
 
 
-    public Github(String _id, String productName){
+    public APIGithub(String _id, String productName){
         super("Github", objectId++);
         this.id = _id;
         this.nickname = "branch";

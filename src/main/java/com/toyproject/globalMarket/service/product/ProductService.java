@@ -5,7 +5,7 @@ import com.toyproject.globalMarket.DTO.Product;
 import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
 import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 
-import com.toyproject.globalMarket.configuration.platform.Github;
+import com.toyproject.globalMarket.configuration.platform.APIGithub;
 import com.toyproject.globalMarket.entity.ProductEntity;
 import com.toyproject.globalMarket.libs.BaseObject;
 import com.toyproject.globalMarket.libs.FileManager;
@@ -13,18 +13,10 @@ import com.toyproject.globalMarket.repository.ProductRepository;
 import com.toyproject.globalMarket.service.product.store.StoreInterface;
 import com.toyproject.globalMarket.service.product.store.aliExpress.AliExpress;
 import okhttp3.*;
-import org.hibernate.service.spi.InjectService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.info.ProjectInfoProperties;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -103,7 +95,7 @@ public class ProductService extends BaseObject {
         return 0;
     }
 
-    private int downloadAndConvertImageToJpeg(Images images, Github github) {;
+    private int downloadAndConvertImageToJpeg(Images images, APIGithub github) {;
         final String destinationDirectory = github.uploadThumbnailDirectory;
         FileManager fileManager = new FileManager();
         fileManager.downloadImages(images, destinationDirectory);
@@ -119,7 +111,7 @@ public class ProductService extends BaseObject {
         switch (productSource.getPlatform()){
             case 네이버 -> {
                 String _id = String.valueOf(productRepository.findUpcommingId());
-                Github github = new Github(_id, productSource.getName());
+                APIGithub github = new APIGithub(_id, productSource.getName());
                 github.initBranch();
                 ret = downloadAndConvertImageToJpeg(productSource.getImages(), github);
                 github.uploadImages();
