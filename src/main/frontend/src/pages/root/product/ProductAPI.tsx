@@ -32,7 +32,8 @@ export function ProductAxios(resultCallback: (data: any) => void, type : string,
                 baseURL: `http://${my.ipAddress}:${my.backEndPort}`,
                 withCredentials: true,
             }).then(function (response) {
-                resultCallback(response.data);
+                if (response.status == 200)
+                    resultCallback(response.data);
             });
             break;
         case "register/confirm":

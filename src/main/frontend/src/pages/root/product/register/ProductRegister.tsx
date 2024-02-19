@@ -185,7 +185,7 @@ const ProductRegister: React.FC = () => {
     }
 
     const ResultCallback = (data : number) => {
-        console.log (data);
+        console.log ("STATUS : ",data);
     }
 
     const onClickConfirm = (event : React.MouseEvent<HTMLButtonElement>) => {

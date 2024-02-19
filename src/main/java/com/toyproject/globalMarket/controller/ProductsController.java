@@ -106,7 +106,6 @@ public class ProductsController extends BaseObject {
                             break;
                     }
                     responseCode = 401;
-
                     do {
                         responseCode = productService.register(productSource, naver.getOAuth());
                         LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 2, "ResponseCode : {0}", responseCode);
@@ -121,7 +120,7 @@ public class ProductsController extends BaseObject {
                 e.printStackTrace();
                 ;
             }
-
+            LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Response Code : {0}", responseCode);
             return ResponseEntity.ok(responseCode);
         }
 
