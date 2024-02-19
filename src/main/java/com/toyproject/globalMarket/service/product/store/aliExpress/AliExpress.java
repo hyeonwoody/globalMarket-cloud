@@ -1,7 +1,6 @@
 package com.toyproject.globalMarket.service.product.store.aliExpress;
 
 import com.google.gson.annotations.SerializedName;
-import com.toyproject.globalMarket.DTO.product.platform.naver.SeoInfo;
 import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 import com.toyproject.globalMarket.libs.BaseObject;
 import com.toyproject.globalMarket.service.product.store.StoreInterface;
@@ -24,10 +23,9 @@ import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+
 
 public class AliExpress extends BaseObject implements StoreInterface {
 
@@ -39,14 +37,40 @@ public class AliExpress extends BaseObject implements StoreInterface {
         super("AlieExpress", objectId++);
     }
 
+    public interface Information {
+        void getField(JsonObject jsonObject);
+    }
 
     @Getter
-    public class GeneralFreightInfo{
-        private String shippingFeeText;
-
+    public class GeneralFreightInfo implements Information {
+        public String shippingFeeText;
 
         public void setShippingFeeText() {
             this.shippingFeeText = this.shippingFeeText.replaceAll("[^0-9]", "");
+        }
+
+        @Override
+        public void getField(JsonObject jsonObject) {
+            Class<?> thisClass = this.getClass();
+            for (Field field : thisClass.getDeclaredFields()) {
+                field.setAccessible(true);
+                Class<?> fieldType = field.getType();
+
+                try {
+                    if (fieldType == String.class) {
+                        String value = jsonObject.get(field.getName()).getAsString();
+                        field.set(thisClass, value);
+                    } else if (fieldType == int.class) {
+                        field.setInt(thisClass, jsonObject.get(field.getName()).getAsInt());
+                    } else if (fieldType == boolean.class) {
+                        field.setBoolean(thisClass, jsonObject.get(field.getName()).getAsBoolean());
+                    }
+                } catch (IllegalAccessException e) {
+                    // Handle the exception gracefully
+                    e.printStackTrace();
+                    // You can choose to throw a custom exception, skip the field, etc.
+                }
+            }
         }
     }
 
@@ -151,7 +175,6 @@ public class AliExpress extends BaseObject implements StoreInterface {
     @Override
     public int convert(ProductRegisterVO productRegisterVO, JsonObject jsonObject) {
 
-
         ProductInfo productInfo = new Gson().fromJson(jsonObject.get("productInfo"), ProductInfo.class);
         PriceInfo priceInfo = new Gson().fromJson(jsonObject.get("priceInfo"), PriceInfo.class);
         SpecificationInfo specificationInfo = new Gson().fromJson(jsonObject.get("specificationInfo"), SpecificationInfo.class);
@@ -244,3 +267,5 @@ public class AliExpress extends BaseObject implements StoreInterface {
     }
 
 }
+
+
