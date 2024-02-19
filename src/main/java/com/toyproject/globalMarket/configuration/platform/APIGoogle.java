@@ -27,12 +27,12 @@ import java.util.List;
 import java.io.InputStream;
 
 
-public class Google extends APIConfig {
+public class APIGoogle extends APIConfig {
 
     private static int objectId = 0;
 
     public static final String uploadRepresentativeDirectory = System.getProperty("user.dir") + "/src/main/resources/tmp/representative";
-    public Google(@Value("${google.clientId}") String clientId,
+    public APIGoogle(@Value("${google.clientId}") String clientId,
                  @Value("${google.clientSecret}") String clientSecret) {
         super("PlatformGoogle", objectId++,clientId, clientSecret, "");
         this.kind = PlatformList.GOOGLE.ordinal();
@@ -83,7 +83,7 @@ public class Google extends APIConfig {
                 DriveScopes.DRIVE_SCRIPTS
         );
         final String CREDENTIALS_FILE_PATH = "/googleCredentials.json";
-        InputStream in = Google.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
+        InputStream in = APIGoogle.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
         if (in == null){
             try {
                 throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
