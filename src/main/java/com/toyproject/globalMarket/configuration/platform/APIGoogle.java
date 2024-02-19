@@ -32,9 +32,8 @@ public class APIGoogle extends APIConfig {
     private static int objectId = 0;
 
     public static final String uploadRepresentativeDirectory = System.getProperty("user.dir") + "/src/main/resources/tmp/representative";
-    public APIGoogle(@Value("${google.clientId}") String clientId,
-                 @Value("${google.clientSecret}") String clientSecret) {
-        super("PlatformGoogle", objectId++,clientId, clientSecret, "");
+    public APIGoogle() {
+        super("PlatformGoogle", objectId++);
         this.kind = PlatformList.GOOGLE.ordinal();
         int a = 0;
     }

@@ -36,7 +36,7 @@ public class CategoryService extends BaseObject {
     }
 
     public int getCategoryNaverAPI(List<CategoryNaverDTO> categoryNaverDTOList) {
-        APINaver naver =new APINaver("", "");
+        APINaver naver =new APINaver();
         naver.getCategory(categoryNaverDTOList);
         categoryRepository.APItoSave(categoryNaverDTOList);
         return 0;

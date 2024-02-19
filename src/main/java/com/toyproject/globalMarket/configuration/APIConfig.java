@@ -5,10 +5,13 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public abstract class APIConfig extends BaseObject {
-    private static int objectId;
-    public String clientId;
-    public String clientSecret;
-    public String url;
+    protected Client client;
+
+    public class Client {
+        public String id;
+        public String secret;
+    }
+
 
 
 
@@ -20,19 +23,10 @@ public abstract class APIConfig extends BaseObject {
     }
     public int kind;
 
-    public APIConfig(String objectName, int objectId, String clientId, String clientSecret, String url) {
+    public APIConfig(String objectName, int objectId) {
         super(objectName, objectId);
-        this.clientId = clientId;
-        this.clientSecret = clientSecret;
-        this.url = url;
     }
 
-    public APIConfig(String clientId, String clientSecret, String url) {
-        super("PlatformConfig", objectId++);
-        this.clientId = clientId;
-        this.clientSecret = clientSecret;
-        this.url = url;
-    }
 
     public abstract String getOAuth();
 }
