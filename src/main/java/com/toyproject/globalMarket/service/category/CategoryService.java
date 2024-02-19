@@ -1,20 +1,14 @@
 package com.toyproject.globalMarket.service.category;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.toyproject.globalMarket.DTO.category.CategoryNaverDTO;
-import com.toyproject.globalMarket.DTO.product.platform.naver.*;
 import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
-import com.toyproject.globalMarket.configuration.platform.Naver;
-import com.toyproject.globalMarket.entity.CategoryNaverEntity;
+import com.toyproject.globalMarket.configuration.platform.APINaver;
 import com.toyproject.globalMarket.libs.BaseObject;
 import com.toyproject.globalMarket.repository.CategoryRepository;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +36,7 @@ public class CategoryService extends BaseObject {
     }
 
     public int getCategoryNaverAPI(List<CategoryNaverDTO> categoryNaverDTOList) {
-        Naver naver =new Naver("", "");
+        APINaver naver =new APINaver("", "");
         naver.getCategory(categoryNaverDTOList);
         categoryRepository.APItoSave(categoryNaverDTOList);
         return 0;

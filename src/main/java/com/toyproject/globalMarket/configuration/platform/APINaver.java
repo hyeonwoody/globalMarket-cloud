@@ -22,15 +22,14 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
 
 @Configuration
-public class Naver extends APIConfig {
+public class APINaver extends APIConfig {
     private static int objectId = 0;
-    public Naver(@Value("${naver.clientId}") String clientId,
+    public APINaver(@Value("${naver.clientId}") String clientId,
                  @Value("${naver.clientSecret}") String clientSecret) {
         super("PlatformNaver", objectId++,clientId, clientSecret, "https://api.commerce.naver.com/external/v1/oauth2/token");
         this.kind = PlatformList.NAVER.ordinal();

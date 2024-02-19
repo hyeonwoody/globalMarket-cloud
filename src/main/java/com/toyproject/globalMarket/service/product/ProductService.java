@@ -69,15 +69,16 @@ public class ProductService extends BaseObject {
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()) {
                 LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Request is Successful with code : {0}", response.code());
+                ProductEntity productEntity = new ProductEntity();
+                productEntity.setEntity(product, productRegisterVO.getUrl());
+                productRepository.save(productEntity);
             } else {
                 LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Request is Failed with code : {0}", response.code());
                 LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Response message : {0}", response.message());
                 LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Response body : {0}", response.body().string());
 
             }
-            ProductEntity productEntity = new ProductEntity();
-            productEntity.setEntity(product, productRegisterVO.getUrl());
-            productRepository.save(productEntity);
+
             return response.code();
         } catch (IOException e) {
             throw new RuntimeException(e);

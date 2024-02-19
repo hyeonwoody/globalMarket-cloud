@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.toyproject.globalMarket.configuration.APIConfig;
-import com.toyproject.globalMarket.configuration.platform.Naver;
+import com.toyproject.globalMarket.configuration.platform.APINaver;
 
 import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 import com.toyproject.globalMarket.libs.BaseObject;
@@ -37,7 +37,7 @@ public class ProductsController extends BaseObject {
 
 
     @Autowired
-    Naver naver;
+    APINaver naver;
 
     protected ProductsController(CategoryService categoryService, ProductService productService) {
         super("ProductController", 0);
@@ -73,58 +73,57 @@ public class ProductsController extends BaseObject {
     }
 
         @PostMapping("/register/confirm")
-    public ResponseEntity<ProductRegisterVO> RegisterConfirm (HttpServletRequest request) {
-        // 요청을 보낸 클라이언트의 IP주소를 반환합니다.
-        ProductRegisterVO productSource = new ProductRegisterVO();
+    public ResponseEntity<Integer> RegisterConfirm (HttpServletRequest request) {
+            // 요청을 보낸 클라이언트의 IP주소를 반환합니다.
+            ProductRegisterVO productSource = new ProductRegisterVO();
 
 
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
-            String requestBody = reader.lines().collect(Collectors.joining(System.lineSeparator()));
+            int responseCode = 0;
+            try {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
+                String requestBody = reader.lines().collect(Collectors.joining(System.lineSeparator()));
 
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "input {0}", requestBody);
-            productSource = objectMapper.readValue(requestBody, ProductRegisterVO.class);
+                ObjectMapper objectMapper = new ObjectMapper();
+                LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "input {0}", requestBody);
+                productSource = objectMapper.readValue(requestBody, ProductRegisterVO.class);
 
 
+                if (productSource.areMembersNotNull()) {
 
+                    categoryService.getNewCategoryInfo(productSource);
+                    productService.getNewProductInfo(productSource);
+                    productService.downloadImages(productSource);
 
-            if (productSource.areMembersNotNull()){
+                    switch (productSource.getPlatform()) {
+                        case 네이버:
+                            platform = naver;
+                            ((APINaver) platform).uploadImages(productSource.getImages(), naver.getOAuth());
+                            break;
+                        case 알리익스프레스:
+                            break;
+                        default:
+                            break;
+                    }
+                    responseCode = 401;
 
-                categoryService.getNewCategoryInfo(productSource);
-                productService.getNewProductInfo(productSource);
-                productService.downloadImages(productSource);
+                    do {
+                        responseCode = productService.register(productSource, naver.getOAuth());
+                        LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 2, "ResponseCode : {0}", responseCode);
+                    } while (responseCode == 401);
 
-                switch (productSource.getPlatform()){
-                    case 네이버:
-                        platform = naver;
-                        ((Naver) platform).uploadImages(productSource.getImages(), naver.getOAuth());
-                        break;
-                    case 알리익스프레스:
-                        break;
-                    default:
-                        break;
+                    //productService.search(platform.getOAuth());
+                } else {
+                    LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "product inputs are null.");
                 }
-                int responseCode =401;
 
-                do {
-                    responseCode = productService.register(productSource, naver.getOAuth());
-                    LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 2, "ResponseCode : {0}", responseCode);
-                } while (responseCode == 401);
-
-                //productService.search(platform.getOAuth());
-            }
-            else {
-                LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "product inputs are null.");
+            } catch (IOException e) {
+                e.printStackTrace();
+                ;
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();;
+            return ResponseEntity.ok(responseCode);
         }
-
-        return ResponseEntity.ok(productSource);
-    }
 
 
 }

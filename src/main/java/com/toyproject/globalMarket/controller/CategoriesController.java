@@ -1,7 +1,7 @@
 package com.toyproject.globalMarket.controller;
 
 import com.toyproject.globalMarket.DTO.category.CategoryNaverDTO;
-import com.toyproject.globalMarket.configuration.platform.Naver;
+import com.toyproject.globalMarket.configuration.platform.APINaver;
 import com.toyproject.globalMarket.libs.BaseObject;
 import com.toyproject.globalMarket.service.category.CategoryService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,7 +30,7 @@ public class CategoriesController extends BaseObject {
     }
 
     @Autowired
-    Naver naver;
+    APINaver naver;
 
     @GetMapping("/naver")
     public ResponseEntity<Map<String, List<String>>> Naver (HttpServletRequest request) {
