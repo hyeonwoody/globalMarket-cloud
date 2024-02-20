@@ -10,13 +10,13 @@ import lombok.Data;
 @Entity
 @Data
 @Table(name="category_naver")
-public class CategoryNaverEntity extends CategoryNaverDTO{
+public class CategoryNaverEntity {
 
     @Id
     private Long category_naver_id;
 
     @Column(name="whole_category_name", nullable = false)
-    public String wholeCategoryName;
+    public String whole_category_name;
 
     @Column(name="name", nullable = false)
     public String name;

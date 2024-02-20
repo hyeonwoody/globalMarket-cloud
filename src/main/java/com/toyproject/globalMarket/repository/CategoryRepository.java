@@ -16,7 +16,7 @@ public interface CategoryRepository extends JpaRepository<CategoryNaverEntity, L
                 .map (entity -> {
                     CategoryNaverDTO categoryNaverDTO = new CategoryNaverDTO();
                     categoryNaverDTO.setId(String.valueOf(entity.getCategory_naver_id()));
-                    categoryNaverDTO.setWholeCategoryName(entity.getWholeCategoryName());
+                    categoryNaverDTO.setWholeCategoryName(entity.getWhole_category_name());
                     categoryNaverDTO.setName(entity.getName());
                     categoryNaverDTO.setLast(entity.isLast());
                     return categoryNaverDTO;
@@ -26,9 +26,8 @@ public interface CategoryRepository extends JpaRepository<CategoryNaverEntity, L
     default void APItoSave(List<CategoryNaverDTO> cateogryNaverDTOList){
         for (CategoryNaverDTO categoryNaverDTO : cateogryNaverDTOList){
             CategoryNaverEntity categoryNaverEntity = new CategoryNaverEntity();
-            categoryNaverEntity.setWholeCategoryName(categoryNaverDTO.getWholeCategoryName());
+            categoryNaverEntity.setWhole_category_name(categoryNaverDTO.getWholeCategoryName());
             categoryNaverEntity.setName(categoryNaverDTO.getName());
-            categoryNaverEntity.setId(categoryNaverDTO.getId());
             categoryNaverEntity.setLast(categoryNaverDTO.isLast());
             categoryNaverEntity.setCategory_naver_id (Long.parseLong(categoryNaverDTO.getId()));
             save(categoryNaverEntity);
