@@ -191,24 +191,25 @@ public class AliExpress extends BaseObject implements StoreInterface {
         if (productRegisterVO.getDetailContent() == null){
             productRegisterVO.setDetailContent("<div class=\"product_detail\">\n" +
                     "<div class=\"product_detail_title\">\n" +
-                    "<h1>스마트스토어 세계장터 제품 상세정보<h1/>\n" +
+                        "<h1>스마트스토어 세계장터 제품 상세정보<h1/>\n" +
                     "</div>\n" +
                     "<div class=\"product_detail_content\">\n" +
-                    "<div class=\"product_detail_content_logo\">\n" +
-                    "<img src=\"https://raw.githubusercontent.com/GlobalMarketKOR/Images/master/detail/template/template_01.jpg\" alt=\"세계장터 로고 및 슬로건\"/>\n" +
-                    "</div>\n" +
-                    "<div class=\"product_detail_content_notice\">\n" +
-                    "<img src=\"https://raw.githubusercontent.com/GlobalMarketKOR/Images/master/detail/template/template_02.jpg\" alt=\"세계장터 공지사항\"/>\n" +
-                    "</div>\n" +
-                    "<div class=\"product_detail_content_hooking\">\n" +
-                    "<img src=\"https://raw.githubusercontent.com/GlobalMarketKOR/Images/" + productRegisterVO.getDBId() + "/detail/template/template_03.jpg\" alt=\"세계장터 제품PR\"/>\n" +
-                    "</div>\n" +
-                    "<div class=\"product_detail_content_season\">\n" +
-                    "<img src=\"https://raw.githubusercontent.com/GlobalMarketKOR/Images/master/detail/template/template_05.jpg\" alt=\"세계장터 시즌\"/>\n" +
-                    "</div>\n" +
-                    "<div class=\"product_detail_content_information\">" +
-                    productInfo.getDetailContent() +
-                    "</div>\n" +
+                        "<center>\n" +
+                            "<div class=\"product_detail_content_logo\">\n" +
+                            "<img src=\"https://raw.githubusercontent.com/GlobalMarketKOR/Images/master/detail/template/template_01.jpg\" alt=\"세계장터 로고 및 슬로건\"/>\n" +
+                            "</div>\n" +
+                            "<div class=\"product_detail_content_notice\">\n" +
+                            "<img src=\"https://raw.githubusercontent.com/GlobalMarketKOR/Images/master/detail/template/template_02.jpg\" alt=\"세계장터 공지사항\"/>\n" +
+                            "</div>\n" +
+                            "<div class=\"product_detail_content_hooking\">\n" +
+                            "<img src=\"https://raw.githubusercontent.com/GlobalMarketKOR/Images/" + productRegisterVO.getDBId() + "/detail/template/template_03.jpg\" alt=\"세계장터 제품PR\"/>\n" +
+                            "</div>\n" +
+                            "<div class=\"product_detail_content_season\">\n" +
+                            "<img src=\"https://raw.githubusercontent.com/GlobalMarketKOR/Images/master/detail/template/template_05.jpg\" alt=\"세계장터 시즌\"/>\n" +
+                            "</div>\n" +
+                            "<div class=\"product_detail_content_information\">" +
+                            productInfo.getDetailContent() +
+                            "</div>\n" +
                             "<div class=\"product_detail_content_caution\">\n" +
                             "<img src=\"https://raw.githubusercontent.com/GlobalMarketKOR/Images/master/detail/template/template_06.jpg\" alt=\"세계장터 유의사항\"/>\n" +
                             "</div>\n" +
@@ -224,6 +225,7 @@ public class AliExpress extends BaseObject implements StoreInterface {
                             "<div class=\"product_detail_content_copyright\">\n" +
                             "<img src=\"https://raw.githubusercontent.com/GlobalMarketKOR/Images/master/detail/template/template_10.jpg\" alt=\"세계장터 상표 및 저작권\"/>\n" +
                             "</div>\n" +
+                        "</center>\n" +
                             "</div>\n" +
                             "</div>"
                     );
