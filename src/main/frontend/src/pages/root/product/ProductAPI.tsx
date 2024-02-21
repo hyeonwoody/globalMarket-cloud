@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, {AxiosError} from 'axios';
 import {My} from '../../../configuration/web/webConfig';
 import {Platform} from '../../../configuration/platform';
 import ProductAPI from "./ProductAPI";
@@ -20,6 +20,7 @@ export interface RegisterState {
     additionalInfoList : string[],
     images : ProductImage
 }
+
 export function ProductAxios(resultCallback: (data: any) => void, type : string, data : RegisterState) {
     console.log ("Axios"+data);
     switch (type){
@@ -46,9 +47,9 @@ export function ProductAxios(resultCallback: (data: any) => void, type : string,
                 withCredentials: true,
                 data: data,
             }).then(function (response) {
-                console.log ("ProductAPI + ProductAxios"+response.status);
-                if (response.status == 200)
-                    resultCallback(response.data);
+                resultCallback(response);
+            }).catch(function (error) {
+                resultCallback(error.response);
             });
             break;
         default:

@@ -65,3 +65,8 @@ tokens/*
 
 lib/*
 
+### Images
+src/Images
+src/Images/*
+
+demo/*

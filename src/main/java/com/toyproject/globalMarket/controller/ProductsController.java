@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.toyproject.globalMarket.VO.response.ResponseVO;
 import com.toyproject.globalMarket.configuration.APIConfig;
-import com.toyproject.globalMarket.configuration.platform.APINaver;
 
 import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 import com.toyproject.globalMarket.libs.BaseObject;
@@ -13,6 +13,7 @@ import com.toyproject.globalMarket.service.category.CategoryService;
 import com.toyproject.globalMarket.service.product.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -67,11 +68,11 @@ public class ProductsController extends BaseObject {
     }
 
         @PostMapping("/register/confirm")
-    public ResponseEntity<Integer> RegisterConfirm (HttpServletRequest request) {
+    public ResponseEntity<String> RegisterConfirm (HttpServletRequest request) {
             // 요청을 보낸 클라이언트의 IP주소를 반환합니다.
             ProductRegisterVO productSource = new ProductRegisterVO();
 
-            int responseCode = 0;
+            ResponseVO response = null;
             try {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
                 String requestBody = reader.lines().collect(Collectors.joining(System.lineSeparator()));
@@ -79,6 +80,7 @@ public class ProductsController extends BaseObject {
                 ObjectMapper objectMapper = new ObjectMapper();
                 LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "input {0}", requestBody);
                 productSource = objectMapper.readValue(requestBody, ProductRegisterVO.class);
+
 
                 if (productSource.areMembersNotNull()) {
 
@@ -88,24 +90,37 @@ public class ProductsController extends BaseObject {
 
                     switch (productSource.getPlatform()) {
                         case 네이버:
-                            productService.uploadImages (productSource.getImages());
+                            productService.uploadImages(productSource.getImages());
                             break;
                         case 알리익스프레스:
                             break;
                         default:
                             break;
                     }
-                    responseCode = productService.register(productSource, productSource.getPlatform().ordinal());
+                    response = productService.register(productSource, productSource.getPlatform().ordinal());
                 } else {
                     LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "product inputs are null.");
                 }
+                LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Response Code : {0}", response.code());
 
             } catch (IOException e) {
                 e.printStackTrace();
                 ;
             }
-            LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Response Code : {0}", responseCode);
-            return ResponseEntity.ok(responseCode);
+            if (response.code() == 200) {
+                return ResponseEntity.ok(null);
+            } else if (response.code() == 400) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response.getResponseBody());
+            } else if (response.code() == 401) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("인가되지 않은 요청");
+            } else if (response.code() == 403) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("권한 없음");
+            } else if (response.code() == 404) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("데이터 없음");
+            } else if (response.code() == 500) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("네이버 서버 오류");
+            }
+            return null;
         }
 
 

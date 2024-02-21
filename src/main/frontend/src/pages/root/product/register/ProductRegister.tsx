@@ -5,31 +5,39 @@ import Modal from "../../part/Modal";
 import ProductRegisterAPI from "./ProductRegisterAPI";
 import Category from "./part/Category";
 import Image from "./part/images/Image"
+import {AxiosResponse} from "axios";
+
 
 
 const ProductRegister: React.FC = () => {
     const [category, setCategory] = useState(new Map<string, string[]>());
-    const [input, setInput] = useState<RegisterState>({
+    const initialState : RegisterState = {
         additionalInfoList: [],
         category: [],
         detailContent: "",
-        name: "", platform: 0, salePrice: 0, stockQuantity: 0,
+        name: "",
+        platform: 0,
+        salePrice: 0,
+        stockQuantity: 0,
         url: "",
         images: {
-            representativeImage: { url: ""}, // Provide default URL or leave it empty
-            optionalImages: []   // Provide default alt text or leave it empty
+            representativeImage: { url: "" }, // Default URL
+            optionalImages: [] // Empty array
         },
-    });
+    };
+    const [input, setInput] = useState<RegisterState>(initialState);
     const [platformState, setPlatform] = useState ("네이버");
     const [isValidUrl, setValidUrl] = useState (false);
     const [dropdown, setDropdown] = useState (false);
     const [showCategory, setShowCategory] = useState (false);
-    const [showModal, setShowModal] = useState(false);
+    const [showURLModal, setShowURLModal] = useState(false);
     const [showInfo, setShowInfo] = useState(false);
     const [additionalInfoList, setAdditionalInfo] = useState<string[]>([]);
 
     const inputClassName = `appearance-none block w-full bg-gray-200 text-gray-700 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white ${isValidUrl ? '' : 'border border-red-500'}`;
 
+    const [showResultModal, setShowResultModal] = useState(false);
+    const [confirmResponse, setConfirmResult] = useState<string>();
     const toggleDropdown = () => {
         setDropdown(!dropdown);
     }
@@ -184,8 +192,17 @@ const ProductRegister: React.FC = () => {
         return options;
     }
 
-    const ResultCallback = (data : number) => {
-        console.log ("STATUS : ",data);
+    const ResultCallback = (response :  AxiosResponse<any, any>) => {
+        if (response.status == 200){
+            setConfirmResult("성공적으로 등록 되었습니다.");
+            setShowResultModal(true);
+            setInput(initialState);
+            setShowInfo(false);
+        }
+        else if (response.status == 400){
+            setConfirmResult(response.data.message);
+            setShowResultModal(true);
+        }
     }
 
     const onClickConfirm = (event : React.MouseEvent<HTMLButtonElement>) => {
@@ -200,7 +217,7 @@ const ProductRegister: React.FC = () => {
 
         else {
             console.log ("모달")
-            setShowModal(true);
+            setShowURLModal(true);
         }
     }
 
@@ -237,7 +254,7 @@ const ProductRegister: React.FC = () => {
 
         else {
             console.log ("모달")
-            setShowModal(true);
+            setShowURLModal(true);
         }
     }
 
@@ -407,10 +424,15 @@ const ProductRegister: React.FC = () => {
 
 
             </div>
-            <Modal show={showModal} onClose={() => setShowModal(false)}>
+            <Modal show={showURLModal} onClose={() => setShowURLModal(false)}>
                 <p>유효한 URL을 입력해주세요.</p>
-                <button onClick={() => setShowModal(false)}>Close</button>
+                <button onClick={() => setShowURLModal(false)}>Close</button>
             </Modal>
+            <Modal show={showResultModal} onClose={() => setShowResultModal(false)}>
+                <p>{confirmResponse}</p>
+                <button onClick={() => setShowResultModal(false)}>Close</button>
+            </Modal>
+
         </div>
 
     )

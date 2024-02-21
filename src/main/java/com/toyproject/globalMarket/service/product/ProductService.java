@@ -2,7 +2,7 @@ package com.toyproject.globalMarket.service.product;
 
 import com.google.gson.Gson;
 import com.toyproject.globalMarket.DTO.Product;
-import com.toyproject.globalMarket.DTO.product.platform.Naver;
+import com.toyproject.globalMarket.VO.response.ResponseVO;
 import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
 import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 
@@ -15,13 +15,13 @@ import com.toyproject.globalMarket.libs.HtmlParser;
 import com.toyproject.globalMarket.repository.ProductRepository;
 import com.toyproject.globalMarket.service.product.store.StoreInterface;
 import com.toyproject.globalMarket.service.product.store.aliExpress.AliExpress;
-import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 @Service
 public class ProductService extends BaseObject {
@@ -39,26 +39,26 @@ public class ProductService extends BaseObject {
         this.productRepository = productRepository;
     }
 
-    public int register (ProductRegisterVO productRegisterVO, int platform){
-        int responseCode = 0;
+    public ResponseVO register (ProductRegisterVO productRegisterVO, int platform){
         Date now = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
         String time = dateFormat.format(now);
         productRegisterVO.setCurrentTime (time);
         Product product = new Product ();
         product.setDTO(productRegisterVO);
+        ResponseVO response = null;
         switch (platform){
             case 0:
-                responseCode = naver.postProducts(product);
+                response = naver.postProducts(product);
                 break;
         }
-        if (responseCode == 200){
-            LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Request is Successful with code : {0}", responseCode);
+        if (response.code() == 200){
+            LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Request is Successful with code : {0}", response.code());
             ProductEntity productEntity = new ProductEntity();
             productEntity.setEntity(product, productRegisterVO.getUrl());
             productRepository.save(productEntity);
         }
-        return responseCode;
+        return response;
     }
 
     public int getNewProductInfo (ProductRegisterVO productRegisterVO){

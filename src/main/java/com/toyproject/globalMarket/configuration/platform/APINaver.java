@@ -8,18 +8,16 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.toyproject.globalMarket.DTO.Product;
+import com.toyproject.globalMarket.VO.response.ResponseVO;
 import com.toyproject.globalMarket.DTO.category.CategoryNaverDTO;
 import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
 import com.toyproject.globalMarket.VO.product.NaverImageVO;
 import com.toyproject.globalMarket.configuration.APIConfig;
-import com.toyproject.globalMarket.entity.ProductEntity;
 import com.toyproject.globalMarket.libs.BCrypt;
 import com.toyproject.globalMarket.libs.EventManager;
 import com.toyproject.globalMarket.libs.FileManager;
 
 import okhttp3.*;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 
@@ -50,7 +48,7 @@ public class APINaver extends APIConfig {
         this.kind = PlatformList.NAVER.ordinal();
     }
 
-    public int postProducts (Product product) {
+    public ResponseVO postProducts (Product product) {
         String accessToken = getOAuth();
         OkHttpClient client = new OkHttpClient();
         try {
@@ -66,13 +64,15 @@ public class APINaver extends APIConfig {
                     .addHeader("content-type", "image/jpeg")
                     .build();
 
-            Response response = client.newCall(request).execute();
-            if (response.code() != 200) {
-                LogOutput(LOG_LEVEL.ERROR, ObjectName(), MethodName(), 0, "Request is Failed with code : {0}", response.code());
-                LogOutput(LOG_LEVEL.ERROR, ObjectName(), MethodName(), 0, "Response message : {0}", response.message());
-                LogOutput(LOG_LEVEL.ERROR, ObjectName(), MethodName(), 0, "Response body : {0}", response.body().string());
+            Response okHttpResponse = client.newCall(request).execute();
+            ResponseVO response = new ResponseVO(okHttpResponse.code(), okHttpResponse.body().string());
+            if (okHttpResponse.code() != 200) {
+                LogOutput(LOG_LEVEL.ERROR, ObjectName(), MethodName(), 0, "Request is Failed with code : {0}", okHttpResponse.code());
+                LogOutput(LOG_LEVEL.ERROR, ObjectName(), MethodName(), 0, "Response message : {0}", okHttpResponse.message());
+                LogOutput(LOG_LEVEL.ERROR, ObjectName(), MethodName(), 0, "Response body : {0}", response.body());
             }
-            return response.code();
+
+            return response;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
