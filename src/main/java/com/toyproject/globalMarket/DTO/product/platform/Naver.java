@@ -182,6 +182,7 @@ public class Naver implements Platform  {
                 break;
             case "스포츠/레저":
                 this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = ProductInfoProvidedNotice.ProductCategory.SPORTS_EQUIPMENT.name();
+                this.originProduct.getDetailAttribute().productInfoProvidedNotice.sportsEquipment = new SportsEquipment(object.getAdditionalInfoList());
                 break;
             case "도서":
                 this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = ProductInfoProvidedNotice.ProductCategory.BOOKS.name();

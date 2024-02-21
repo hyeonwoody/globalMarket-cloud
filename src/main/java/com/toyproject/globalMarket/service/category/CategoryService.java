@@ -225,7 +225,17 @@ public class CategoryService extends BaseObject {
                 }
                 break;
             case "스포츠/레저":
-
+                productSource.getAdditionalInfoList().add("품명");
+                productSource.getAdditionalInfoList().add("모델명");
+                productSource.getAdditionalInfoList().add("KC 인증정보");
+                productSource.getAdditionalInfoList().add("크기");
+                productSource.getAdditionalInfoList().add("중량");
+                productSource.getAdditionalInfoList().add("색상");
+                productSource.getAdditionalInfoList().add("재질");
+                productSource.getAdditionalInfoList().add("재품 구성");
+                productSource.getAdditionalInfoList().add("동일 모델의 출시연월 'yyyy-MM'");
+                productSource.getAdditionalInfoList().add("제조사");
+                productSource.getAdditionalInfoList().add("상품별 세부 사양");
                 break;
             case "도서":
 
