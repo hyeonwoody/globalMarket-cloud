@@ -3,6 +3,8 @@ package com.toyproject.globalMarket.service.product.store.aliExpress;
 import com.google.gson.annotations.SerializedName;
 import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 import com.toyproject.globalMarket.libs.BaseObject;
+import com.toyproject.globalMarket.libs.HtmlManager;
+import com.toyproject.globalMarket.libs.HtmlParser;
 import com.toyproject.globalMarket.service.product.store.StoreInterface;
 
 
@@ -230,7 +232,12 @@ public class AliExpress extends BaseObject implements StoreInterface {
                             "</div>"
                     );
         }
-
+        else {
+            HtmlManager htmlManager = new HtmlManager();
+            String detailContent = htmlManager.cleanHtml(productRegisterVO.getDetailContent());
+            productRegisterVO.setDetailContent(detailContent);
+            htmlManager.replaceDetailContnetImages(productRegisterVO);
+        }
         if (productRegisterVO.getSalePrice() == 0){
             int price = Math.max(priceInfo.getSaleMaxPrice().value, priceInfo.getDetails().maxAmount.value);
             productRegisterVO.setSalePrice(price - (price % 10));

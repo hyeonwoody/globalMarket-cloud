@@ -24,6 +24,8 @@ public class APIGithub extends BaseObject {
     public final String uploadDirectory = System.getProperty("user.dir") + "/src/Images";
     public final String uploadThumbnailDirectory = System.getProperty("user.dir") + "/src/Images/detail/thumbnail";
     public final String uploadPageDirectory = System.getProperty("user.dir") + "/src/Images/detail/page";
+    public final String URL = "https://raw.githubusercontent.com/GlobalMarketKOR/Images/";
+    public final String pageURL = "/detail/page/";
 
 
     private String id;
