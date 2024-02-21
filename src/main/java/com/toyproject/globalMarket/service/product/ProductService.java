@@ -2,13 +2,16 @@ package com.toyproject.globalMarket.service.product;
 
 import com.google.gson.Gson;
 import com.toyproject.globalMarket.DTO.Product;
+import com.toyproject.globalMarket.DTO.product.platform.Naver;
 import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
 import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 
 import com.toyproject.globalMarket.configuration.platform.APIGithub;
+import com.toyproject.globalMarket.configuration.platform.APINaver;
 import com.toyproject.globalMarket.entity.ProductEntity;
 import com.toyproject.globalMarket.libs.BaseObject;
 import com.toyproject.globalMarket.libs.FileManager;
+import com.toyproject.globalMarket.libs.HtmlParser;
 import com.toyproject.globalMarket.repository.ProductRepository;
 import com.toyproject.globalMarket.service.product.store.StoreInterface;
 import com.toyproject.globalMarket.service.product.store.aliExpress.AliExpress;
@@ -28,54 +31,34 @@ public class ProductService extends BaseObject {
     private final ProductRepository productRepository;
 
     @Autowired
+    APINaver naver;
+
+    @Autowired
     public ProductService(ProductRepository productRepository) {
         super("ProductService", objectId++);
         this.productRepository = productRepository;
     }
 
-    public int register (ProductRegisterVO productRegisterVO, String accessToken){
+    public int register (ProductRegisterVO productRegisterVO, int platform){
+        int responseCode = 0;
         Date now = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
         String time = dateFormat.format(now);
         productRegisterVO.setCurrentTime (time);
-
         Product product = new Product ();
         product.setDTO(productRegisterVO);
-
-
-
-        OkHttpClient client = new OkHttpClient();
-        try {
-            MediaType mediaType = MediaType.parse("application/json");
-            Gson gson = new Gson();
-            String jsonBody = gson.toJson(product.getDTO());
-            System.out.println(jsonBody);
-            RequestBody body = RequestBody.create(mediaType, jsonBody);
-            Request request = new Request.Builder()
-                    .url("https://api.commerce.naver.com/external/v2/products")
-                    .post(body)
-                    .addHeader("Authorization", "Bearer " + accessToken)
-                    .addHeader("content-type", "image/jpeg")
-                    .build();
-
-            Response response = client.newCall(request).execute();
-            if (response.isSuccessful()) {
-                LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Request is Successful with code : {0}", response.code());
-                ProductEntity productEntity = new ProductEntity();
-                productEntity.setEntity(product, productRegisterVO.getUrl());
-                productRepository.save(productEntity);
-            } else {
-                LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Request is Failed with code : {0}", response.code());
-                LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Response message : {0}", response.message());
-                LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Response body : {0}", response.body().string());
-
-            }
-
-            return response.code();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        switch (platform){
+            case 0:
+                responseCode = naver.postProducts(product);
+                break;
         }
-
+        if (responseCode == 200){
+            LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Request is Successful with code : {0}", responseCode);
+            ProductEntity productEntity = new ProductEntity();
+            productEntity.setEntity(product, productRegisterVO.getUrl());
+            productRepository.save(productEntity);
+        }
+        return responseCode;
     }
 
     public int getNewProductInfo (ProductRegisterVO productRegisterVO){
@@ -95,11 +78,23 @@ public class ProductService extends BaseObject {
         return 0;
     }
 
-    private int downloadAndConvertImageToJpeg(Images images, APIGithub github) {;
+    public int downloadDetailContentImagesAndConvertImageToJpeg (String detailContent, APIGithub github){
+        final String destinationDirectory = github.uploadPageDirectory;
+        Images images = new Images();
+        HtmlParser htmlParser = new HtmlParser();
+        htmlParser.getDetailContentImages(detailContent, images);
+
+        FileManager fileManager = new FileManager();
+        fileManager.downloadImages(images, destinationDirectory);
+        fileManager.convertImageToJpeg(images, destinationDirectory);
+        return 0;
+    }
+
+    private int downloadThumbnailAndConvertImageToJpeg(Images images, APIGithub github) {;
         final String destinationDirectory = github.uploadThumbnailDirectory;
         FileManager fileManager = new FileManager();
         fileManager.downloadImages(images, destinationDirectory);
-          fileManager.convertImageToJpeg(images);
+        fileManager.convertImageToJpeg(images);
 
         return 0;
     }
@@ -113,8 +108,9 @@ public class ProductService extends BaseObject {
                 String _id = String.valueOf(productRepository.findUpcommingId());
                 APIGithub github = new APIGithub(_id, productSource.getName());
                 github.initBranch();
-                ret = downloadAndConvertImageToJpeg(productSource.getImages(), github);
-                github.uploadImages();
+                ret = downloadThumbnailAndConvertImageToJpeg(productSource.getImages(), github);
+                ret = downloadDetailContentImagesAndConvertImageToJpeg (productSource.getDetailContent(), github);
+                github.commitImages();
                 break;
             }
             case 지마켓 -> {
@@ -127,5 +123,10 @@ public class ProductService extends BaseObject {
         return 0;
     }
 
-
+    public void uploadImages(Images images) {
+        naver.uploadImages(images);
+        String _id = String.valueOf(productRepository.findUpcommingId());
+        APIGithub github = new APIGithub();
+        github.turnToMaster();
+    }
 }

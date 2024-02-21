@@ -35,10 +35,6 @@ public class ProductsController extends BaseObject {
     @Autowired
     private final ProductService productService;
 
-
-    @Autowired
-    APINaver naver;
-
     protected ProductsController(CategoryService categoryService, ProductService productService) {
         super("ProductController", 0);
         this.categoryService = categoryService;
@@ -57,8 +53,6 @@ public class ProductsController extends BaseObject {
 
             productSource.setCategory(requestParamCategory);
             productSource.setUrl(requestParamUrl);
-
-
             LogOutput(LOG_LEVEL.DEBUG, ObjectName(), MethodName(), 0, " productSource :  {0}", productSource.toString());
             categoryService.getAdditionalInfoList(productSource);
             productService.getNewProductInfo(productSource);
@@ -77,17 +71,14 @@ public class ProductsController extends BaseObject {
             // 요청을 보낸 클라이언트의 IP주소를 반환합니다.
             ProductRegisterVO productSource = new ProductRegisterVO();
 
-
             int responseCode = 0;
             try {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
                 String requestBody = reader.lines().collect(Collectors.joining(System.lineSeparator()));
 
-
                 ObjectMapper objectMapper = new ObjectMapper();
                 LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "input {0}", requestBody);
                 productSource = objectMapper.readValue(requestBody, ProductRegisterVO.class);
-
 
                 if (productSource.areMembersNotNull()) {
 
@@ -97,21 +88,14 @@ public class ProductsController extends BaseObject {
 
                     switch (productSource.getPlatform()) {
                         case 네이버:
-                            platform = naver;
-                            ((APINaver) platform).uploadImages(productSource.getImages(), naver.getOAuth());
+                            productService.uploadImages (productSource.getImages());
                             break;
                         case 알리익스프레스:
                             break;
                         default:
                             break;
                     }
-                    responseCode = 401;
-                    do {
-                        responseCode = productService.register(productSource, naver.getOAuth());
-                        LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 2, "ResponseCode : {0}", responseCode);
-                    } while (responseCode == 401);
-
-                    //productService.search(platform.getOAuth());
+                    responseCode = productService.register(productSource, productSource.getPlatform().ordinal());
                 } else {
                     LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "product inputs are null.");
                 }
