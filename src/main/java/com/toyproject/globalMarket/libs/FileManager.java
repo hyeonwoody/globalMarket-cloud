@@ -4,6 +4,7 @@ import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,8 +33,40 @@ public class FileManager extends BaseObject {
         super("FileManager", objectId++);
     }
 
+    public void convertImageToJpeg(Images images, String path) {
+        final String uploadDirectory = System.getProperty("user.dir") + "/src/Images/";
+        final String convert = "convert.sh";
+        String webpFile = null;
+        String jpgFile = null;
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        Process process = null;
+        int exitCode = 0;
+        for (Images.OptionalImage optionalImage : images.optionalImages) {
+            webpFile = optionalImage.url;
+            jpgFile = webpFile.replace("webp", "jpg");
+            processBuilder.command(Arrays.asList("sh", uploadDirectory+convert, webpFile, jpgFile, path));
+            try {
+                process = processBuilder.start();
+                exitCode = 0;
+                exitCode = process.waitFor();
+                if (exitCode == 0){
+                    LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 2, "Convert executed successfully.");
+                    optionalImage.setUrl(jpgFile);
+                }
+                else {
+                    LogOutput(LOG_LEVEL.ERROR, ObjectName(), MethodName(), 3, "Convert execution failed with exit code: {0}" + exitCode);
+                    optionalImage.setUrl(null);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
     public void convertImageToJpeg(Images images) {
-        final String uploadDirectory = System.getProperty("user.dir") + "/src/main/resources/";
+        final String uploadDirectory = System.getProperty("user.dir") + "/src/Images/";
         final String convert = "convert.sh";
         String webpFile = images.representativeImage.url;
         String jpgFile = webpFile.replace("webp", "jpg");
@@ -110,20 +143,22 @@ public class FileManager extends BaseObject {
     }
 
     public void downloadImages(Images images, String destinationDirectory) {
-        try {
-            URL url = new URL(images.representativeImage.url);
-            String fileName = "image" + 0 + ".webp";
-            Path destinationPath = Paths.get(destinationDirectory, fileName);
-            try (InputStream inputStream = url.openStream()) {
-                Files.copy(inputStream, destinationPath, StandardCopyOption.REPLACE_EXISTING);
-                String path = destinationPath.toString();
-                images.representativeImage.setUrl(path);
-                LogOutput(EventManager.LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Representative Image Downloaded successfully");
+        if (images.representativeImage.url != null) {
+            try {
+                URL url = new URL(images.representativeImage.url);
+                String fileName = "image" + 0 + ".webp";
+                Path destinationPath = Paths.get(destinationDirectory, fileName);
+                try (InputStream inputStream = url.openStream()) {
+                    Files.copy(inputStream, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+                    String path = destinationPath.toString();
+                    images.representativeImage.setUrl(path);
+                    LogOutput(EventManager.LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Representative Image Downloaded successfully");
+                }
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         for (int i = 0; i < images.optionalImages.size(); ++i) {
             try {

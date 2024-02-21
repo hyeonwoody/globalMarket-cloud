@@ -8,6 +8,9 @@ import java.util.Arrays;
 
 public class APIGithub extends BaseObject {
 
+    public APIGithub(){
+        super("Github", objectId++);
+    }
 
     public APIGithub(String _id, String productName){
         super("Github", objectId++);
@@ -17,9 +20,9 @@ public class APIGithub extends BaseObject {
         this.params = new String[]{id + "_" + nickname, productName};
     }
     private static int objectId = 0;
-    public final String uploadDirectory = System.getProperty("user.dir") + "/src/main/resources";
-    public final String uploadThumbnailDirectory = System.getProperty("user.dir") + "/src/main/resources/detail/thumbnail";
-
+    public final String uploadDirectory = System.getProperty("user.dir") + "/src/Images";
+    public final String uploadThumbnailDirectory = System.getProperty("user.dir") + "/src/Images/detail/thumbnail";
+    public final String uploadPageDirectory = System.getProperty("user.dir") + "/src/Images/detail/page";
 
 
     private String id;
@@ -45,7 +48,7 @@ public class APIGithub extends BaseObject {
         }
     }
 
-    public void uploadImages() {
+    public void commitImages() {
         final String commit = "/commit.sh";
         ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.command(Arrays.asList("sh", uploadDirectory+commit, this.params[0], this.params[1]));
@@ -65,7 +68,27 @@ public class APIGithub extends BaseObject {
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+    public void turnToMaster(){
+        final String master = "/master.sh";
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.command(Arrays.asList("sh", uploadDirectory+master));
 
+        //final String gitUrl = "https://raw.githubusercontent.com/GlobalMarketKOR/Images/" + branch;
+        //getRawGithubImageUrl (productSource.getImages(), gitUrl);
+
+        Process process = null;
+        try {
+            process = processBuilder.start();
+            int exitCode = process.waitFor();
+            if (exitCode == 0) {
+                LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Commit script executed successfully.");
+            } else {
+                LogOutput(LOG_LEVEL.ERROR, ObjectName(), MethodName(), 2, "Commit script execution failed with exit code: {0}",exitCode);
+            }
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void getRawGithubImageUrl(Images images, String gitUrl) {
