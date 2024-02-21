@@ -1,6 +1,7 @@
 package com.toyproject.globalMarket.configuration.platform;
 
 import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
+import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 import com.toyproject.globalMarket.libs.BaseObject;
 
 import java.io.IOException;
@@ -10,14 +11,14 @@ public class APIGithub extends BaseObject {
 
     public APIGithub(){
         super("Github", objectId++);
+        this.id = "fdf";
+        this.params = new String[]{id, "d"};
     }
 
-    public APIGithub(String _id, String productName){
+    public APIGithub(ProductRegisterVO productSource){
         super("Github", objectId++);
-        this.id = _id;
-        this.nickname = "branch";
-        this.id_nickname = id + "_" + nickname;
-        this.params = new String[]{id + "_" + nickname, productName};
+        this.id = productSource.getDBId();
+        this.params = new String[]{id, productSource.getName()};
     }
     private static int objectId = 0;
     public final String uploadDirectory = System.getProperty("user.dir") + "/src/Images";

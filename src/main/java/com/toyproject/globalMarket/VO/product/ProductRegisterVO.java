@@ -41,6 +41,8 @@ public class ProductRegisterVO {
 
     public Images images;
 
+    private String DBId;
+
     public void setTmpImages(List<String> imageList) {
         this.images = new Images();
         this.images.representativeImage.url = imageList.get(0).replaceFirst("s", "");

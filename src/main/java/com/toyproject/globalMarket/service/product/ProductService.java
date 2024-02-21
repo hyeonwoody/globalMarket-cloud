@@ -63,6 +63,8 @@ public class ProductService extends BaseObject {
 
     public int getNewProductInfo (ProductRegisterVO productRegisterVO){
         StoreInterface store = null;
+        String _id = String.valueOf(productRepository.findUpcommingId());
+        productRegisterVO.setDBId(_id);
             if (productRegisterVO.getUrl().contains("aliexpress")){
                 LogOutput(LOG_LEVEL.INFO, this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 0, "aaaREGISTER: " + "HERE");
                 store = new AliExpress();
@@ -105,8 +107,8 @@ public class ProductService extends BaseObject {
         int ret = 0;
         switch (productSource.getPlatform()){
             case 네이버 -> {
-                String _id = String.valueOf(productRepository.findUpcommingId());
-                APIGithub github = new APIGithub(_id, productSource.getName());
+                String _id = productSource.getDBId();
+                APIGithub github = new APIGithub(productSource);
                 github.initBranch();
                 ret = downloadThumbnailAndConvertImageToJpeg(productSource.getImages(), github);
                 ret = downloadDetailContentImagesAndConvertImageToJpeg (productSource.getDetailContent(), github);
@@ -125,7 +127,6 @@ public class ProductService extends BaseObject {
 
     public void uploadImages(Images images) {
         naver.uploadImages(images);
-        String _id = String.valueOf(productRepository.findUpcommingId());
         APIGithub github = new APIGithub();
         github.turnToMaster();
     }
