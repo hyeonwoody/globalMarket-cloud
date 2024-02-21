@@ -203,6 +203,10 @@ const ProductRegister: React.FC = () => {
             setConfirmResult(response.data.message);
             setShowResultModal(true);
         }
+        else if (response.status == 500){
+            setConfirmResult("내부 서버 오류");
+            setShowResultModal(true);
+        }
     }
 
     const onClickConfirm = (event : React.MouseEvent<HTMLButtonElement>) => {
