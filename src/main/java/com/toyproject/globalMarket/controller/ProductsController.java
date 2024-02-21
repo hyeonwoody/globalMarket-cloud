@@ -87,6 +87,7 @@ public class ProductsController extends BaseObject {
                     categoryService.getNewCategoryInfo(productSource);
                     productService.getNewProductInfo(productSource);
                     productService.downloadImages(productSource);
+                    productService.modifyDetailContent(productSource);
 
                     switch (productSource.getPlatform()) {
                         case 네이버:

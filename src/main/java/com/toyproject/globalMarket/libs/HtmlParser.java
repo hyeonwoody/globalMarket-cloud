@@ -35,7 +35,7 @@ public class HtmlParser extends BaseObject {
                 images.optionalImages.add(optionalImage);
             }
         } else {
-            LogOutput(EventManager.LOG_LEVEL.ERROR, ObjectName(), MethodName(), 2, "No <script> elements found in the document.");
+            LogOutput(EventManager.LOG_LEVEL.ERROR, ObjectName(), MethodName(), 2, "No <img> elements found in the document.");
         }
     }
 }

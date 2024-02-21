@@ -1,6 +1,8 @@
 package com.toyproject.globalMarket.service.product;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toyproject.globalMarket.DTO.Product;
 import com.toyproject.globalMarket.VO.response.ResponseVO;
 import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
@@ -11,6 +13,7 @@ import com.toyproject.globalMarket.configuration.platform.APINaver;
 import com.toyproject.globalMarket.entity.ProductEntity;
 import com.toyproject.globalMarket.libs.BaseObject;
 import com.toyproject.globalMarket.libs.FileManager;
+import com.toyproject.globalMarket.libs.HtmlManager;
 import com.toyproject.globalMarket.libs.HtmlParser;
 import com.toyproject.globalMarket.repository.ProductRepository;
 import com.toyproject.globalMarket.service.product.store.StoreInterface;
@@ -39,7 +42,7 @@ public class ProductService extends BaseObject {
         this.productRepository = productRepository;
     }
 
-    public ResponseVO register (ProductRegisterVO productRegisterVO, int platform){
+    public ResponseVO register (ProductRegisterVO productRegisterVO, int platform) throws JsonProcessingException {
         Date now = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
         String time = dateFormat.format(now);
@@ -54,8 +57,13 @@ public class ProductService extends BaseObject {
         }
         if (response.code() == 200){
             LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Request is Successful with code : {0}", response.code());
+
+
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode jsonNode = mapper.readTree(response.body());
+            long productNumber = jsonNode.get("smartstoreChannelProductNo").asLong();
             ProductEntity productEntity = new ProductEntity();
-            productEntity.setEntity(product, productRegisterVO.getUrl());
+            productEntity.setEntity(product, productRegisterVO.getUrl(), productNumber);
             productRepository.save(productEntity);
         }
         return response;
@@ -129,5 +137,10 @@ public class ProductService extends BaseObject {
         naver.uploadImages(images);
         APIGithub github = new APIGithub();
         github.turnToMaster();
+    }
+
+    public void modifyDetailContent(ProductRegisterVO productSource) {
+        HtmlManager htmlManager = new HtmlManager();
+        htmlManager.replaceDetailContnetImages(productSource);
     }
 }

@@ -236,7 +236,6 @@ public class AliExpress extends BaseObject implements StoreInterface {
             HtmlManager htmlManager = new HtmlManager();
             String detailContent = htmlManager.cleanHtml(productRegisterVO.getDetailContent());
             productRegisterVO.setDetailContent(detailContent);
-            htmlManager.replaceDetailContnetImages(productRegisterVO);
         }
         if (productRegisterVO.getSalePrice() == 0){
             int price = Math.max(priceInfo.getSaleMaxPrice().value, priceInfo.getDetails().maxAmount.value);
