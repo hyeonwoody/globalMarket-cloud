@@ -127,10 +127,6 @@ const ProductRegister: React.FC = () => {
                 default:
                     break;
             }
-
-            // categoryNaverList.forEach((categoryNaver) => {
-            //     console.log(categoryNaver.wholeCategoryName, categoryNaver.name);
-            // });
         }
         setShowCategory(true);
         ProductRegisterAPI(generateCategory, input.platform);
@@ -387,35 +383,44 @@ const ProductRegister: React.FC = () => {
                                 </div>
                             ))}
 
-                            </div>
-
-
+                        </div>
                         }
 
                         {showInfo &&
-                            <div className="w-full px-3" id={"product-detail"}>
-                                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                                       htmlFor="grid-product-detail">
-                                    상품 설명
-                                </label>
-                                <textarea
-                                    className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                    name="detailContent"
-                                    value={input.detailContent}
-                                    onChange={handleInputChange("detailContent")}
-                                    placeholder="이 상품은 해외구매대행 상품으로 7일 ~ 21일 (주말/공휴일 제외)의 배송기간이 소요됩니다."
-                                    rows={Math.max(3, input.detailContent.split('\n').length)}
-                                />
-                                <div dangerouslySetInnerHTML={{__html: input.detailContent}}/>
+                            <div className="flex flex-wrap -mx-3 mb-2" id={"product-detail"}>
+                                <div className="px-3 mb-0 md:mb-2" id={"product-price"}>
+                                    <label
+                                        className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                                        htmlFor="grid-product-detail">
+                                        상품 설명
+                                    </label>
+                                    <textarea
+                                        className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                        name="detailContent"
+                                        value={input.detailContent}
+                                        onChange={handleInputChange("detailContent")}
+                                        placeholder="이 상품은 해외구매대행 상품으로 7일 ~ 21일 (주말/공휴일 제외)의 배송기간이 소요됩니다."
+                                        rows={Math.max(3, input.detailContent.split('\n').length)}
+                                    />
+                                    <div dangerouslySetInnerHTML={{__html: input.detailContent}}/>
+                                </div>
                             </div>
                         }
 
                         {showInfo ?
+                            <div>
                             <button
                                 className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full mx-auto block "
                                 onClick={onClickConfirm}>
                                 확정
-                            </button> :
+                            </button>
+                                <div className="fixed bottom-0 right-0 p-6">
+                                <button
+                                    className="bg-gray-800 text-white rounded-full w-10 h-10 flex items-center justify-center"
+                                    onClick={onClickParse}><p>다시</p>
+                                </button>
+                                </div>
+                            </div> :
                             <button
                                 className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full mx-auto block "
                                 onClick={onClickParse}>
