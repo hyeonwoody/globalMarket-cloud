@@ -56,9 +56,7 @@ public class ProductService extends BaseObject {
                 break;
         }
         if (response.code() == 200){
-            LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Request is Successful with code : {0}", response.code());
-
-
+            LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "Product register request is Successful with code : {0}", response.code());
             ObjectMapper mapper = new ObjectMapper();
             JsonNode jsonNode = mapper.readTree(response.body());
             long productNumber = jsonNode.get("smartstoreChannelProductNo").asLong();
