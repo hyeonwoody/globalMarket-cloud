@@ -1,11 +1,12 @@
 import React, {ChangeEvent, useState} from 'react';
-import ProductAxios, {RegisterState, ProductImage} from "../ProductAPI";
+import ProductAxios, {RegisterState} from "../ProductAPI";
 import {Platform, platformList} from "../../../../configuration/platform";
 import Modal from "../../part/Modal";
 import ProductRegisterAPI from "./ProductRegisterAPI";
 import Category from "./part/Category";
 import Image from "./part/images/Image"
 import {AxiosResponse} from "axios";
+import Keyword from "./part/Keyword";
 
 
 
@@ -22,8 +23,9 @@ const ProductRegister: React.FC = () => {
         url: "",
         images: {
             representativeImage: { url: "" }, // Default URL
-            optionalImages: [] // Empty array
+            optionalImages: []
         },
+        keyword: [],
     };
     const [input, setInput] = useState<RegisterState>(initialState);
     const [platformState, setPlatform] = useState ("네이버");
@@ -231,7 +233,8 @@ const ProductRegister: React.FC = () => {
             ["salePrice"]:data.salePrice,
             ["stockQuantity"]:data.stockQuantity,
             ["additionalInfoList"]:data.additionalInfoList,
-            ["images"]:data.images
+            ["images"]:data.images,
+            ["keyword"]:data.keyword
         }));
 
         setAdditionalInfo(data.additionalInfoList);
@@ -362,6 +365,9 @@ const ProductRegister: React.FC = () => {
                                 />
                             </div>
                         </div>}
+
+                        {showInfo && <Keyword/>
+                        }
 
                         {showInfo && <div className="flex flex-wrap -mx-3 mb-2" id={"product-additionalInfo"}>
                             {additionalInfoList?.map((info, index) => (

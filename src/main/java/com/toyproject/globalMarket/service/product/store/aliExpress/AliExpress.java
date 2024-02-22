@@ -25,6 +25,7 @@ import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -241,13 +242,13 @@ public class AliExpress extends BaseObject implements StoreInterface {
             int price = Math.max(priceInfo.getSaleMaxPrice().value, priceInfo.getDetails().maxAmount.value);
             productRegisterVO.setSalePrice(price - (price % 10));
         }
-
-
-        if (productRegisterVO.getImages() == null)
+        if (productRegisterVO.getImages() == null){
             productRegisterVO.setTmpImages(productInfo.getImageList());
+        }
 
         //SEO
-        if (specificationInfo == null){
+        if (productRegisterVO.getKeyword() == null){
+            productRegisterVO.setKeyword(new ArrayList<>());
             for (SpecificationInfo.Property property : specificationInfo.getPropertyList()) {
                 productRegisterVO.getKeyword().add(property.getAttrName());
                 productRegisterVO.getKeyword().add(property.getAttrValue());

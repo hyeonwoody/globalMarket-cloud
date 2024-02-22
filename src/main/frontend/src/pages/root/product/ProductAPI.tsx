@@ -18,7 +18,8 @@ export interface RegisterState {
     salePrice : number,
     stockQuantity : number
     additionalInfoList : string[],
-    images : ProductImage
+    images : ProductImage,
+    keyword : string[]
 }
 
 export function ProductAxios(resultCallback: (data: any) => void, type : string, data : RegisterState) {
