@@ -12,20 +12,7 @@ import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 
 public interface StoreInterface {
     abstract JsonObject parseHtml(String html);
-    default String getHtml(String url){
-        try{
-            HttpClient httpClient = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .build();
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            return response.body();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
+
     abstract int convert (ProductRegisterVO productRegisterVO, JsonObject jsonObject) throws IOException;
     abstract int getProductInfo(ProductRegisterVO productRegisterVO) throws IOException;
 }

@@ -307,8 +307,9 @@ public class AliExpress extends BaseObject implements StoreInterface {
 
     @Override
     public int getProductInfo(ProductRegisterVO productRegisterVO){
-        String html = getHtml(productRegisterVO.getUrl());
-        JsonObject jsonObject = parseHtml(html);
+        HtmlParser htmlParser = new HtmlParser();
+        String html = htmlParser.getHtml(productRegisterVO.getUrl());
+        JsonObject jsonObject = this.parseHtml(html);
         convert (productRegisterVO, jsonObject);
         return 0;
     }
