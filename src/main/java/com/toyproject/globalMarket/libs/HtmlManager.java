@@ -47,8 +47,8 @@ public class HtmlManager {
             }
             div.attr("class", name);
         }
-        List<Element> scriptList = doc.select("script").remove();
-        List<Element> linkList = doc.select("link").remove();
+        doc.select("script").remove();
+        doc.select("link").remove();
         String ret = removeHtmlBodyTags(doc);
         return ret;
     }
