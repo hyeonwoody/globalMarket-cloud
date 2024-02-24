@@ -1,4 +1,4 @@
-package com.toyproject.globalMarket.VO.product;
+package com.toyproject.globalMarket.VO;
 
 import lombok.Data;
 

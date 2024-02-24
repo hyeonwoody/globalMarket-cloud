@@ -1,15 +1,12 @@
 package com.toyproject.globalMarket.libs;
 
-import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
-import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
+import com.toyproject.globalMarket.VO.ProductRegisterVO;
 import com.toyproject.globalMarket.configuration.platform.APIGithub;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
-import javax.print.Doc;
 import java.util.List;
 import java.util.stream.Collectors;
 

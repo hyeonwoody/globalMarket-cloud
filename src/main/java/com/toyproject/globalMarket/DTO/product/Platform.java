@@ -1,8 +1,7 @@
 package com.toyproject.globalMarket.DTO.product;
 
 import com.google.gson.JsonObject;
-import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
-import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
+import com.toyproject.globalMarket.VO.ProductRegisterVO;
 
 
 public interface Platform {

@@ -1,4 +1,4 @@
-package com.toyproject.globalMarket.VO.product;
+package com.toyproject.globalMarket.VO;
 import com.google.gson.JsonObject;
 import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
 import com.toyproject.globalMarket.DTO.product.platform.naver.SeoInfo;
@@ -34,7 +34,10 @@ public class ProductRegisterVO {
 
     private String[] category;
     private ArrayList<String> additionalInfoList;
-    private ArrayList<String> keyword;
+
+    private String pageTitle;
+    private String metaDescription;
+    private ArrayList<String> TagList;
 
     private int salePrice;
     private int saleQuantity;

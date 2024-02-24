@@ -1,7 +1,8 @@
-package com.toyproject.globalMarket.VO.product;
+package com.toyproject.globalMarket.VO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import com.toyproject.globalMarket.VO.ImageVO;
 import lombok.Data;
 
 

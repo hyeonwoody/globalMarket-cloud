@@ -1,7 +1,7 @@
 package com.toyproject.globalMarket.configuration.platform;
 
 import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
-import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
+import com.toyproject.globalMarket.VO.ProductRegisterVO;
 import com.toyproject.globalMarket.libs.BaseObject;
 
 import java.io.IOException;

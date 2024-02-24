@@ -1,7 +1,6 @@
 package com.toyproject.globalMarket.entity;
 
 import com.toyproject.globalMarket.DTO.Product;
-import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 import jakarta.persistence.*;
 
 @Entity

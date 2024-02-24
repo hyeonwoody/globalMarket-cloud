@@ -11,7 +11,7 @@ import com.toyproject.globalMarket.DTO.Product;
 import com.toyproject.globalMarket.VO.response.ResponseVO;
 import com.toyproject.globalMarket.DTO.category.CategoryNaverDTO;
 import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
-import com.toyproject.globalMarket.VO.product.NaverImageVO;
+import com.toyproject.globalMarket.VO.NaverImageVO;
 import com.toyproject.globalMarket.configuration.APIConfig;
 import com.toyproject.globalMarket.libs.BCrypt;
 import com.toyproject.globalMarket.libs.EventManager;
