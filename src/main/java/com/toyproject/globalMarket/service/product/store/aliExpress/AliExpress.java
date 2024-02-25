@@ -1,10 +1,9 @@
 package com.toyproject.globalMarket.service.product.store.aliExpress;
 
 import com.google.gson.annotations.SerializedName;
-import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
+import com.toyproject.globalMarket.VO.ProductRegisterVO;
 import com.toyproject.globalMarket.libs.BaseObject;
 import com.toyproject.globalMarket.libs.HtmlManager;
-import com.toyproject.globalMarket.libs.HtmlParser;
 import com.toyproject.globalMarket.service.product.store.StoreInterface;
 
 
@@ -245,13 +244,18 @@ public class AliExpress extends BaseObject implements StoreInterface {
         if (productRegisterVO.getImages() == null){
             productRegisterVO.setTmpImages(productInfo.getImageList());
         }
-
+        if (productRegisterVO.getPageTitle() == null){
+            productRegisterVO.setPageTitle("타이틀");
+        }
+        if (productRegisterVO.getMetaDescription() == null){
+            productRegisterVO.setMetaDescription(productInfo.getSubject());
+        }
         //SEO
-        if (productRegisterVO.getKeyword() == null){
-            productRegisterVO.setKeyword(new ArrayList<>());
+        if (productRegisterVO.getTagList() == null){
+            productRegisterVO.setTagList(new ArrayList<>());
             for (SpecificationInfo.Property property : specificationInfo.getPropertyList()) {
-                productRegisterVO.getKeyword().add(property.getAttrName());
-                productRegisterVO.getKeyword().add(property.getAttrValue());
+                productRegisterVO.getTagList().add(property.getAttrName());
+                productRegisterVO.getTagList().add(property.getAttrValue());
             }
         }
         return 0;

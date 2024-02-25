@@ -1,7 +1,5 @@
 package com.toyproject.globalMarket.DTO.product.platform.naver;
 
-import org.aspectj.weaver.ast.Or;
-
 import java.util.ArrayList;
 
 public class DetailAttribute{
@@ -140,5 +138,4 @@ public class DetailAttribute{
     public boolean itselfProductionProductYn;
     public boolean brandCertificationYn;
     public SeoInfo seoInfo;
-
 }

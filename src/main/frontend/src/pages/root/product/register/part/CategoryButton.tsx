@@ -10,9 +10,6 @@ function CategoryButton(props:CategoryButtonProps) {
     const [title, setTitle] = useState<string> ("카테고리");
     const [dropdown, setDropdown] = useState (false);
 
-    console.log(props.category);
-
-
     const toggleDropdown = () => {
         setDropdown(!dropdown);
     }

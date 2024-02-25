@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useState} from 'react';
-import ProductAxios, {RegisterState} from "../ProductAPI";
+import ProductAxios, {ProductImage, RegisterState} from "../ProductAPI";
 import {Platform, platformList} from "../../../../configuration/platform";
 import Modal from "../../part/Modal";
 import ProductRegisterAPI from "./ProductRegisterAPI";
@@ -25,9 +25,12 @@ const ProductRegister: React.FC = () => {
             representativeImage: { url: "" }, // Default URL
             optionalImages: []
         },
-        keyword: [],
+        pageTitle : "",
+        metaDescription : "",
+        tagList: [],
     };
     const [input, setInput] = useState<RegisterState>(initialState);
+    const [inputImageCache, setInputImageCache] = useState<ProductImage>();
     const [platformState, setPlatform] = useState ("네이버");
     const [isValidUrl, setValidUrl] = useState (false);
     const [dropdown, setDropdown] = useState (false);
@@ -44,35 +47,41 @@ const ProductRegister: React.FC = () => {
         setDropdown(!dropdown);
     }
     const ImageCallback = (index : number) => {
-        if (index == 0){
-            setInput((prevInput: RegisterState) => {
-                prevInput.images.representativeImage.url = prevInput.images.optionalImages[0].url;
-
-                let newImageOptional = prevInput.images.optionalImages;
-                prevInput.images.optionalImages = newImageOptional.filter((_, idx) => idx !== 0);
-
-                return {
+        if (index === -1){
+            if (inputImageCache) {
+                setInput((prevInput) => ({
                     ...prevInput,
-                    ["images"] : prevInput.images
-                };
-            });
+                    ["images"]: inputImageCache,
+                }));
+            }
+        }
+        else if (index === 0){
+            if (input.images.optionalImages.length !== 0){
+                setInput((prevInput: RegisterState) => {
+                    prevInput.images.representativeImage.url = prevInput.images.optionalImages[0].url;
+                    let newImageOptional = prevInput.images.optionalImages;
+                    prevInput.images.optionalImages = newImageOptional.filter((_, idx) => idx !== 0);
+
+                    return {
+                        ...prevInput,
+                        ["images"] : prevInput.images
+                    };
+                });
+            }
         }
         else {
             setInput((prevInput: RegisterState) => {
                     let newImageOptional = prevInput.images.optionalImages;
                     prevInput.images.optionalImages = newImageOptional.filter((_, idx) => idx !== index-1);
-
                     return {
                         ...prevInput,
                         ["images"] : prevInput.images
                     };
             });
         }
-        console.log("HHHHH");
-        console.log(input);
     }
 
-    const categoryCallback = (result : string, level : number) => {
+    const CategoryCallback = (result : string, level : number) => {
         if (level < input.category.length){
             setInput((prevInput) => ({
                 ...prevInput,
@@ -146,6 +155,44 @@ const ProductRegister: React.FC = () => {
         }));
     };
 
+    const KeywordDeleteCallback = (index : number) => {
+        setInput((prevInput: RegisterState) => {
+            let tmpTagList = prevInput.tagList;
+            prevInput.tagList = tmpTagList.filter((_, idx) => idx !== index);
+            return {
+                ...prevInput,
+                ["tagList"] : prevInput.tagList,
+            };
+        });
+    }
+
+    const KeywordCallback = (field: keyof RegisterState, keyword : string, index? : number) => {
+        switch (field){
+            case "tagList":
+                console.log ("ProductRegister:"+keyword);
+                if (index && index < input.tagList.length){
+                    setInput((prevInput) =>({
+                        ...prevInput,
+                        [field]: prevInput.tagList.map((tag, i) =>
+                            i === index ? keyword : tag
+                        ),
+                    }));
+                }
+                else {
+                    setInput((prevInput)=>({
+                        ...prevInput,
+                        [field]: [...input.tagList, keyword],
+                    }));
+                }
+                break;
+            default :
+                setInput((prevInput) =>({
+                    ...prevInput,
+                    [field]: keyword,
+                }));
+                break;
+        }
+    }
     const handleInputChange = (field: keyof RegisterState, index? : number) => (
         event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>
         ) => {
@@ -168,7 +215,6 @@ const ProductRegister: React.FC = () => {
                 break;
         }
         console.log (input);
-
     };
 
 
@@ -208,24 +254,20 @@ const ProductRegister: React.FC = () => {
     }
 
     const onClickConfirm = (event : React.MouseEvent<HTMLButtonElement>) => {
-        console.log("bbCCCCCCCC");
         event.preventDefault();
-
-
         if (isValidUrl){
-            console.log("aa");
             ProductAxios(ResultCallback, "register/confirm", input);
         }
-
         else {
-            console.log ("모달")
             setShowURLModal(true);
         }
     }
 
     const parseResultCallback = (data : RegisterState) => {
+        console.log("AS");
         console.log(data);
-        console.log("FFF"+data.name)
+
+
         setInput((prevInput) => ({
             ...prevInput,
             ["name"]: data.name,
@@ -234,8 +276,11 @@ const ProductRegister: React.FC = () => {
             ["stockQuantity"]:data.stockQuantity,
             ["additionalInfoList"]:data.additionalInfoList,
             ["images"]:data.images,
-            ["keyword"]:data.keyword
+            ["pageTitle"]:data.pageTitle,
+            ["metaDescription"]:data.metaDescription,
+            ["tagList"]:data.tagList
         }));
+        setInputImageCache(data.images);
 
         setAdditionalInfo(data.additionalInfoList);
         setShowInfo(true);
@@ -264,10 +309,7 @@ const ProductRegister: React.FC = () => {
 
     return (
         <div className="Container">
-
-
             <div className="p-4 sm:ml-64">
-
                 <form className="w-full">
                     <div className="w-full p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
                         <div className={"button-Container -mx-3 relative"} id={"product-platform"}>
@@ -295,7 +337,7 @@ const ProductRegister: React.FC = () => {
                                 )}
                             </div>
                         </div>
-                        {showCategory && <Category category={category} callback={categoryCallback}/>}
+                        {showCategory && <Category category={category} callback={CategoryCallback}/>}
                         <div className="flex flex-wrap -mx-3 mb-2" id={"product-url"}>
                             <div className="w-full md:w-full px-3 mb-6 md:mb-3">
                                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
@@ -360,18 +402,16 @@ const ProductRegister: React.FC = () => {
                                     className="appearance-none block bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                     name="detailContent"
                                     value={input.stockQuantity}
-
                                     placeholder="0 ~ 29999"
                                 />
                             </div>
                         </div>}
 
-                        {showInfo && <Keyword/>
-                        }
+                        {showInfo && <Keyword pageTitle={input.pageTitle} metaDescription={input.metaDescription} tagList={input.tagList} callback={KeywordCallback} deleteCallback={KeywordDeleteCallback}/>}
 
                         {showInfo && <div className="flex flex-wrap -mx-3 mb-2" id={"product-additionalInfo"}>
                             {additionalInfoList?.map((info, index) => (
-                                <div className="md:w-1/2 px-3 mb-0 md:mb-2" id={"product-price"}>
+                                <div className="md:w-1/2 px-3 mb-0 md:mb-2" id={"product-price"} key={index}>
                                     <label
                                         className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                                         htmlFor="grid-product-name">

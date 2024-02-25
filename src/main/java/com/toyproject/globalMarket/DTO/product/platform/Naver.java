@@ -4,11 +4,9 @@ import com.google.gson.JsonObject;
 import com.toyproject.globalMarket.DTO.product.Platform;
 import com.toyproject.globalMarket.DTO.product.platform.naver.*;
 
-import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
-import com.toyproject.globalMarket.libs.BaseObject;
+import com.toyproject.globalMarket.VO.ProductRegisterVO;
 import lombok.Getter;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 @Getter
@@ -45,12 +43,19 @@ public class Naver implements Platform  {
         this.originProduct.setImages(object.getImages());
         this.originProduct.setSaleStartDate(object.getSaleStartDate());
 
+        setDTOSeoInfo(object.getPageTitle(), object.getMetaDescription(), object.getTagList());
+        setProductProvidedNotice(object);
+
+
+    }
+
+    private void setDTOSeoInfo(String pageTitle, String metaDescription, ArrayList<String> tagList) {
+        this.originProduct.getDetailAttribute().seoInfo = new SeoInfo(pageTitle, metaDescription, tagList);
+    }
+
+    private void setProductProvidedNotice(ProductRegisterVO object) {
         this.originProduct.getDetailAttribute().productInfoProvidedNotice = new ProductInfoProvidedNotice();
         String[] productCategory = object.getCategory();
-
-
-
-
         BaseProduct product;
         switch (productCategory[0]) {
             case "패션의류":
@@ -192,7 +197,6 @@ public class Naver implements Platform  {
                 this.originProduct.getDetailAttribute().productInfoProvidedNotice.etc = new Etc(object.getAdditionalInfoList());
                 break;
         }
-
     }
 
     @Override

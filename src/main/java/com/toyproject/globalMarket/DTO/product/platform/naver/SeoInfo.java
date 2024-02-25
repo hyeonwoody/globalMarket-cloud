@@ -11,12 +11,25 @@ public class SeoInfo{
     private String pageTitle;
     public String metaDescription;
     public ArrayList<SellerTag> sellerTags;
-    public static class SellerTag {
+
+    public SeoInfo(String pageTitle, String metaDescription, ArrayList<String> keyword){
+        this.pageTitle = pageTitle;
+        this.metaDescription = metaDescription;
+        this.sellerTags = new ArrayList<>();
+        for (int i = 2; i < keyword.size(); ++i){
+            SellerTag sellerTag = new SellerTag(keyword.get(i));
+            this.sellerTags.add(sellerTag);
+        }
+    }
+
+    public SeoInfo() {
+
+    }
+
+    public class SellerTag {
         public SellerTag(String text) {
             this.text = text;
         }
-
-        public int code;
         public String text;
     }
 }

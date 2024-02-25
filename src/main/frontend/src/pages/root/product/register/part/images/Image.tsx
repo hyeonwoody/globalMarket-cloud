@@ -8,7 +8,6 @@ interface ImageProps {
 }
 
 function Image (props : ImageProps) {
-
     const onClickDelete = (event : React.MouseEvent<HTMLButtonElement>, index : number) => {
         event.preventDefault();
 
@@ -48,7 +47,7 @@ function Image (props : ImageProps) {
 
                         {props.images.optionalImages.length > 0 ? props.images.optionalImages.map((value, index) => (
 
-                            <div className={"image-Container"}>
+                            <div className={"image-Container"} key={index}>
                                 <img key={"image" + index + 1} className={"max-w-sm max-h-sm"} src={value.url}/>
                                 <button
                                     key={"button" + index + 1}
