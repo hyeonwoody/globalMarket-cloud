@@ -7,14 +7,18 @@ interface ImageProps {
     callback : (index : number) => void
 }
 
+
+
 function Image (props : ImageProps) {
     const onClickDelete = (event : React.MouseEvent<HTMLButtonElement>, index : number) => {
         event.preventDefault();
-
-        console.log ("INDEX : "+ index)
         props.callback(index);
     }
 
+    const onClickReset = (event : React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+        props.callback(-1);
+    }
 
     return (
         <div className="Image-Container flex flex-wrap -mx-3 mb-2" id={"product-images"}>
@@ -23,14 +27,11 @@ function Image (props : ImageProps) {
                        htmlFor="grid-product-name">
                     대표 이미지
                 </label>
-                <center>
-
-                </center>
-
-
-
-
-
+                <button
+                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full mx-auto block "
+                    onClick={onClickReset}>
+                    다시
+                </button>
                 <div className={"product-optional-images"}>
                     <div className="grid grid-cols-3 gap-4">
                         <div className={"image-Container relative"}>
@@ -40,7 +41,7 @@ function Image (props : ImageProps) {
                                 key={"button0"}
                                 className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full
                                 mx-auto block"
-                                onClick ={(event) => onClickDelete(event, 0)}>
+                                onClick={(event) => onClickDelete(event, 0)}>
                                 삭제
                             </button>
                         </div>

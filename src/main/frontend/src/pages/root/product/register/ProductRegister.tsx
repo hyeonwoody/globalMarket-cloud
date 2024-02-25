@@ -33,6 +33,10 @@ const ProductRegister: React.FC = () => {
     const [inputPageTitle, setInputPageTitle] = useState<string>("");
     const [inputMetaDescription, setInputMetaDescription] = useState<string>("");
     const [inputTagList, setInputTagList] = useState<string[]>([]);
+    const [inputImages, setInputImages] = useState<ProductImage>({
+        representativeImage: { url: "" }, // Default URL
+        optionalImages: []
+    },);
 
 
     const [inputImageCache, setInputImageCache] = useState<ProductImage>();
@@ -54,35 +58,28 @@ const ProductRegister: React.FC = () => {
     }
     const ImageCallback = (index : number) => {
         if (index === -1){
-            if (inputImageCache) {
-                setInput((prevInput) => ({
-                    ...prevInput,
-                    ["images"]: inputImageCache,
-                }));
-            }
+            setInputImages(inputImageCache as ProductImage);
         }
         else if (index === 0){
-            if (input.images.optionalImages.length !== 0){
-                setInput((prevInput: RegisterState) => {
-                    prevInput.images.representativeImage.url = prevInput.images.optionalImages[0].url;
-                    let newImageOptional = prevInput.images.optionalImages;
-                    prevInput.images.optionalImages = newImageOptional.filter((_, idx) => idx !== 0);
-
-                    return {
-                        ...prevInput,
-                        ["images"] : prevInput.images
-                    };
-                });
+            if (inputImages?.optionalImages.length !== 0){
+                setInputImages ((prevState :ProductImage) => {
+                        inputImages.representativeImage.url = prevState.optionalImages[0].url;
+                        let updatedImages = prevState.optionalImages.filter((_, idx) =>idx !== 0);
+                        return {
+                            ...prevState,
+                            ["optionalImages"]: updatedImages,
+                        }
+                })
             }
         }
         else {
-            setInput((prevInput: RegisterState) => {
-                    let newImageOptional = prevInput.images.optionalImages;
-                    prevInput.images.optionalImages = newImageOptional.filter((_, idx) => idx !== index-1);
-                    return {
-                        ...prevInput,
-                        ["images"] : prevInput.images
-                    };
+            setInputImages((prevState : ProductImage) => {
+                let updatedImages = prevState.optionalImages.filter((_, idx) => idx !== index-1);
+                return {
+                    ...prevState,
+                    ["optionalImages"]: updatedImages,
+                }
+
             });
         }
     }
@@ -271,6 +268,7 @@ const ProductRegister: React.FC = () => {
                     ["pageTitle"]: inputPageTitle as string,
                     ["metaDescription"]: inputMetaDescription as string,
                     ["tagList"]: inputTagList as string[],
+                    ["images"]:inputImages as ProductImage,
             };
             if (isValidUrl){
                 ProductAxios(ConfirmResultCallback, "register/confirm", updatedInput);
@@ -295,8 +293,8 @@ const ProductRegister: React.FC = () => {
             ["salePrice"]:data.salePrice,
             ["stockQuantity"]:data.stockQuantity,
             ["additionalInfoList"]:data.additionalInfoList,
-            ["images"]:data.images,
         }));
+        setInputImages(data.images);
         setInputImageCache(data.images);
 
         setInputPageTitle(data.pageTitle);
@@ -376,7 +374,7 @@ const ProductRegister: React.FC = () => {
                             </div>
                         </div>
 
-                        {showInfo && <Image images={input.images} callback={ImageCallback}/>}
+                        {showInfo && <Image images={inputImages as ProductImage} callback={ImageCallback}/>}
 
                         {showInfo && <div className="flex flex-wrap -mx-3 mb-2" id={"product-info"}>
                             <div className="w-full md:w-full px-3 mb-0 md:mb-2" id={"product-name"}>
@@ -477,22 +475,23 @@ const ProductRegister: React.FC = () => {
 
                         {showInfo ?
                             <div>
-                            <button
-                                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full mx-auto block "
-                                onClick={onClickConfirm}>
-                                확정
-                            </button>
-                                <div className="fixed bottom-0 right-0 p-6">
-                                <button
-                                    className="bg-gray-800 text-white rounded-full w-10 h-10 flex items-center justify-center"
-                                    onClick={onClickParse}><p>다시</p>
-                                </button>
+
+                                <div className="fixed bottom-0 right-0 p-6 floating-buttons">
+                                    <button
+                                        className="bg-gray-800 text-white rounded-full w-10 h-10 mb-2 flex items-center justify-center"
+                                        onClick={onClickParse}><p>다시</p>
+                                    </button>
+                                    <button
+                                        className="bg-green-500 hover:bg-green-700 text-white rounded-full font-bold w-10 h-10 rounded-full mx-auto block "
+                                        onClick={onClickConfirm}>
+                                        확정
+                                    </button>
                                 </div>
                             </div> :
                             <button
                                 className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full mx-auto block "
                                 onClick={onClickParse}>
-                                분석
+                            분석
                             </button>}
                     </div>
 
