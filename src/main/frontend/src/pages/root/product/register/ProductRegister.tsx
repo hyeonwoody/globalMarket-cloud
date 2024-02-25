@@ -30,6 +30,11 @@ const ProductRegister: React.FC = () => {
         tagList: [],
     };
     const [input, setInput] = useState<RegisterState>(initialState);
+    const [inputPageTitle, setInputPageTitle] = useState<string>("");
+    const [inputMetaDescription, setInputMetaDescription] = useState<string>("");
+    const [inputTagList, setInputTagList] = useState<string[]>([]);
+
+
     const [inputImageCache, setInputImageCache] = useState<ProductImage>();
     const [platformState, setPlatform] = useState ("네이버");
     const [isValidUrl, setValidUrl] = useState (false);
@@ -43,6 +48,7 @@ const ProductRegister: React.FC = () => {
 
     const [showResultModal, setShowResultModal] = useState(false);
     const [confirmResponse, setConfirmResult] = useState<string>();
+
     const toggleDropdown = () => {
         setDropdown(!dropdown);
     }
@@ -156,33 +162,33 @@ const ProductRegister: React.FC = () => {
     };
 
     const KeywordDeleteCallback = (index : number) => {
-        setInput((prevInput: RegisterState) => {
-            let tmpTagList = prevInput.tagList;
-            prevInput.tagList = tmpTagList.filter((_, idx) => idx !== index);
-            return {
-                ...prevInput,
-                ["tagList"] : prevInput.tagList,
-            };
+        setInputTagList((prevState : string[])=>{
+            const tmp = prevState.filter((_, idx) => idx !== index);
+            console.log("KEYWORD DELETE")
+            console.log(tmp);
+            return tmp;
         });
-    }
+    };
 
     const KeywordCallback = (field: keyof RegisterState, keyword : string, index? : number) => {
         switch (field){
+            case "pageTitle":
+                setInputPageTitle(keyword);
+                break;
+            case "metaDescription":
+                setInputMetaDescription(keyword);
+                break;
             case "tagList":
-                console.log ("ProductRegister:"+keyword);
-                if (index && index < input.tagList.length){
-                    setInput((prevInput) =>({
-                        ...prevInput,
-                        [field]: prevInput.tagList.map((tag, i) =>
-                            i === index ? keyword : tag
-                        ),
-                    }));
+                if ( 0 <= (index as number) && (index as number) < inputTagList.length){ ////modify tag
+                    setInputTagList((prevState) => {
+                        const updatedTagList = prevState.map((tag, i) => (i === index ? keyword : tag));
+                        return updatedTagList;
+                    });
                 }
-                else {
-                    setInput((prevInput)=>({
-                        ...prevInput,
-                        [field]: [...input.tagList, keyword],
-                    }));
+                else { //adding tag
+                    setInputTagList((prevState : string[]) => {
+                       return [...prevState, keyword];
+                    });
                 }
                 break;
             default :
@@ -198,6 +204,7 @@ const ProductRegister: React.FC = () => {
         ) => {
         switch (field){
             case "additionalInfoList":
+                let aa : number = 0;
                 setInput((prevInput) => ({
                     ...prevInput,
                     [field]: prevInput.additionalInfoList.map((info, i) =>
@@ -207,6 +214,11 @@ const ProductRegister: React.FC = () => {
                 break;
             case "url":
                 setValidUrl(isValid(event.target.value));
+                setInput((prevInput) => ({
+                    ...prevInput,
+                    [field]: event.target.value,
+                }));
+                break;
             default :
                 setInput((prevInput) => ({
                     ...prevInput,
@@ -220,7 +232,6 @@ const ProductRegister: React.FC = () => {
 
     const generateOptions = () => {
         const options: any[] = [];
-
         platformList.forEach((item, index) => {
             options.push(
                 <button
@@ -232,11 +243,10 @@ const ProductRegister: React.FC = () => {
                 </button>
             );
         });
-
         return options;
     }
 
-    const ResultCallback = (response :  AxiosResponse<any, any>) => {
+    const ConfirmResultCallback = (response :  AxiosResponse<any, any>) => {
         if (response.status == 200){
             setConfirmResult("성공적으로 등록 되었습니다.");
             setShowResultModal(true);
@@ -255,17 +265,27 @@ const ProductRegister: React.FC = () => {
 
     const onClickConfirm = (event : React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
-        if (isValidUrl){
-            ProductAxios(ResultCallback, "register/confirm", input);
-        }
-        else {
-            setShowURLModal(true);
-        }
+        setInput((prevInput : RegisterState) => {
+            const updatedInput : RegisterState =
+                {...prevInput,
+                    ["pageTitle"]: inputPageTitle as string,
+                    ["metaDescription"]: inputMetaDescription as string,
+                    ["tagList"]: inputTagList as string[],
+            };
+            if (isValidUrl){
+                ProductAxios(ConfirmResultCallback, "register/confirm", updatedInput);
+            }
+            else {
+                setShowURLModal(true);
+            }
+            return updatedInput;
+        });
     }
 
     const parseResultCallback = (data : RegisterState) => {
         console.log("AS");
         console.log(data);
+
 
 
         setInput((prevInput) => ({
@@ -276,11 +296,12 @@ const ProductRegister: React.FC = () => {
             ["stockQuantity"]:data.stockQuantity,
             ["additionalInfoList"]:data.additionalInfoList,
             ["images"]:data.images,
-            ["pageTitle"]:data.pageTitle,
-            ["metaDescription"]:data.metaDescription,
-            ["tagList"]:data.tagList
         }));
         setInputImageCache(data.images);
+
+        setInputPageTitle(data.pageTitle);
+        setInputMetaDescription(data.metaDescription);
+        setInputTagList(data.tagList);
 
         setAdditionalInfo(data.additionalInfoList);
         setShowInfo(true);
@@ -292,18 +313,19 @@ const ProductRegister: React.FC = () => {
     }
 
     const onClickParse = (event : React.MouseEvent<HTMLButtonElement>) => {
-        console.log("bbCCCCCCCC");
         event.preventDefault();
-
-        if (isValidUrl){
-            console.log("aa");
-            ProductAxios(parseResultCallback, "register/information", input);
-        }
-
-        else {
-            console.log ("모달")
-            setShowURLModal(true);
-        }
+        console.log("EEEE   ");
+        setInput((prevInput : RegisterState) => {
+            const updatedInput = {...prevInput};
+            console.log(updatedInput);
+            if (isValidUrl){
+                ProductAxios(parseResultCallback, "register/information", updatedInput);
+            }
+            else {
+                setShowURLModal(true);
+            }
+            return updatedInput;
+        });
     }
 
 
@@ -407,7 +429,7 @@ const ProductRegister: React.FC = () => {
                             </div>
                         </div>}
 
-                        {showInfo && <Keyword pageTitle={input.pageTitle} metaDescription={input.metaDescription} tagList={input.tagList} callback={KeywordCallback} deleteCallback={KeywordDeleteCallback}/>}
+                        {showInfo && <Keyword pageTitle={inputPageTitle} metaDescription={inputMetaDescription} tagList={inputTagList} callback={KeywordCallback} deleteCallback={KeywordDeleteCallback}/>}
 
                         {showInfo && <div className="flex flex-wrap -mx-3 mb-2" id={"product-additionalInfo"}>
                             {additionalInfoList?.map((info, index) => (

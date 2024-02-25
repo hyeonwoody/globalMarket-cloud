@@ -30,6 +30,8 @@ export function ProductAxios(resultCallback: (data: any) => void, type : string,
 
         case "register/information":
             console.log ("FFFFFF, "+ data)
+            console.log("GGG");
+            console.log(data);
             axios({
                 url: `products/${type}?url=${encodeURIComponent(data.url)}&category=${encodeURIComponent(data.category.join(">"))}`,
                 method: 'get',

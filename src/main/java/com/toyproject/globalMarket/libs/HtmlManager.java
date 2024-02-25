@@ -12,6 +12,43 @@ import java.util.stream.Collectors;
 
 public class HtmlManager {
 
+    public String addTitleandMetaDescription (String html){
+        Document doc = Jsoup.parse(html);
+        String[] lines = doc.html().split("\n");
+        StringBuilder cleanedHtml = new StringBuilder();
+        for (String line : lines) {
+            if (line.toLowerCase().startsWith("<head>") || line.toLowerCase().startsWith(" <head>")) {
+                cleanedHtml.append("<head>\n");
+                cleanedHtml.append("<title>");
+                cleanedHtml.append("temporary title");
+                cleanedHtml.append("</title>\n");
+                cleanedHtml.append("<meta name=\"description\" content=");
+                cleanedHtml.append("\"temporary description\">\n");
+                cleanedHtml.append("</head>\n");
+            } else {
+                cleanedHtml.append(line).append("\n");
+            }
+        }
+        return cleanedHtml.toString();
+    }
+    public String addTitleandMetaDescription(ProductRegisterVO productSource, Document doc) {
+        String[] lines = doc.html().split("\n");
+        StringBuilder cleanedHtml = new StringBuilder();
+        for (String line : lines) {
+                if (line.toLowerCase().startsWith("<head>") || line.toLowerCase().startsWith(" <head>")) {
+                    cleanedHtml.append("<head>\n");
+                    cleanedHtml.append("<title>");
+                    cleanedHtml.append(productSource.getPageTitle());
+                    cleanedHtml.append("</title>\n");
+                    cleanedHtml.append("<meta name=\"description\" content=");
+                    cleanedHtml.append("\"" + productSource.getMetaDescription() + "\">\n");
+                    cleanedHtml.append("</head>\n");
+                } else {
+                    cleanedHtml.append(line).append("\n");
+                }
+            }
+        return cleanedHtml.toString();
+    }
     private String removeHtmlBodyTags(Document doc){
         String[] lines = doc.body().outerHtml().split("\n");
         StringBuilder cleanedHtml = new StringBuilder();
@@ -80,8 +117,11 @@ public class HtmlManager {
             String alt = img.attr("alt");
              img.attr("alt", alt == "" ? "상품 이미지" : alt);
         }
-
-        String ret = removeHtmlBodyTags(doc);
+        //String ret = removeHtmlBodyTags(doc);
+        //String ret = addTitleandMetaDescription(productSource, doc);
+        String ret = doc.toString();
         productSource.setDetailContent(ret);
     }
+
+
 }
