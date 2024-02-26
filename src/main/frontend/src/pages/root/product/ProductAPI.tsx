@@ -4,6 +4,12 @@ import {Platform} from '../../../configuration/platform';
 import ProductAPI from "./ProductAPI";
 const my = new My();
 
+export interface CallbackStrategy {
+    Create : 0,
+    Delete : 1,
+    Switch : 2,
+    Reset : 3,
+}
 export interface ProductImage {
     representativeImage : {url : string},
     optionalImages: {url: string}[]

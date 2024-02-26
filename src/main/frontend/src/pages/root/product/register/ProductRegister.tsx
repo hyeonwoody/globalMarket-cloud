@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useState} from 'react';
-import ProductAxios, {ProductImage, RegisterState} from "../ProductAPI";
+import ProductAxios, {CallbackStrategy, ProductImage, RegisterState} from "../ProductAPI";
 import {Platform, platformList} from "../../../../configuration/platform";
 import Modal from "../../part/Modal";
 import ProductRegisterAPI from "./ProductRegisterAPI";
@@ -30,16 +30,18 @@ const ProductRegister: React.FC = () => {
         tagList: [],
     };
     const [input, setInput] = useState<RegisterState>(initialState);
-    const [inputPageTitle, setInputPageTitle] = useState<string>("");
-    const [inputMetaDescription, setInputMetaDescription] = useState<string>("");
-    const [inputTagList, setInputTagList] = useState<string[]>([]);
+    const [inputImageCache, setInputImageCache] = useState<ProductImage>();
     const [inputImages, setInputImages] = useState<ProductImage>({
         representativeImage: { url: "" }, // Default URL
         optionalImages: []
     },);
+    const [inputPageTitle, setInputPageTitle] = useState<string>("");
+    const [inputMetaDescription, setInputMetaDescription] = useState<string>("");
+    const [inputTagList, setInputTagList] = useState<string[]>([]);
 
 
-    const [inputImageCache, setInputImageCache] = useState<ProductImage>();
+
+
     const [platformState, setPlatform] = useState ("네이버");
     const [isValidUrl, setValidUrl] = useState (false);
     const [dropdown, setDropdown] = useState (false);
@@ -56,31 +58,46 @@ const ProductRegister: React.FC = () => {
     const toggleDropdown = () => {
         setDropdown(!dropdown);
     }
-    const ImageCallback = (index : number) => {
-        if (index === -1){
-            setInputImages(inputImageCache as ProductImage);
-        }
-        else if (index === 0){
-            if (inputImages?.optionalImages.length !== 0){
-                setInputImages ((prevState :ProductImage) => {
+
+
+    const ImageCallback = (strategy : keyof CallbackStrategy, index? : number) => {
+        switch (strategy){
+            case "Reset":
+                setInputImages(inputImageCache as ProductImage);
+                break;
+            case "Delete":
+                if (index as number === 0 && inputImages?.optionalImages.length !== 0){
+                    setInputImages ((prevState :ProductImage) => {
                         inputImages.representativeImage.url = prevState.optionalImages[0].url;
                         let updatedImages = prevState.optionalImages.filter((_, idx) =>idx !== 0);
                         return {
                             ...prevState,
                             ["optionalImages"]: updatedImages,
                         }
-                })
-            }
-        }
-        else {
-            setInputImages((prevState : ProductImage) => {
-                let updatedImages = prevState.optionalImages.filter((_, idx) => idx !== index-1);
-                return {
-                    ...prevState,
-                    ["optionalImages"]: updatedImages,
+                    })
                 }
-
-            });
+                else if(index as number > 0)
+                {
+                    setInputImages((prevState : ProductImage) => {
+                        let updatedImages = prevState.optionalImages.filter((_, idx) => idx !== (index as number)-1);
+                        return {
+                            ...prevState,
+                            ["optionalImages"]: updatedImages,
+                        }
+                    });
+                }
+                break;
+            case "Switch":
+                setInputImages((prevState : ProductImage) => {
+                    const updatedOptionalImages = [...prevState.optionalImages];
+                    updatedOptionalImages[(index as number)-1] = prevState.representativeImage;
+                    return {
+                        ...prevState,
+                        representativeImage: prevState.optionalImages[(index as number) - 1],
+                        optionalImages: updatedOptionalImages,
+                    };
+                });
+                break;
         }
     }
 
@@ -482,7 +499,7 @@ const ProductRegister: React.FC = () => {
                                         onClick={onClickParse}><p>다시</p>
                                     </button>
                                     <button
-                                        className="bg-green-500 hover:bg-green-700 text-white rounded-full font-bold w-10 h-10 rounded-full mx-auto block "
+                                        className="bg-green-500 hover:bg-green-700 text-white rounded-full font-bold w-10 h-10 mx-auto block"
                                         onClick={onClickConfirm}>
                                         확정
                                     </button>
