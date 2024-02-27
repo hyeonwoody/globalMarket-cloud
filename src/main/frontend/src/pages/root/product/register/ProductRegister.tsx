@@ -266,8 +266,6 @@ const ProductRegister: React.FC = () => {
         if (response.status == 200){
             setConfirmResult("성공적으로 등록 되었습니다.");
             setShowResultModal(true);
-            setInput(initialState);
-            setShowInfo(false);
         }
         else if (response.status == 400){
             setConfirmResult(response.data.message);
