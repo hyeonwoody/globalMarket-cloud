@@ -206,10 +206,7 @@ const ProductRegister: React.FC = () => {
                 }
                 break;
             default :
-                setInput((prevInput) =>({
-                    ...prevInput,
-                    [field]: keyword,
-                }));
+                console.log("Nothing");
                 break;
         }
     }

@@ -3,7 +3,7 @@ package com.toyproject.globalMarket.DTO.product.platform.naver;
 import lombok.Setter;
 
 @Setter
-public class BaseElectronicProduct extends BaseProduct{
+public class BaseReleaseProduct extends BaseProduct{
     public String itemName;
     public String modelName;
     public String certificationType;

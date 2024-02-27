@@ -184,13 +184,16 @@ public class CategoryService extends BaseObject {
                 }
                 break;
             case "생활/건강":
-                if (productCategory[1].contains("자동차")){
+                if (productCategory[1].contains("자동차용품")){
                     productSource.getAdditionalInfoList().add("품명");
                     productSource.getAdditionalInfoList().add("모델명");
                     productSource.getAdditionalInfoList().add("제품 사용으로 인한 위험 및 유의 사항");
                     productSource.getAdditionalInfoList().add("제조자");
                     productSource.getAdditionalInfoList().add("크기");
                     productSource.getAdditionalInfoList().add("적용 차종");
+                    productSource.getAdditionalInfoList().add("KC 인증정보");
+                    productSource.getAdditionalInfoList().add("검사합격증 번호");
+                    productSource.getAdditionalInfoList().add("동일 모델의 출시연월 'yyyy-MM'");
                 }
                 else if (productCategory[1].contains("악기")){
 
