@@ -145,6 +145,7 @@ public class Naver implements Platform  {
             case "생활/건강":
                 if (productCategory[1].contains("자동차")){
                     this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = ProductInfoProvidedNotice.ProductCategory.CAR_ARTICLES.name();
+                    this.originProduct.getDetailAttribute().productInfoProvidedNotice.carArticles = new CarArticles(object.getAdditionalInfoList());
                 }
                 else if (productCategory[1].contains("악기")){
                     this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = ProductInfoProvidedNotice.ProductCategory.MUSICAL_INSTRUMENT.name();

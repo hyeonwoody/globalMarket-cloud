@@ -63,7 +63,7 @@ public class ProductInfoProvidedNotice{
     public OpticsAppliances opticsAppliances;
 //    public MicroElectronics microElectronics;
 //    public Navigation navigation;
-//    public CarArticles carArticles;
+    public CarArticles carArticles;
 //    public MedicalAppliances medicalAppliances;
 //    public KitchenUtensils kitchenUtensils;
 //    public Cosmetic cosmetic;

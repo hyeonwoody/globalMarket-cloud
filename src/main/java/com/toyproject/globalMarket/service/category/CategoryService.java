@@ -185,7 +185,12 @@ public class CategoryService extends BaseObject {
                 break;
             case "생활/건강":
                 if (productCategory[1].contains("자동차")){
-
+                    productSource.getAdditionalInfoList().add("품명");
+                    productSource.getAdditionalInfoList().add("모델명");
+                    productSource.getAdditionalInfoList().add("제품 사용으로 인한 위험 및 유의 사항");
+                    productSource.getAdditionalInfoList().add("제조자");
+                    productSource.getAdditionalInfoList().add("크기");
+                    productSource.getAdditionalInfoList().add("적용 차종");
                 }
                 else if (productCategory[1].contains("악기")){
 
