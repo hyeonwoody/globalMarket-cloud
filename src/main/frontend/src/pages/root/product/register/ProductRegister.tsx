@@ -89,13 +89,18 @@ const ProductRegister: React.FC = () => {
                 break;
             case "Switch":
                 setInputImages((prevState : ProductImage) => {
-                    const updatedOptionalImages = [...prevState.optionalImages];
-                    updatedOptionalImages[(index as number)-1] = prevState.representativeImage;
-                    return {
-                        ...prevState,
-                        representativeImage: prevState.optionalImages[(index as number) - 1],
-                        optionalImages: updatedOptionalImages,
-                    };
+                    const {representativeImage, optionalImages} = prevState;
+                    const updatedOptionalImages = [...optionalImages];
+                    if (index !== undefined && 0 <= index && index < optionalImages.length){
+                        const updatedRepresentativeImage = updatedOptionalImages[index];
+                        updatedOptionalImages[index] = representativeImage;
+                        return {
+                            ...prevState,
+                            representativeImage: updatedRepresentativeImage,
+                            optionalImages: updatedOptionalImages,
+                        };
+                    }
+                    return prevState;
                 });
                 break;
         }
@@ -295,11 +300,6 @@ const ProductRegister: React.FC = () => {
     }
 
     const parseResultCallback = (data : RegisterState) => {
-        console.log("AS");
-        console.log(data);
-
-
-
         setInput((prevInput) => ({
             ...prevInput,
             ["name"]: data.name,

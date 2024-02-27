@@ -18,7 +18,7 @@ function Image (props : ImageProps) {
     function onClickSelect(event: React.MouseEvent<HTMLButtonElement>, index: number) {
         event.preventDefault();
         if (index > 0){
-            props.callback("Switch", index);
+            props.callback("Switch", index-1);
         }
     }
     const onClickReset = (event : React.MouseEvent<HTMLButtonElement>) => {
