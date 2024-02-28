@@ -3,6 +3,11 @@ package com.toyproject.globalMarket.DTO.product.platform.naver;
 import java.util.ArrayList;
 
 public class OptionInfo{
+    public OptionInfo (){
+        this.optionSimple = new ArrayList<OptionSimple>();
+        this.optionCombinationGroupNames = new OptionCombinationGroupNames();
+        this.optionCombinations = new ArrayList<OptionCombination>();
+    }
     public String simpleOptionSortType;
     public ArrayList<OptionSimple> optionSimple;
     public class OptionSimple{
@@ -25,6 +30,8 @@ public class OptionInfo{
         public String optionGroupName2;
         public String optionGroupName3;
         public String optionGroupName4;
+        public int stockQuantity;
+        public int price;
     }
     public ArrayList<OptionCombination> optionCombinations;
     public class OptionCombination{
