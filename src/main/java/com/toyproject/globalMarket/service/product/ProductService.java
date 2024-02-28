@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toyproject.globalMarket.DTO.Product;
 import com.toyproject.globalMarket.VO.response.ResponseVO;
 import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
-import com.toyproject.globalMarket.VO.ProductRegisterVO;
+import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 
 import com.toyproject.globalMarket.configuration.platform.APIGithub;
 import com.toyproject.globalMarket.configuration.platform.APINaver;

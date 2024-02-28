@@ -1,6 +1,6 @@
 package com.toyproject.globalMarket.libs;
 
-import com.toyproject.globalMarket.VO.ProductRegisterVO;
+import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 import com.toyproject.globalMarket.configuration.platform.APIGithub;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

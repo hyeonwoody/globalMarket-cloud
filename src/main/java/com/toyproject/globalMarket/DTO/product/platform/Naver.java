@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.toyproject.globalMarket.DTO.product.Platform;
 import com.toyproject.globalMarket.DTO.product.platform.naver.*;
 
-import com.toyproject.globalMarket.VO.ProductRegisterVO;
+import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 import lombok.Getter;
 
 import java.util.ArrayList;

@@ -3,7 +3,7 @@ package com.toyproject.globalMarket.DTO;
 import com.toyproject.globalMarket.DTO.product.Platform;
 import com.toyproject.globalMarket.DTO.product.platform.Naver;
 
-import com.toyproject.globalMarket.VO.ProductRegisterVO;
+import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 import lombok.Data;
 
 @Data

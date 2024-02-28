@@ -1,4 +1,4 @@
-package com.toyproject.globalMarket.VO;
+package com.toyproject.globalMarket.VO.product;
 import com.google.gson.JsonObject;
 import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
 import com.toyproject.globalMarket.DTO.product.platform.naver.SeoInfo;

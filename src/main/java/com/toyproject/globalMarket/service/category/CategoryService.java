@@ -2,7 +2,7 @@ package com.toyproject.globalMarket.service.category;
 
 
 import com.toyproject.globalMarket.DTO.category.CategoryNaverDTO;
-import com.toyproject.globalMarket.VO.ProductRegisterVO;
+import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 import com.toyproject.globalMarket.configuration.platform.APINaver;
 import com.toyproject.globalMarket.libs.BaseObject;
 import com.toyproject.globalMarket.repository.CategoryRepository;

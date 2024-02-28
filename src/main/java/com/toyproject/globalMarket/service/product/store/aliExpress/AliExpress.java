@@ -1,7 +1,7 @@
 package com.toyproject.globalMarket.service.product.store.aliExpress;
 
 import com.google.gson.annotations.SerializedName;
-import com.toyproject.globalMarket.VO.ProductRegisterVO;
+import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 import com.toyproject.globalMarket.libs.BaseObject;
 import com.toyproject.globalMarket.libs.HtmlManager;
 import com.toyproject.globalMarket.service.product.store.StoreInterface;

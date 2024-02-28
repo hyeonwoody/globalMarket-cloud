@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toyproject.globalMarket.VO.response.ResponseVO;
 import com.toyproject.globalMarket.configuration.APIConfig;
 
-import com.toyproject.globalMarket.VO.ProductRegisterVO;
+import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 import com.toyproject.globalMarket.libs.BaseObject;
 import com.toyproject.globalMarket.service.category.CategoryService;
 import com.toyproject.globalMarket.service.product.ProductService;
