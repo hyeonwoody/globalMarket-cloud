@@ -66,7 +66,13 @@ public class ProductService extends BaseObject {
         return response;
     }
 
-    public int getNewProductInfo (ProductRegisterVO productRegisterVO){
+    public int getProductRegisterInfo (ProductRegisterVO productRegisterVO){
+        String _id = String.valueOf(productRepository.findUpcommingId());
+        productRegisterVO.setDBId(_id);
+        return 0;
+    }
+
+    public int getProductInfo (ProductRegisterVO productRegisterVO){
         StoreInterface store = null;
         String _id = String.valueOf(productRepository.findUpcommingId());
         productRegisterVO.setDBId(_id);
@@ -74,7 +80,6 @@ public class ProductService extends BaseObject {
                 LogOutput(LOG_LEVEL.INFO, this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 0, "aaaREGISTER: " + "HERE");
                 store = new AliExpress();
             }
-
             if (store != null){
                 try {
                     store.getProductInfo(productRegisterVO);
@@ -105,8 +110,6 @@ public class ProductService extends BaseObject {
 
         return 0;
     }
-
-
 
     public int downloadImages(ProductRegisterVO productSource) {
         int ret = 0;
