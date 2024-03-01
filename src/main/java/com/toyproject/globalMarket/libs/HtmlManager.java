@@ -86,6 +86,8 @@ public class HtmlManager {
         String ret = removeHtmlBodyTags(doc);
         return ret;
     }
+
+    //Replace images url to be github.
     public void replaceDetailContnetImages(ProductRegisterVO productSource) {
         Document doc = Jsoup.parse(productSource.getDetailContent());
         List<Element> imgList = doc.select("img")

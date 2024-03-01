@@ -133,6 +133,7 @@ public class ProductService extends BaseObject {
         return 0;
     }
 
+    //Upload downloaded images to github, resulting matched url modified.
     public void uploadImages(Images images) {
         naver.uploadImages(images);
         APIGithub github = new APIGithub();
