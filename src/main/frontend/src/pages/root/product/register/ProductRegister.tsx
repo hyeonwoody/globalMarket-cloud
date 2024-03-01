@@ -8,6 +8,7 @@ import Image from "./part/images/Image"
 import {AxiosResponse} from "axios";
 import Keyword from "./part/Keyword";
 import Option from "./part/Option";
+import Platform from "./part/Platform";
 
 
 
@@ -46,9 +47,7 @@ const ProductRegister: React.FC = () => {
     const [isFetchingData, setFetchingData] = useState<boolean>(false);
 
 
-    const [platformState, setPlatform] = useState ("네이버");
     const [isValidUrl, setValidUrl] = useState (false);
-    const [dropdown, setDropdown] = useState (false);
     const [showURLModal, setShowURLModal] = useState(false);
     const [showInfo, setShowInfo] = useState(false);
     const [additionalInfoList, setAdditionalInfo] = useState<string[]>([]);
@@ -59,8 +58,29 @@ const ProductRegister: React.FC = () => {
     const [showResultModal, setShowResultModal] = useState(false);
     const [confirmResponse, setConfirmResult] = useState<string>();
 
-    const toggleDropdown = () => {
-        setDropdown(!dropdown);
+    const PlatformCallback = (platform : number) => {
+
+        const  generateCategory = (data : any) => {
+            const categoryMap = new Map();
+            switch (platform){
+                case 0:
+                    console.log("00");
+                    Object.entries(data).map(([key , value]) =>{
+                        if (Array.isArray(value) && key == "FIRST"){
+                            console.log (key, value);
+                        }
+                        categoryMap.set (key, value);
+                    });
+                    console.log (categoryMap);
+                    setCategory(categoryMap);
+                    break;
+                default:
+                    //this will not be executed, since ProductRegisterAPI never call to here, when platform != 0
+                    setCategory(categoryMap);
+                    break;
+            }
+        }
+        ProductRegisterAPI(generateCategory, platform);
     }
 
     const OptionCallback = (value : ProductOption[] | undefined) => {
@@ -136,43 +156,8 @@ const ProductRegister: React.FC = () => {
     }
 
     const handleOption = (result : number) => {
-        setPlatform(platformList[result])
-        toggleDropdown();
-        setInput((prevInput) => ({
-            ...prevInput,
-            ["platform"]: result,
-        }));
-
-        const  generateCategory = (data : any) => {
-
-            const categoryMap = new Map();
-
-            switch (result){
-                case 0:
-                    interface CategoryNaver{
-                        wholeCategoryName: string,
-                            id: string,
-                            name: string,
-                            last: boolean
-                    }
-                    let categoryNaverList: CategoryNaver[] = data as CategoryNaver[];
-                    Object.entries(data).map(([key , value]) =>{
-                        if (Array.isArray(value) && key == "FIRST"){
-                            console.log (key, value);
-                        }
 
 
-                        categoryMap.set (key, value);
-                    });
-
-                    console.log (categoryMap);
-                    setCategory(categoryMap);
-                    break;
-                default:
-                    break;
-            }
-        }
-        ProductRegisterAPI(generateCategory, input.platform);
     }
 
     const isValid = (url : string) => {
@@ -255,23 +240,6 @@ const ProductRegister: React.FC = () => {
         }
         console.log (input);
     };
-
-
-    const generateOptions = () => {
-        const options: any[] = [];
-        platformList.forEach((item, index) => {
-            options.push(
-                <button
-                    key={index}
-                    onClick={() => handleOption(index)}
-                    className="block px-4 py-2  hover:bg-gray-100  dark:hover:text-black "
-                >
-                    {item}
-                </button>
-            );
-        });
-        return options;
-    }
 
     const ConfirmResultCallback = (response :  AxiosResponse<any, any>) => {
         if (response.status == 200){
@@ -373,39 +341,12 @@ const ProductRegister: React.FC = () => {
         });
     }
 
-
-
-
     return (
         <div className="Container">
             <div className="p-4 sm:ml-64">
                 <form className="w-full">
                     <div className="w-full p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
-                        <div className={"button-Container -mx-3 relative"} id={"product-platform"}>
-                            <div className="w-full md:w-full px-3 mb-6 md:mb-3">
-                                <label className="block text-gray-700 text-xs font-bold mb-2"
-                                       htmlFor="grid-product-url">
-                                    플랫폼
-                                </label>
-                                <button id="dropdownHoverButton"
-                                        onClick={toggleDropdown}
-                                        className="text-white bg-green-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
-                                        type="button">{platformState}
-                                    <svg className="w-2.5 h-2.5 ms-3" aria-hidden="true"
-                                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                        <path stroke="currentColor"
-                                              d="m1 1 4 4 4-4"/>
-                                    </svg>
-                                </button>
-
-                                {dropdown && (
-                                    <div
-                                        className="absolute z-10 top-full left-0 mt-1 bg-green-400 rounded-lg shadow w-44 dark:bg-gray-700">
-                                        {generateOptions()}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
+                        {<Platform callback={PlatformCallback} />}
                         {<Category category={category} callback={CategoryCallback}/>}
                         <div className="flex flex-wrap -mx-3 mb-2" id={"product-url"}>
                             <div className="w-full md:w-full px-3 mb-6 md:mb-3">
