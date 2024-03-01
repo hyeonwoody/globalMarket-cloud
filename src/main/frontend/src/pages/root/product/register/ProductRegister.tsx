@@ -11,6 +11,7 @@ import Option from "./part/Option";
 
 
 
+
 const ProductRegister: React.FC = () => {
     const [category, setCategory] = useState(new Map<string, string[]>());
     const initialState : RegisterState = {
@@ -48,7 +49,6 @@ const ProductRegister: React.FC = () => {
     const [platformState, setPlatform] = useState ("네이버");
     const [isValidUrl, setValidUrl] = useState (false);
     const [dropdown, setDropdown] = useState (false);
-    const [showCategory, setShowCategory] = useState (false);
     const [showURLModal, setShowURLModal] = useState(false);
     const [showInfo, setShowInfo] = useState(false);
     const [additionalInfoList, setAdditionalInfo] = useState<string[]>([]);
@@ -406,7 +406,7 @@ const ProductRegister: React.FC = () => {
                                 )}
                             </div>
                         </div>
-                        {showCategory && <Category category={category} callback={CategoryCallback}/>}
+                        {<Category category={category} callback={CategoryCallback}/>}
                         <div className="flex flex-wrap -mx-3 mb-2" id={"product-url"}>
                             <div className="w-full md:w-full px-3 mb-6 md:mb-3">
                                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"

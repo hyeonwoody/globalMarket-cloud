@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 
 
 export interface CategoryButtonProps{
@@ -9,6 +9,26 @@ export interface CategoryButtonProps{
 function CategoryButton(props:CategoryButtonProps) {
     const [title, setTitle] = useState<string> ("카테고리");
     const [dropdown, setDropdown] = useState (false);
+
+
+    const dropdownRef = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        const handleClickOutside = (event :any) => {
+            if (!dropdownRef.current || dropdownRef.current.contains(event.target)) {
+                return; // Clicked inside dr    opdown or on the button
+            }
+            setDropdown(false); // Close the dropdown when clicked outside
+        };
+
+        // Add event listener on component mount
+        document.addEventListener('mousedown', handleClickOutside);
+
+        // Remove event listener on component unmount (cleanup)
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [dropdown, dropdownRef]);
+
+
+
 
     const toggleDropdown = () => {
         setDropdown(!dropdown);
@@ -52,7 +72,7 @@ function CategoryButton(props:CategoryButtonProps) {
                 </svg>
             </button>
             {dropdown && (
-                <div
+                <div ref={dropdownRef}
                     className="absolute z-10 top-full left-0 mt-1 bg-green-400 rounded-lg shadow w-44 dark:bg-gray-700">
                     {generateOptions()}
                 </div>
