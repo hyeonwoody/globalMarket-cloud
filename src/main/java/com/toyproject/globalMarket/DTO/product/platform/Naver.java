@@ -43,14 +43,14 @@ public class Naver implements Platform  {
         this.originProduct.setImages(object.getImages());
         this.originProduct.setSaleStartDate(object.getSaleStartDate());
 
-        setDTOSeoInfo(object.getPageTitle(), object.getMetaDescription(), object.getTagList());
+        setSeoInfo(object);
         setProductProvidedNotice(object);
 
 
     }
 
-    private void setDTOSeoInfo(String pageTitle, String metaDescription, ArrayList<String> tagList) {
-        this.originProduct.getDetailAttribute().seoInfo = new SeoInfo(pageTitle, metaDescription, tagList);
+    private void setSeoInfo(ProductRegisterVO object) {
+        this.originProduct.getDetailAttribute().setSeoInfo (new SeoInfo(object.getPageTitle(), object.getMetaDescription(), object.getTagList()));
     }
 
     private void setProductProvidedNotice(ProductRegisterVO object) {

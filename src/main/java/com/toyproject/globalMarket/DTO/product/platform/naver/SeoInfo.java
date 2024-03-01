@@ -21,11 +21,6 @@ public class SeoInfo{
             this.sellerTags.add(sellerTag);
         }
     }
-
-    public SeoInfo() {
-
-    }
-
     public class SellerTag {
         public SellerTag(String text) {
             this.text = text;
