@@ -48,7 +48,14 @@ public class DetailAttribute{
     }
 
     public SellerCodeInfo sellerCodeInfo;
-    public class SellerCodeInfo{
+    public static class SellerCodeInfo{
+        public SellerCodeInfo(String code){
+            sellerCustomCode1 = code;
+        }
+        SellerCodeInfo (String code1, String code2){
+            sellerCustomCode1 = code1;
+            sellerCustomCode2 = code2;
+        }
         public String sellerManagementCode;
         public String sellerBarcode;
         public String sellerCustomCode1;

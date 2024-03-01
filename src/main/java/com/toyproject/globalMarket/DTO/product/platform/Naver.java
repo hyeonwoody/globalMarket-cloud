@@ -44,9 +44,16 @@ public class Naver implements Platform  {
         this.originProduct.setSaleStartDate(object.getSaleStartDate());
 
         setSeoInfo(object);
+        setSellerCodeInfo(object);
         setProductProvidedNotice(object);
 
 
+    }
+    private void setOptionInfo (ProductRegisterVO object){
+        this.originProduct.getDetailAttribute().setOptionInfo(new OptionInfo(object));
+    }
+    private void setSellerCodeInfo (ProductRegisterVO object){
+        this.originProduct.getDetailAttribute().setSellerCodeInfo(new DetailAttribute.SellerCodeInfo(object.getDBId()));
     }
 
     private void setSeoInfo(ProductRegisterVO object) {
