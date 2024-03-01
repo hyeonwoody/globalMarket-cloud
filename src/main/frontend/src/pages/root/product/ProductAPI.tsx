@@ -27,6 +27,11 @@ export interface ProductImage {
     optionalImages: {url: string}[]
 }
 
+export interface ProductOption {
+    groupName : string,
+    name : string
+}
+
 export interface RegisterState {
     platform : Platform,
     category : string[],
@@ -39,7 +44,8 @@ export interface RegisterState {
     images : ProductImage,
     pageTitle : string,
     metaDescription : string,
-    tagList : string[]
+    tagList : string[],
+    optionList : ProductOption[] | undefined
 }
 
 export function ProductAxios(resultCallback: (data: any) => void, type : string, data : RegisterState) {

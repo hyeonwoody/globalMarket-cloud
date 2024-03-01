@@ -70,7 +70,7 @@ public class ProductsController extends BaseObject {
         @PostMapping("/register/confirm")
     public ResponseEntity<String> RegisterConfirm (HttpServletRequest request) {
             // 요청을 보낸 클라이언트의 IP주소를 반환합니다.
-            ProductRegisterVO productSource = new ProductRegisterVO();
+            ProductRegisterVO productSource;
             ResponseVO response = null;
             try {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
@@ -79,6 +79,9 @@ public class ProductsController extends BaseObject {
                 ObjectMapper objectMapper = new ObjectMapper();
                 LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "input {0}", requestBody);
                 productSource = objectMapper.readValue(requestBody, ProductRegisterVO.class);
+                if (true){
+                    productSource.setOptionType(0);
+                }
                 if (productSource.areMembersNotNull()) {
                     categoryService.getNewCategoryInfo(productSource);
                     productService.getProductRegisterInfo(productSource);

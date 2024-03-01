@@ -1,15 +1,16 @@
 package com.toyproject.globalMarket.DTO.product.platform.naver;
 
+import lombok.Setter;
+
 import java.util.ArrayList;
 
+@Setter
 public class DetailAttribute{
     DetailAttribute (){
         this.afterServiceInfo = new AfterServiceInfo();
         this.minorPurchasable = true;
 
         this.originAreaInfo = new OriginAreaInfo();
-
-        this.seoInfo = new SeoInfo();
     }
     public NaverShoppingSearchInfo naverShoppingSearchInfo;
     public class NaverShoppingSearchInfo{
@@ -144,5 +145,5 @@ public class DetailAttribute{
     public boolean customProductYn;
     public boolean itselfProductionProductYn;
     public boolean brandCertificationYn;
-    public SeoInfo seoInfo;
+    private SeoInfo seoInfo;
 }

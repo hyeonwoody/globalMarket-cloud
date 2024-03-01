@@ -3,6 +3,8 @@ import com.google.gson.JsonObject;
 import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
 import com.toyproject.globalMarket.DTO.product.platform.naver.SeoInfo;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +34,15 @@ public class ProductRegisterVO {
     private String name;
     private String detailContent;
 
+    private int optionType;
+    private ArrayList<Option> optionList;
+
+    @Getter
+    @Setter
+    public static class Option {
+        private String groupName;
+        private String name;
+    }
     private String[] category;
     private ArrayList<String> additionalInfoList;
 

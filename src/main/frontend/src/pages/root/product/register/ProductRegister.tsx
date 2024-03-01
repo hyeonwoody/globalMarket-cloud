@@ -7,6 +7,7 @@ import Category from "./part/Category";
 import Image from "./part/images/Image"
 import {AxiosResponse} from "axios";
 import Keyword from "./part/Keyword";
+import Option from "./part/Option";
 
 
 
@@ -28,6 +29,7 @@ const ProductRegister: React.FC = () => {
         pageTitle : "",
         metaDescription : "",
         tagList: [],
+        optionList: undefined
     };
     const [input, setInput] = useState<RegisterState>(initialState);
     const [inputImageCache, setInputImageCache] = useState<ProductImage>();
@@ -38,8 +40,9 @@ const ProductRegister: React.FC = () => {
     const [inputPageTitle, setInputPageTitle] = useState<string>("");
     const [inputMetaDescription, setInputMetaDescription] = useState<string>("");
     const [inputTagList, setInputTagList] = useState<string[]>([]);
+    const [inputOptionList, setInputOptionList] = useState<ProductOption[]>();
 
-
+    const [isFetchingData, setFetchingData] = useState<boolean>(false);
 
 
     const [platformState, setPlatform] = useState ("네이버");
@@ -55,10 +58,16 @@ const ProductRegister: React.FC = () => {
     const [showResultModal, setShowResultModal] = useState(false);
     const [confirmResponse, setConfirmResult] = useState<string>();
 
+    useEffect(() => {
+        console.log (inputOptionList);
+    }, [inputOptionList]);
     const toggleDropdown = () => {
         setDropdown(!dropdown);
     }
 
+    const OptionCallback = (value : ProductOption[] | undefined) => {
+        setInputOptionList(value);
+    }
 
     const ImageCallback = (strategy : keyof CallbackStrategy, index? : number) => {
         switch (strategy){
@@ -215,6 +224,10 @@ const ProductRegister: React.FC = () => {
                 break;
         }
     }
+    const handleTest =  (event : React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+        setFetchingData(true);
+    }
     const handleInputChange = (field: keyof RegisterState, index? : number) => (
         event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>
         ) => {
@@ -292,6 +305,8 @@ const ProductRegister: React.FC = () => {
 
     const onClickConfirm = (event : React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
+        setFetchingData(true);
+        console.log(inputOptionList);
         setInput((prevInput : RegisterState) => {
             const updatedInput : RegisterState =
                 {...prevInput,
@@ -299,6 +314,7 @@ const ProductRegister: React.FC = () => {
                     ["metaDescription"]: inputMetaDescription as string,
                     ["tagList"]: inputTagList as string[],
                     ["images"]:inputImages as ProductImage,
+                    ["optionList"]:inputOptionList
             };
             if (isValidUrl){
                 ProductAxios(ConfirmResultCallback, "register/confirm", updatedInput);
@@ -451,8 +467,16 @@ const ProductRegister: React.FC = () => {
                                 />
                             </div>
                         </div>}
+                        <button
+                            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full mx-auto block "
+                            onClick={handleTest}>
+                            테스트
+                        </button>
+                        {showInfo && <Option fetchData={isFetchingData} callback={OptionCallback}/>}
 
-                        {showInfo && <Keyword pageTitle={inputPageTitle} metaDescription={inputMetaDescription} tagList={inputTagList} callback={KeywordCallback} deleteCallback={KeywordDeleteCallback}/>}
+                        {showInfo && <Keyword pageTitle={inputPageTitle} metaDescription={inputMetaDescription}
+                                              tagList={inputTagList} callback={KeywordCallback}
+                                              deleteCallback={KeywordDeleteCallback}/>}
 
                         {showInfo && <div className="flex flex-wrap -mx-3 mb-2" id={"product-additionalInfo"}>
                             {additionalInfoList?.map((info, index) => (
@@ -516,7 +540,7 @@ const ProductRegister: React.FC = () => {
                             <button
                                 className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full mx-auto block "
                                 onClick={onClickParse}>
-                            분석
+                                분석
                             </button>}
                     </div>
 
@@ -538,6 +562,5 @@ const ProductRegister: React.FC = () => {
 
     )
         ;
-            }
-
-            export default React.memo(ProductRegister);
+}
+export default React.memo(ProductRegister);
