@@ -1,6 +1,6 @@
-import React, {ChangeEvent, useState} from 'react';
-import ProductAxios, {CallbackStrategy, ProductImage, RegisterState} from "../ProductAPI";
-import {Platform, platformList} from "../../../../configuration/platform";
+import React, {ChangeEvent, useEffect, useState} from 'react';
+import ProductAxios, {CallbackStrategy, ErrorResponse, ProductImage, ProductOption, RegisterState} from "../ProductAPI";
+import {platformList} from "../../../../configuration/platform";
 import Modal from "../../part/Modal";
 import ProductRegisterAPI from "./ProductRegisterAPI";
 import Category from "./part/Category";
@@ -268,7 +268,20 @@ const ProductRegister: React.FC = () => {
             setShowResultModal(true);
         }
         else if (response.status == 400){
-            setConfirmResult(response.data.message);
+            const errorResponse = response.data as ErrorResponse;
+            {
+
+            }
+            if (errorResponse.invalidInputs != null){
+                let message : string = "";
+                errorResponse.invalidInputs.map ((input, index) => (
+                    message += input.message + "\n"
+                ));
+                setConfirmResult(message);
+            }
+            else {
+                setConfirmResult(errorResponse.message);
+            }
             setShowResultModal(true);
         }
         else if (response.status == 500){

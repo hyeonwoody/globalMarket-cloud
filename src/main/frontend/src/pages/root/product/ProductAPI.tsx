@@ -4,6 +4,18 @@ import {Platform} from '../../../configuration/platform';
 import ProductAPI from "./ProductAPI";
 const my = new My();
 
+export interface InvalidInput {
+    name: string,
+    type: string,
+    message: string,
+}
+export interface ErrorResponse{
+    code: string;
+    message: string;
+    timestamp: string;
+    invalidInputs: InvalidInput[] | undefined,
+}
+
 export interface CallbackStrategy {
     Create : 0,
     Delete : 1,
