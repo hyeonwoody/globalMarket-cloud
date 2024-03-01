@@ -34,7 +34,7 @@ const Modal = (props : ModalProps) => {
     };
 
     return (
-        <div style={modalStyle} onClick={props.onClose}>
+        <div style={modalStyle}>
             <div style={modalContentStyle} onClick={(e) => e.stopPropagation()}>
                 {props.children}
             </div>

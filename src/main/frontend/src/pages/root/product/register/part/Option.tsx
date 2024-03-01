@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from "react";
+import React, {ChangeEvent, useEffect, useState} from "react";
 import {ProductOption} from "../../ProductAPI"
 
 interface OptionProps {
@@ -13,8 +13,7 @@ function Option (props: OptionProps) {
             name : ""
         }
     ]);
-
-    if (props.fetchData && optionUse){
+    if (props.fetchData && optionUse) {
         props.callback(optionList);
     }
     else if (props.fetchData && (!optionUse)){

@@ -55,17 +55,16 @@ const ProductRegister: React.FC = () => {
 
     const inputClassName = `appearance-none block w-full bg-gray-200 text-gray-700 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white ${isValidUrl ? '' : 'border border-red-500'}`;
 
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [showResultModal, setShowResultModal] = useState(false);
     const [confirmResponse, setConfirmResult] = useState<string>();
 
-    useEffect(() => {
-        console.log (inputOptionList);
-    }, [inputOptionList]);
     const toggleDropdown = () => {
         setDropdown(!dropdown);
     }
 
     const OptionCallback = (value : ProductOption[] | undefined) => {
+        console.log("OptionCallback")
         setInputOptionList(value);
     }
 
@@ -173,7 +172,6 @@ const ProductRegister: React.FC = () => {
                     break;
             }
         }
-        setShowCategory(true);
         ProductRegisterAPI(generateCategory, input.platform);
     }
 
@@ -302,11 +300,12 @@ const ProductRegister: React.FC = () => {
             setShowResultModal(true);
         }
     }
-
-    const onClickConfirm = (event : React.MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
-        setFetchingData(true);
-        console.log(inputOptionList);
+    const onNoConfirmModal = () => {
+        setShowConfirmModal(false);
+        setFetchingData(false);
+    }
+    const onYesConfirmModal = () => {
+        setShowConfirmModal(false);
         setInput((prevInput : RegisterState) => {
             const updatedInput : RegisterState =
                 {...prevInput,
@@ -315,7 +314,7 @@ const ProductRegister: React.FC = () => {
                     ["tagList"]: inputTagList as string[],
                     ["images"]:inputImages as ProductImage,
                     ["optionList"]:inputOptionList
-            };
+                };
             if (isValidUrl){
                 ProductAxios(ConfirmResultCallback, "register/confirm", updatedInput);
             }
@@ -324,6 +323,13 @@ const ProductRegister: React.FC = () => {
             }
             return updatedInput;
         });
+        setFetchingData(false);
+    }
+
+    const onClickConfirm =  (event : React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+        setFetchingData(true);
+        setShowConfirmModal(true);
     }
 
     const parseResultCallback = (data : RegisterState) => {
@@ -366,6 +372,8 @@ const ProductRegister: React.FC = () => {
             return updatedInput;
         });
     }
+
+
 
 
     return (
@@ -523,8 +531,6 @@ const ProductRegister: React.FC = () => {
                         }
 
                         {showInfo ?
-                            <div>
-
                                 <div className="fixed bottom-0 right-0 p-6 floating-buttons">
                                     <button
                                         className="bg-gray-800 text-white rounded-full w-10 h-10 mb-2 flex items-center justify-center"
@@ -535,8 +541,7 @@ const ProductRegister: React.FC = () => {
                                         onClick={onClickConfirm}>
                                         확정
                                     </button>
-                                </div>
-                            </div> :
+                                </div>:
                             <button
                                 className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full mx-auto block "
                                 onClick={onClickParse}>
@@ -549,11 +554,18 @@ const ProductRegister: React.FC = () => {
 
 
             </div>
-            <Modal show={showURLModal} onClose={() => setShowURLModal(false)}>
+            <Modal show={showURLModal} onClose={() => setShowURLModal(true)}>
                 <p>유효한 URL을 입력해주세요.</p>
                 <button onClick={() => setShowURLModal(false)}>Close</button>
             </Modal>
-            <Modal show={showResultModal} onClose={() => setShowResultModal(false)}>
+            <Modal show={showConfirmModal} onClose={() => setShowConfirmModal(false)}>
+                <p>제품 등록합니다.</p>
+                <div className={"flex justify-center gap-3"}>
+                <button onClick={() => onYesConfirmModal()}>Yes</button>
+                <button onClick={() => onNoConfirmModal()}>no</button>
+                </div>
+            </Modal>
+            <Modal show={showResultModal} onClose={() => setShowResultModal(true)}>
                 <p>{confirmResponse}</p>
                 <button onClick={() => setShowResultModal(false)}>Close</button>
             </Modal>

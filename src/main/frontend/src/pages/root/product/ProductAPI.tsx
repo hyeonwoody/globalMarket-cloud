@@ -50,6 +50,7 @@ export interface RegisterState {
 
 export function ProductAxios(resultCallback: (data: any) => void, type : string, data : RegisterState) {
     console.log ("Axios"+data);
+    console.log ("Axios"+data.optionList);
     switch (type){
 
         case "register/information":
