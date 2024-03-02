@@ -76,7 +76,8 @@ public class CategoryService extends BaseObject {
         }
     }
 
-    public void getAdditionalInfoList(ProductRegisterVO productSource) {
+
+    public ArrayList<String> getAdditionalInfoList(ProductRegisterVO productSource) {
         String[] productCategory = productSource.getCategory();
         productSource.setAdditionalInfoList(new ArrayList<>());
         switch (productCategory[0]) {
@@ -240,6 +241,8 @@ public class CategoryService extends BaseObject {
             default:
                 break;
         }
+
+        return productSource.getAdditionalInfoList();
     }
 }
 

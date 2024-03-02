@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+    import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 @RestController
@@ -66,6 +67,21 @@ public class ProductsController extends BaseObject {
         }
         return ResponseEntity.ok(productSource);
     }
+
+    @GetMapping("/register/information-additional")
+    public ResponseEntity<ArrayList<String>> RegisterInformationAdditional (HttpServletRequest request) {
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
+            String[] requestParamCategory = request.getParameter("category").split(">");
+            ProductRegisterVO productSource = new ProductRegisterVO();
+            productSource.setCategory(requestParamCategory);
+            return ResponseEntity.ok(categoryService.getAdditionalInfoList(productSource));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
 
         @PostMapping("/register/confirm")
     public ResponseEntity<String> RegisterConfirm (HttpServletRequest request) {
