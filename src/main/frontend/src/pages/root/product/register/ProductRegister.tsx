@@ -199,15 +199,6 @@ const ProductRegister: React.FC = () => {
         event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>
         ) => {
         switch (field){
-            case "additionalInfoList":
-                let aa : number = 0;
-                setInput((prevInput) => ({
-                    ...prevInput,
-                    [field]: prevInput.additionalInfoList.map((info, i) =>
-                        i === index ? event.target.value : info
-                    ),
-                }));
-                break;
             case "url":
                 setValidUrl(isValid(event.target.value));
                 setInput((prevInput) => ({
@@ -292,7 +283,6 @@ const ProductRegister: React.FC = () => {
             ["detailContent"]:data.detailContent,
             ["salePrice"]:data.salePrice,
             ["stockQuantity"]:data.stockQuantity,
-            ["additionalInfoList"]:data.additionalInfoList,
         }));
         setInputImages(data.images);
         setInputImageCache(data.images);
