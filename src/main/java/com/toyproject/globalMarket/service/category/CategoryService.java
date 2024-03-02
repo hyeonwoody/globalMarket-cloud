@@ -43,25 +43,14 @@ public class CategoryService extends BaseObject {
     }
 
     public int getNaverMap(Map<String, List<String>> categoryNaver, List <CategoryNaverDTO> categoryNaverDTOList) {
-        for (CategoryNaverDTO cateogryNaverDTO : categoryNaverDTOList) {
-            String[] ret = cateogryNaverDTO.getWholeCategoryName().split(">");
-            String key = null;
-            String value = null;
-            if (ret.length == 1){
-                key = ret[0];
-                List<String> tmp = categoryNaver.getOrDefault("FIRST", new ArrayList<>());
-                tmp.add(key);
-                categoryNaver.put("FIRST", tmp);
-            }
+        for (CategoryNaverDTO category : categoryNaverDTOList) {
+            String[] categories = category.getWholeCategoryName().split(">");
+            String parent = categories.length > 1 ? categories[categories.length - 2] : "FIRST";
+            String child = categories.length > 1 ? categories[categories.length - 1] : categories[0];
 
-            else {
-                key = ret[ret.length-2];
-                value = ret[ret.length-1];
-            }
-            List<String> tmp = categoryNaver.getOrDefault(key, new ArrayList<>());
-            if (ret.length != 1)
-                tmp.add(value);
-            categoryNaver.put(key, tmp);
+            List<String> children = categoryNaver.getOrDefault(parent, new ArrayList<>());
+            children.add(child);
+            categoryNaver.put(parent, children);
         }
         return 0;
     }
