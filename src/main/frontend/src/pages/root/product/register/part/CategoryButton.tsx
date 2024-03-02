@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 
 
 export interface CategoryButtonProps{
-    category: string[] | undefined,
+    category: string[]
     callback: (result: string, level: number) => void;
     level: number;
 }
@@ -50,7 +50,7 @@ function CategoryButton(props:CategoryButtonProps) {
                 <button
                     key={index}
                     onClick={() => handleOption(index)}
-                    className="block px-4 py-2  hover:bg-gray-100  dark:hover:text-black "
+                    className="block px-4 py-2 hover:bg-gray-100  dark:hover:text-black "
                 >
                     {item}
                 </button>
@@ -58,6 +58,26 @@ function CategoryButton(props:CategoryButtonProps) {
         });
         return options;
     }
+
+    interface DivStyles {
+        color: string;
+        top: string;
+        left: string;
+        position: any; // Use the correct type for position
+    }
+    const DropDownStyles : (index : number) => DivStyles = (index) => {
+        const columns = 3;
+        const columnIndex = index % columns;
+        const top = 90;
+        const left = 10 + (index-1) * 270;
+
+        return {
+            color: "white",
+            top: `${top}px`,
+            left: `${left}px`,
+            position: "absolute",
+        }
+    };
 
     return (
         <div>
@@ -73,7 +93,8 @@ function CategoryButton(props:CategoryButtonProps) {
             </button>
             {dropdown && (
                 <div ref={dropdownRef}
-                    className="absolute z-10 top-full left-0 mt-1 bg-green-400 rounded-lg shadow w-44 dark:bg-gray-700">
+                     style={DropDownStyles(props.level)}
+                    className="top-full left-0 mt-1 bg-green-400 rounded-lg shadow w-70 dark:bg-gray-700">
                     {generateOptions()}
                 </div>
             )}

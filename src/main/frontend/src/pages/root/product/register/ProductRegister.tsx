@@ -1,6 +1,5 @@
 import React, {ChangeEvent, useEffect, useState} from 'react';
 import ProductAxios, {CallbackStrategy, ErrorResponse, ProductImage, ProductOption, RegisterState} from "../ProductAPI";
-import {platformList} from "../../../../configuration/platform";
 import Modal from "../../part/Modal";
 import ProductRegisterAPI from "./ProductRegisterAPI";
 import Category from "./part/Category";
@@ -9,12 +8,13 @@ import {AxiosResponse} from "axios";
 import Keyword from "./part/Keyword";
 import Option from "./part/Option";
 import Platform from "./part/Platform";
+import AdditionalInfo from "./part/AdditionalInfo";
 
 
 
 
 const ProductRegister: React.FC = () => {
-    const [category, setCategory] = useState(new Map<string, string[]>());
+    const [category, setCategory] = useState<Map<string, string[]>>(new Map<string, string[]>());
     const initialState : RegisterState = {
         additionalInfoList: [],
         category: [],
@@ -34,6 +34,8 @@ const ProductRegister: React.FC = () => {
         optionList: undefined
     };
     const [input, setInput] = useState<RegisterState>(initialState);
+    const [inputAdditionalInfoList, setInputAdditionalInfoList] = useState<string[]>();
+
     const [inputImageCache, setInputImageCache] = useState<ProductImage>();
     const [inputImages, setInputImages] = useState<ProductImage>({
         representativeImage: { url: "" }, // Default URL
@@ -50,7 +52,7 @@ const ProductRegister: React.FC = () => {
     const [isValidUrl, setValidUrl] = useState (false);
     const [showURLModal, setShowURLModal] = useState(false);
     const [showInfo, setShowInfo] = useState(false);
-    const [additionalInfoList, setAdditionalInfo] = useState<string[]>([]);
+
 
     const inputClassName = `appearance-none block w-full bg-gray-200 text-gray-700 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white ${isValidUrl ? '' : 'border border-red-500'}`;
 
@@ -66,9 +68,6 @@ const ProductRegister: React.FC = () => {
                 case 0:
                     console.log("00");
                     Object.entries(data).map(([key , value]) =>{
-                        if (Array.isArray(value) && key == "FIRST"){
-                            console.log (key, value);
-                        }
                         categoryMap.set (key, value);
                     });
                     console.log (categoryMap);
@@ -81,6 +80,17 @@ const ProductRegister: React.FC = () => {
             }
         }
         ProductRegisterAPI(generateCategory, platform);
+    }
+
+    const CategoryCallback = (value : string[]) => {
+        setInput((prevState) => ({
+            ...prevState,
+            category: value,
+        }));
+    }
+
+    const AdditionalInfoCallback = (value : string[]) => {
+        setInputAdditionalInfoList(value);
     }
 
     const OptionCallback = (value : ProductOption[] | undefined) => {
@@ -132,32 +142,6 @@ const ProductRegister: React.FC = () => {
                 });
                 break;
         }
-    }
-
-    const CategoryCallback = (result : string, level : number) => {
-        if (level < input.category.length){
-            setInput((prevInput) => ({
-                ...prevInput,
-                category: prevInput.category.map((value, index) => index === level ? result : value),
-            }));
-        }
-        else {
-            setInput((prevInput) => ({
-                ...prevInput,
-                category: [...prevInput.category, result],
-            }));
-        }
-        if (category.get(result) == undefined){
-            setInput((prevInput) => ({
-                ...prevInput,
-                category: prevInput.category.slice(0, level+1),
-            }));
-        }
-    }
-
-    const handleOption = (result : number) => {
-
-
     }
 
     const isValid = (url : string) => {
@@ -277,6 +261,7 @@ const ProductRegister: React.FC = () => {
         setInput((prevInput : RegisterState) => {
             const updatedInput : RegisterState =
                 {...prevInput,
+                    ["additionalInfoList"]: inputAdditionalInfoList as string[],
                     ["pageTitle"]: inputPageTitle as string,
                     ["metaDescription"]: inputMetaDescription as string,
                     ["tagList"]: inputTagList as string[],
@@ -316,7 +301,6 @@ const ProductRegister: React.FC = () => {
         setInputMetaDescription(data.metaDescription);
         setInputTagList(data.tagList);
 
-        setAdditionalInfo(data.additionalInfoList);
         setShowInfo(true);
         var preview = document.getElementById('preview');
         if (preview != null)
@@ -379,11 +363,7 @@ const ProductRegister: React.FC = () => {
                                     value={input.name}
                                     placeholder="도수없는 안경"
                                     onChange={handleInputChange("name")}/>
-
-
                             </div>
-
-
                         </div>}
 
                         {showInfo && <div className="flex flex-wrap -mx-3 mb-2" id={"product-number"}>
@@ -399,8 +379,6 @@ const ProductRegister: React.FC = () => {
                                     value={input.salePrice}
                                     placeholder="20000"
                                     onChange={handleInputChange("salePrice")}/>
-
-
                             </div>
 
                             <div className="md:w-1/2 px-3" id={"product-stock"}>
@@ -426,29 +404,29 @@ const ProductRegister: React.FC = () => {
                         {showInfo && <Keyword pageTitle={inputPageTitle} metaDescription={inputMetaDescription}
                                               tagList={inputTagList} callback={KeywordCallback}
                                               deleteCallback={KeywordDeleteCallback}/>}
+                        {showInfo && <AdditionalInfo fetchData={isFetchingData} platform={input.platform} category={input.category} callback={AdditionalInfoCallback}/>}
+                        {/*{showInfo && <div className="flex flex-wrap -mx-3 mb-2" id={"product-additionalInfo"}>*/}
+                        {/*    {additionalInfoList?.map((info, index) => (*/}
+                        {/*        <div className="md:w-1/2 px-3 mb-0 md:mb-2" id={"product-price"} key={index}>*/}
+                        {/*            <label*/}
+                        {/*                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"*/}
+                        {/*                htmlFor="grid-product-name">*/}
+                        {/*                {info}*/}
+                        {/*            </label>*/}
+                        {/*            <input*/}
+                        {/*                className="appearance-none block bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"*/}
+                        {/*                id="grid-last-name"*/}
+                        {/*                type="text"*/}
+                        {/*                value={input.additionalInfoList[index]}*/}
+                        {/*                placeholder={info}*/}
+                        {/*                onChange={handleInputChange("additionalInfoList", index)}/>*/}
 
-                        {showInfo && <div className="flex flex-wrap -mx-3 mb-2" id={"product-additionalInfo"}>
-                            {additionalInfoList?.map((info, index) => (
-                                <div className="md:w-1/2 px-3 mb-0 md:mb-2" id={"product-price"} key={index}>
-                                    <label
-                                        className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                                        htmlFor="grid-product-name">
-                                        {info}
-                                    </label>
-                                    <input
-                                        className="appearance-none block bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                        id="grid-last-name"
-                                        type="text"
-                                        value={input.additionalInfoList[index]}
-                                        placeholder={info}
-                                        onChange={handleInputChange("additionalInfoList", index)}/>
 
+                        {/*        </div>*/}
+                        {/*    ))}*/}
 
-                                </div>
-                            ))}
-
-                        </div>
-                        }
+                        {/*</div>*/}
+                        {/*}*/}
 
                         {showInfo &&
                             <div className="flex flex-wrap -mx-3 mb-2" id={"product-detail"}>

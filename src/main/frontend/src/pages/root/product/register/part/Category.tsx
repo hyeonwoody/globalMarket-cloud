@@ -1,63 +1,88 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import CategoryButton, {CategoryButtonProps} from "./CategoryButton";
-import categoryButton from "./CategoryButton";
-
-
 
 interface CategoryProps{
     category: Map<string, string[]>,
-    callback: (result: string, level : number) => void
+    callback: (result: string[]) => void
 }
+
+interface CategoryButton {
+    category : string[] | undefined
+}
+
 function Category(props:CategoryProps) {
-    const [buttonList, setButtonList] = useState<CategoryButtonProps[]>([]);
-
-    const [currentLevel, setLevel] = useState<number>(0);
-
-    const deleteButton = (level: number) => {
-        console.log("DELETE")
-        setButtonList((prevButton) => {
-            const savedButton = prevButton.filter(button => {
-                return button.level < level;
-            });
-            return savedButton;
-        });
-    }
-
-    const addNewButton = (result : string, level: number) => {
-        console.log("ADD NEW 외부");
-        // @ts-ignore
-        if (props.category.get(result).length > 0) {
-            console.log("ADD NEW")
-            const categoryButtonProps: CategoryButtonProps = {
-                category: props.category.get(result), // Access the category value from props
-                callback: categorySelectionCallback, // Pass the callback function
-                level: level+1 // Set the level value
-            };
-            setButtonList((prevButton) => {
-                return [...prevButton, categoryButtonProps];
-            })
-        }
-    };
-    const handleButtonClick = (index : number) => {
-        alert(`Button ${index + 1} clicked`);
-    };
-
     const categorySelectionCallback = (result: string, level: number) => {
         console.log("BUtton CALLBACKk")
         console.log ("LEVEL : "+ level);
         console.log ("props category"+props.category.get(result));
         console.log ("ButtonList.length"+buttonList.length);
         if (level == buttonList.length && props.category.get(result)){
-            console.log("ADDD NEW")
-            addNewButton(result, level);
+            addNewButton(result);
         }
         else if (level < buttonList.length){
             console.log ("EDIT button");
-            deleteButton (level+1);
-            addNewButton(result, level);
+            deleteButton (level);
+            addNewButton(result);
         }
-        props.callback (result, level);
+        CategoryFinal (result, level);
     }
+
+    const [buttonList, setButtonList] = useState<CategoryButton[]>([
+    ]);
+    const [category, setCategory] = useState<string[]>([]);
+
+    useEffect(() => {
+        console.log(buttonList.length);
+        console.log(props.category.get("FIRST"));
+            setButtonList([{category: props.category.get("FIRST")}]);
+    }, [props.category]);
+    const CategoryFinal = (result : string, level : number) => {
+        if (level < category.length){
+            setCategory( (prevState) => {
+                const updatedCategory = prevState.filter((button, index) =>{
+                    return index < level;
+                });
+                updatedCategory[level-1] = result;
+                console.log("FF" + updatedCategory);
+                return updatedCategory;
+            })
+        }
+        else {
+            setCategory((prevState) => {
+                return [...prevState, result];
+            });
+        }
+        if (props.category.get(result) == undefined){ //leaf category
+            setCategory((prevState) => {
+                props.callback(prevState);
+                return prevState;
+            });
+
+        }
+    }
+
+    const deleteButton = (level: number) => {
+        console.log("DELETE")
+        setButtonList((prevButton) => {
+            const savedButton = prevButton.filter((button, index) => {
+                return index < level;
+            });
+            return savedButton;
+        });
+    }
+
+    const addNewButton = (result : string) => {
+        // @ts-ignore
+        if (props.category.get(result).length > 0) {
+            const updatedCategoryButton: CategoryButton = {
+                ["category"]: props.category.get(result), // Access the category value from props
+            };
+            setButtonList((prevButton) => {
+                return [...prevButton, updatedCategoryButton];
+            })
+        }
+    };
+
 
 
     return (
@@ -68,10 +93,11 @@ function Category(props:CategoryProps) {
                     카테고리
                 </label>
                 <p className="text-xs">(생활건강,수집품,코스튬플레이,소품)</p>
+                <p className="text-xs">(패션잡화,남성신발,부츠,롱부츠)</p>
                 <div className={"grid grid-cols-5"}>
-                    <CategoryButton category={props.category.get("FIRST")} callback={categorySelectionCallback} level={0}/>
-                    {buttonList.map((button, index) =>(
-                        <CategoryButton key={index} category={button.category} callback={categorySelectionCallback} level={button.level}/>
+                    {buttonList.map((button, index) => (
+                        <CategoryButton key={index} category={button.category as string[]}
+                                        callback={categorySelectionCallback} level={index + 1}/>
                     ))}
                 </div>
 
