@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useEffect, useState} from 'react';
+import React, {ChangeEvent, useState} from 'react';
 import ProductAxios, {CallbackStrategy, ErrorResponse, ProductImage, ProductOption, RegisterState} from "../ProductAPI";
 import Modal from "../../part/Modal";
 import ProductRegisterAPI from "./ProductRegisterAPI";
@@ -83,6 +83,7 @@ const ProductRegister: React.FC = () => {
     }
 
     const CategoryCallback = (value : string[]) => {
+        //setInputCategory(value);
         setInput((prevState) => ({
             ...prevState,
             category: value,
@@ -176,8 +177,7 @@ const ProductRegister: React.FC = () => {
             case "tagList":
                 if ( 0 <= (index as number) && (index as number) < inputTagList.length){ ////modify tag
                     setInputTagList((prevState) => {
-                        const updatedTagList = prevState.map((tag, i) => (i === index ? keyword : tag));
-                        return updatedTagList;
+                        return prevState.map((tag, i) => (i === index ? keyword : tag));
                     });
                 }
                 else { //adding tag
@@ -195,7 +195,7 @@ const ProductRegister: React.FC = () => {
         event.preventDefault();
         setFetchingData(true);
     }
-    const handleInputChange = (field: keyof RegisterState, index? : number) => (
+    const handleInputChange = (field: keyof RegisterState) => (
         event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>
         ) => {
         switch (field){
@@ -228,7 +228,7 @@ const ProductRegister: React.FC = () => {
             }
             if (errorResponse.invalidInputs != null){
                 let message : string = "";
-                errorResponse.invalidInputs.map ((input, index) => (
+                errorResponse.invalidInputs.map ((input) => (
                     message += input.message + "\n"
                 ));
                 setConfirmResult(message);
@@ -252,6 +252,7 @@ const ProductRegister: React.FC = () => {
         setInput((prevInput : RegisterState) => {
             const updatedInput : RegisterState =
                 {...prevInput,
+                    //["category"] : inputCategory as string[],
                     ["additionalInfoList"]: inputAdditionalInfoList as string[],
                     ["pageTitle"]: inputPageTitle as string,
                     ["metaDescription"]: inputMetaDescription as string,
@@ -292,7 +293,7 @@ const ProductRegister: React.FC = () => {
         setInputTagList(data.tagList);
 
         setShowInfo(true);
-        var preview = document.getElementById('preview');
+        let preview = document.getElementById('preview');
         if (preview != null)
             preview.innerHTML = data.detailContent;
         console.log("DDDD");
@@ -395,28 +396,6 @@ const ProductRegister: React.FC = () => {
                                               tagList={inputTagList} callback={KeywordCallback}
                                               deleteCallback={KeywordDeleteCallback}/>}
                         {showInfo && <AdditionalInfo fetchData={isFetchingData} platform={input.platform} category={input.category} callback={AdditionalInfoCallback}/>}
-                        {/*{showInfo && <div className="flex flex-wrap -mx-3 mb-2" id={"product-additionalInfo"}>*/}
-                        {/*    {additionalInfoList?.map((info, index) => (*/}
-                        {/*        <div className="md:w-1/2 px-3 mb-0 md:mb-2" id={"product-price"} key={index}>*/}
-                        {/*            <label*/}
-                        {/*                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"*/}
-                        {/*                htmlFor="grid-product-name">*/}
-                        {/*                {info}*/}
-                        {/*            </label>*/}
-                        {/*            <input*/}
-                        {/*                className="appearance-none block bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"*/}
-                        {/*                id="grid-last-name"*/}
-                        {/*                type="text"*/}
-                        {/*                value={input.additionalInfoList[index]}*/}
-                        {/*                placeholder={info}*/}
-                        {/*                onChange={handleInputChange("additionalInfoList", index)}/>*/}
-
-
-                        {/*        </div>*/}
-                        {/*    ))}*/}
-
-                        {/*</div>*/}
-                        {/*}*/}
 
                         {showInfo &&
                             <div className="flex flex-wrap -mx-3 mb-2" id={"product-detail"}>
