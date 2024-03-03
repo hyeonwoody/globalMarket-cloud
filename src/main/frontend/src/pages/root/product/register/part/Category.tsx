@@ -57,7 +57,6 @@ function Category(props:CategoryProps) {
                 props.callback(prevState);
                 return prevState;
             });
-
         }
     }
 
