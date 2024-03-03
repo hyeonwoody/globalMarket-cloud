@@ -1,6 +1,9 @@
 package com.toyproject.globalMarket.VO.option;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 
@@ -12,26 +15,34 @@ public class StandardOptionVO {
         this.standardOptionCategoryGroups = tmp.standardOptionCategoryGroups;
     }
 
+    @JsonIgnoreProperties
     private String category;
+    @JsonIgnoreProperties
     private long categoryId;
+
     private boolean useStandardOption;
     private ArrayList<StandardOptionCategoryGroup> standardOptionCategoryGroups;
 
 
 
-    static private class StandardOptionCategoryGroup {
-        private int attributeId;
+    @Setter
+    @Getter
+    public static class StandardOptionCategoryGroup {
+        private Long attributeId;
         private String attributeName;
-        private String groupNames;
+        private String groupName;
         private boolean imageRegistrationUsable;
         private boolean realValueUsable;
         private boolean optionSetRequired;
         private ArrayList<StandardOptionAttribute> standardOptionAttributes;
-        static private class StandardOptionAttribute {
+
+        @Setter
+        @Getter
+        public static class StandardOptionAttribute {
             private long attributeId;
             private long attributeValueId;
             private String attributeValueName;
-            private String attributeColorCOde;
+            private String attributeColorCode;
             private ArrayList<String> imageUrls;
         }
     }
