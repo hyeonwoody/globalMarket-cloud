@@ -12,11 +12,7 @@ function AdditionalInfo(props:AdditionalInfoProps) {
     const [title, setTitle] = useState<string[]>([]);
 
     useEffect(() => {
-        console.log("BEFORE")
-        console.log(additionalInfoList);
         AdditionalInfoAxios(AxiosCallback, props);
-        console.log("AFTER")
-        console.log(additionalInfoList);
     }, [props.category]);
 
     if (props.fetchData) {

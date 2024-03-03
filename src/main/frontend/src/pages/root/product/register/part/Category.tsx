@@ -93,6 +93,7 @@ function Category(props:CategoryProps) {
                 </label>
                 <p className="text-xs">(생활건강,수집품,코스튬플레이,소품)</p>
                 <p className="text-xs">(패션잡화,남성신발,부츠,롱부츠)</p>
+                <p className="text-xs">(패션잡화,남성신발,슬립온)</p>
                 <div className={"grid grid-cols-5"}>
                     {buttonList.map((button, index) => (
                         <CategoryButton key={index} category={button.category as string[]}
