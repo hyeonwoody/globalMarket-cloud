@@ -3,27 +3,92 @@ import {CallbackStrategy, ProductImage} from "../../../ProductAPI";
 import Category from "../Category";
 
 interface ImageProps {
+    fetchData : boolean,
     images : ProductImage,
-    callback : (strategy : keyof CallbackStrategy, index? : number) => void
+    callback : (data : ProductImage) => void
 }
 
-
-
-
 function Image (props : ImageProps) {
+    const [images, setImages] = useState <ProductImage> (props.images);
+    const inputImageCache : ProductImage = props.images;
+
+    if (props.fetchData) {
+        props.callback(images);
+    }
+
+    const ImageFinal = (strategy : keyof CallbackStrategy, index? : number) => {
+        switch (strategy){
+            case "Create":
+                break;
+            case "Reset":
+                setImages(inputImageCache as ProductImage);
+                break;
+            case "Delete":
+                if (index as number === 0 && images?.optionalImages.length !== 0){
+                    setImages((prevState: ProductImage) => {
+                        images.representativeImage.url = prevState.optionalImages[0].url;
+                        let updatedImages = prevState.optionalImages.filter((_, idx) =>idx !== 0);
+                        return {
+                            ...prevState,
+                            ["optionalImages"]: updatedImages,
+                        }
+                    })
+                }
+                else if(index as number > 0)
+                {
+                    setImages( (prevState : ProductImage) => {
+                        let updatedImages = prevState.optionalImages.filter((_, idx) => idx !== (index as number)-1);
+                        return {
+                            ...prevState,
+                            ["optionalImages"]: updatedImages,
+                        }
+                    })
+                }
+                break;
+            case "Switch":
+                // const {representativeImage, optionalImages} = prevState;
+                // const updatedOptionalImages = [...optionalImages];
+                // if (index !== undefined && 0 <= index && index < optionalImages.length){
+                //     const updatedRepresentativeImage = updatedOptionalImages[index];
+                //     updatedOptionalImages[index] = representativeImage;
+                //     return {
+                //         ...prevState,
+                //         representativeImage: updatedRepresentativeImage,
+                //         optionalImages: updatedOptionalImages,
+                //     };
+                // }
+                // return prevState;
+
+                setImages( (prevState : ProductImage) => {
+                    const updatedOptionalImages = [...prevState.optionalImages];
+                    if (index !== undefined && 0 <= index && index < updatedOptionalImages.length){
+                        const updatedRepresentativeImage = updatedOptionalImages[index];
+                        updatedOptionalImages[index] = prevState.representativeImage;
+                        return {
+                            ...prevState,
+                            representativeImage: updatedRepresentativeImage,
+                            optionalImages: updatedOptionalImages,
+                        };
+                    }
+                    return prevState;
+                })
+        }
+    }
+
     const onClickDelete = (event : React.MouseEvent<HTMLButtonElement>, index : number) => {
         event.preventDefault();
-        props.callback("Delete", index);
+        console.log("DE"+index)
+        ImageFinal("Delete", index);
     }
     function onClickSelect(event: React.MouseEvent<HTMLButtonElement>, index: number) {
         event.preventDefault();
         if (index > 0){
-            props.callback("Switch", index-1);
+            ImageFinal("Switch", index-1);
         }
     }
     const onClickReset = (event : React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
-        props.callback("Reset");
+        ImageFinal("Reset");
     }
     const imgInnerStyles : React.CSSProperties = {
         display: "flex",
@@ -89,7 +154,7 @@ function Image (props : ImageProps) {
                             <div className="grid grid-cols-3 gap-4">
                                 <div className={"image-Container representative-img"} style={imgInnerStyles}>
                                     <img key={"image0"} style={imgStyles} className={"max-w-sm max-h-sm"}
-                                         src={props.images.representativeImage.url}/>
+                                         src={images?.representativeImage.url}/>
                                     <button
                                         key={"DeleteButton0"}
                                         className="bg-green-500 hover:bg-green-700 font-bold w-10 h-10 rounded-full"
@@ -106,7 +171,7 @@ function Image (props : ImageProps) {
                                     </button>
 
                                 </div>
-                                {props.images.optionalImages.length > 0 ? props.images.optionalImages.map((value, index) => (
+                                {images?.optionalImages.map((value, index) => (
 
                                     <div className={"image-Container optional-imgs"} style={imgInnerStyles} key={index}>
                                         <img key={"image" + index + 1} className={"max-w-sm max-h-sm"} src={value.url}/>
@@ -145,7 +210,7 @@ function Image (props : ImageProps) {
                                         </button>
                                     </div>
 
-                                )) : null}
+                                ))}
                             </div>
                         </div>
                     </div>

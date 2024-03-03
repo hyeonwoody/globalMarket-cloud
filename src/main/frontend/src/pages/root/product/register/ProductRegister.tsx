@@ -34,6 +34,7 @@ const ProductRegister: React.FC = () => {
         optionList: undefined
     };
     const [input, setInput] = useState<RegisterState>(initialState);
+    const [inputCategory, setInputCategory] = useState<string[]> ([]);
     const [inputAdditionalInfoList, setInputAdditionalInfoList] = useState<string[]>();
 
     const [inputImageCache, setInputImageCache] = useState<ProductImage>();
@@ -61,7 +62,6 @@ const ProductRegister: React.FC = () => {
     const [confirmResponse, setConfirmResult] = useState<string>();
 
     const PlatformCallback = (platform : number) => {
-
         const  generateCategory = (data : any) => {
             const categoryMap = new Map();
             switch (platform){
@@ -83,11 +83,7 @@ const ProductRegister: React.FC = () => {
     }
 
     const CategoryCallback = (value : string[]) => {
-        //setInputCategory(value);
-        setInput((prevState) => ({
-            ...prevState,
-            category: value,
-        }));
+        setInputCategory(value);
     }
 
     const AdditionalInfoCallback = (value : string[]) => {
@@ -99,50 +95,8 @@ const ProductRegister: React.FC = () => {
         setInputOptionList(value);
     }
 
-    const ImageCallback = (strategy : keyof CallbackStrategy, index? : number) => {
-        switch (strategy){
-            case "Reset":
-                setInputImages(inputImageCache as ProductImage);
-                break;
-            case "Delete":
-                if (index as number === 0 && inputImages?.optionalImages.length !== 0){
-                    setInputImages ((prevState :ProductImage) => {
-                        inputImages.representativeImage.url = prevState.optionalImages[0].url;
-                        let updatedImages = prevState.optionalImages.filter((_, idx) =>idx !== 0);
-                        return {
-                            ...prevState,
-                            ["optionalImages"]: updatedImages,
-                        }
-                    })
-                }
-                else if(index as number > 0)
-                {
-                    setInputImages((prevState : ProductImage) => {
-                        let updatedImages = prevState.optionalImages.filter((_, idx) => idx !== (index as number)-1);
-                        return {
-                            ...prevState,
-                            ["optionalImages"]: updatedImages,
-                        }
-                    });
-                }
-                break;
-            case "Switch":
-                setInputImages((prevState : ProductImage) => {
-                    const {representativeImage, optionalImages} = prevState;
-                    const updatedOptionalImages = [...optionalImages];
-                    if (index !== undefined && 0 <= index && index < optionalImages.length){
-                        const updatedRepresentativeImage = updatedOptionalImages[index];
-                        updatedOptionalImages[index] = representativeImage;
-                        return {
-                            ...prevState,
-                            representativeImage: updatedRepresentativeImage,
-                            optionalImages: updatedOptionalImages,
-                        };
-                    }
-                    return prevState;
-                });
-                break;
-        }
+    const ImageCallback = (value : ProductImage) => {
+        setInputImages(value);
     }
 
     const isValid = (url : string) => {
@@ -252,7 +206,7 @@ const ProductRegister: React.FC = () => {
         setInput((prevInput : RegisterState) => {
             const updatedInput : RegisterState =
                 {...prevInput,
-                    //["category"] : inputCategory as string[],
+                    ["category"] : inputCategory as string[],
                     ["additionalInfoList"]: inputAdditionalInfoList as string[],
                     ["pageTitle"]: inputPageTitle as string,
                     ["metaDescription"]: inputMetaDescription as string,
@@ -339,7 +293,7 @@ const ProductRegister: React.FC = () => {
                             </div>
                         </div>
 
-                        {showInfo && <Image images={inputImages as ProductImage} callback={ImageCallback}/>}
+                        {showInfo && <Image fetchData={isFetchingData} images={inputImages as ProductImage} callback={ImageCallback}/>}
 
                         {showInfo && <div className="flex flex-wrap -mx-3 mb-2" id={"product-info"}>
                             <div className="w-full md:w-full px-3 mb-0 md:mb-2" id={"product-name"}>
@@ -395,7 +349,7 @@ const ProductRegister: React.FC = () => {
                         {showInfo && <Keyword pageTitle={inputPageTitle} metaDescription={inputMetaDescription}
                                               tagList={inputTagList} callback={KeywordCallback}
                                               deleteCallback={KeywordDeleteCallback}/>}
-                        {showInfo && <AdditionalInfo fetchData={isFetchingData} platform={input.platform} category={input.category} callback={AdditionalInfoCallback}/>}
+                        {showInfo && <AdditionalInfo fetchData={isFetchingData} platform={input.platform} category={inputCategory} callback={AdditionalInfoCallback}/>}
 
                         {showInfo &&
                             <div className="flex flex-wrap -mx-3 mb-2" id={"product-detail"}>
