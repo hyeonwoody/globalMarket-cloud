@@ -344,7 +344,7 @@ const ProductRegister: React.FC = () => {
                             onClick={handleTest}>
                             테스트
                         </button>
-                        {showInfo && <Option fetchData={isFetchingData} callback={OptionCallback}/>}
+                        {showInfo && <Option fetchData={isFetchingData} category={inputCategory} callback={OptionCallback}/>}
 
                         {showInfo && <Keyword pageTitle={inputPageTitle} metaDescription={inputMetaDescription}
                                               tagList={inputTagList} callback={KeywordCallback}
