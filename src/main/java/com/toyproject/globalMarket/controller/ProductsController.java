@@ -68,7 +68,7 @@ public class ProductsController extends BaseObject {
         return ResponseEntity.ok(productSource);
     }
 
-    @GetMapping("/register/information-additional")
+    @GetMapping("/register/information/additional")
     public ResponseEntity<ArrayList<String>> RegisterInformationAdditional (HttpServletRequest request) {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()));

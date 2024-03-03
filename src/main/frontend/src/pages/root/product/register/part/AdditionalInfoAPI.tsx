@@ -10,7 +10,7 @@ export function AdditionalInfoAxios(resultCallback: (data: any) => void, data : 
     switch (data.platform){
         case 0:
             axios({
-                url: `products/register/information-additional?category=${encodeURIComponent(data.category.join(">"))}`,
+                url: `products/register/information/additional?category=${encodeURIComponent(data.category.join(">"))}`,
                 method: 'get',
                 baseURL: `http://${my.ipAddress}:${my.backEndPort}`,
                 withCredentials: true,
