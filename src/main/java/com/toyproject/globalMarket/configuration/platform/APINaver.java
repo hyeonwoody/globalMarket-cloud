@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.toyproject.globalMarket.DTO.Product;
+import com.toyproject.globalMarket.VO.option.StandardOptionVO;
 import com.toyproject.globalMarket.VO.response.ResponseVO;
 import com.toyproject.globalMarket.DTO.category.CategoryNaverDTO;
 import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
@@ -46,6 +47,31 @@ public class APINaver extends APIConfig {
             throw new RuntimeException(e);
         }
         this.kind = PlatformList.NAVER.ordinal();
+    }
+
+    public ResponseVO getStandardOptions (StandardOptionVO standardOption){
+        String accessToken = getOAuth();
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url("https://api.commerce.naver.com/external/v1/options/standard-options?categoryId="+standardOption.getCategoryId())
+                .get()
+                .addHeader("Authorization", "Bearer " + accessToken)
+                .build();
+
+        try {
+            Response okHttpResponse = client.newCall(request).execute();
+            ResponseVO response = new ResponseVO(okHttpResponse.code(), okHttpResponse.body().string());
+            if (okHttpResponse.code() != 200) {
+                LogOutput(LOG_LEVEL.ERROR, ObjectName(), MethodName(), 0, "Request is Failed with code : {0}", okHttpResponse.code());
+                LogOutput(LOG_LEVEL.ERROR, ObjectName(), MethodName(), 0, "Response message : {0}", okHttpResponse.message());
+                LogOutput(LOG_LEVEL.ERROR, ObjectName(), MethodName(), 0, "Response body : {0}", response.body());
+            }
+            return response;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     public ResponseVO postProducts (Product product) {

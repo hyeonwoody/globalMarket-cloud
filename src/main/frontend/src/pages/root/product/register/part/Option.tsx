@@ -1,10 +1,36 @@
 import React, {ChangeEvent, useEffect, useState} from "react";
 import {ProductOption} from "../../ProductAPI"
+import OptionAxios from "./OptionAPI";
 
 interface OptionProps {
     fetchData : boolean,
+    category : string[],
     callback : (value : ProductOption[] | undefined) => void
 }
+
+interface StandardOptionCategoryGroup {
+    attributeId: number;
+    attributeName: string;
+    groupNames: string;
+    imageRegistrationUsable: boolean;
+    realValueUsable: boolean;
+    optionSetRequired: boolean;
+    standardOptionAttributes: StandardOptionAttribute[];
+}
+
+// Interface for StandardOptionAttribute
+interface StandardOptionAttribute {
+    attributeId: number;
+    attributeValueId: number;
+    attributeValueName: string;
+    attributeColorCode: string;
+    imageUrls: string[];
+}
+interface StandardOption {
+    useStandardOption : boolean,
+    standardOptionCategoryGroups : StandardOptionCategoryGroup[],
+}
+
 function Option (props: OptionProps) {
     const [optionUse, setOptionUse] = useState <boolean>(false);
     const [optionList, setOptionList] = useState <ProductOption[]> ([
@@ -13,6 +39,18 @@ function Option (props: OptionProps) {
             name : ""
         }
     ]);
+
+    useEffect(() => {
+        OptionAxios(AxiosCallback, props.category);
+    }, [props.category]);
+    const AxiosCallback = (data : StandardOption) => {
+        if (data.useStandardOption)
+            setStandardOptions(data);
+        setStandardAble(data.useStandardOption);
+    }
+
+    const [standardAble, setStandardAble] = useState<boolean>();
+    const [standardOption, setStandardOptions] = useState<StandardOption>();
     if (props.fetchData && optionUse) {
         props.callback(optionList);
     }
@@ -87,6 +125,7 @@ function Option (props: OptionProps) {
                             <label htmlFor="use" className="text-gray-700">{use.label}</label>
                         </div>
                     ))}
+                    {standardAble && <p>표준 가능</p>}
                 </div>
                 {optionUse && <div className="grid grid-row-3 gap-2">
                     {optionList?.map ((option, index) => (
