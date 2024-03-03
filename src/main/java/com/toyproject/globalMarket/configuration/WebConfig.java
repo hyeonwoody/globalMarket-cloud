@@ -41,5 +41,10 @@ public class WebConfig implements WebMvcConfigurer{
                 .allowCredentials(true)
                 .allowedOrigins("http://" + this.ipAddress + ":" + this.frontEndPort);
 
+        registry.addMapping("options/naver/standard-options")
+                .allowedMethods("GET")
+                .allowCredentials(true)
+                .allowedOrigins("http://" + this.ipAddress + ":" + this.frontEndPort);
+
     }
 }

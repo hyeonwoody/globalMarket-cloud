@@ -18,14 +18,13 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/categories")
-public class CategoriesController extends BaseObject {
+public class CategoriesController {
 
     private final CategoryService categoryService;
 
 
     @Autowired
     protected CategoriesController(CategoryService categoryService) {
-        super("CategoriesController", 0);
         this.categoryService = categoryService;
     }
 

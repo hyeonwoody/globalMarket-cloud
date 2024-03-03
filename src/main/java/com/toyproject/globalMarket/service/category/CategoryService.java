@@ -2,6 +2,7 @@ package com.toyproject.globalMarket.service.category;
 
 
 import com.toyproject.globalMarket.DTO.category.CategoryNaverDTO;
+import com.toyproject.globalMarket.VO.option.StandardOptionVO;
 import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 import com.toyproject.globalMarket.configuration.platform.APINaver;
 import com.toyproject.globalMarket.libs.BaseObject;
@@ -27,6 +28,19 @@ public class CategoryService extends BaseObject {
     public CategoryService(CategoryRepository categoryRepository) {
         super("CategoryService", objectId++);
         this.categoryRepository = categoryRepository;
+    }
+
+    public int getCategoryId (StandardOptionVO standardOption){
+        String category = standardOption.getCategory();
+        Long idOptional = categoryRepository.findIdByWhole_category_name(category);
+        if (idOptional > 0L){
+            standardOption.setCategoryId(idOptional);
+            return 0;
+        }
+        else {
+            standardOption.setCategoryId(-1);
+        }
+        return -1;
     }
 
     public int getCategoryNaverDB (List<CategoryNaverDTO> categoryNaverDTOList){
