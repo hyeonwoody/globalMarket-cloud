@@ -1,8 +1,8 @@
 import React, {ChangeEvent, useState} from 'react';
-import ProductAxios, {CallbackStrategy, ErrorResponse, ProductImage, ProductOption, RegisterState} from "../ProductAPI";
+    import ProductRegisterAPI, {CallbackStrategy, ErrorResponse, ProductImage, ProductOption, RegisterState} from "./ProductRegisterAPI";
 import Modal from "../../part/Modal";
-import ProductRegisterAPI from "./ProductRegisterAPI";
-import Category from "./part/Category";
+import ProductRegisterCategoryAPI from "./ProductRegisterCategoryAPI";
+import Category from "./part/category/Category";
 import Image from "./part/images/Image"
 import {AxiosResponse} from "axios";
 import Keyword from "./part/Keyword";
@@ -45,7 +45,7 @@ const ProductRegister: React.FC = () => {
     const [inputPageTitle, setInputPageTitle] = useState<string>("");
     const [inputMetaDescription, setInputMetaDescription] = useState<string>("");
     const [inputTagList, setInputTagList] = useState<string[]>([]);
-    const [inputOptionList, setInputOptionList] = useState<ProductOption[]>();
+    const [inputOptionList, setInputOptionList] = useState<ProductOption[] | undefined>();
 
     const [isFetchingData, setFetchingData] = useState<boolean>(false);
 
@@ -79,7 +79,7 @@ const ProductRegister: React.FC = () => {
                     break;
             }
         }
-        ProductRegisterAPI(generateCategory, platform);
+        ProductRegisterCategoryAPI(generateCategory, platform);
     }
 
     const CategoryCallback = (value : string[]) => {
@@ -91,7 +91,7 @@ const ProductRegister: React.FC = () => {
     }
 
     const OptionCallback = (value : ProductOption[] | undefined) => {
-        console.log("OptionCallback")
+        console.log("OptionCallback");
         setInputOptionList(value);
     }
 
@@ -215,7 +215,7 @@ const ProductRegister: React.FC = () => {
                     ["optionList"]:inputOptionList
                 };
             if (isValidUrl){
-                ProductAxios(ConfirmResultCallback, "register/confirm", updatedInput);
+                ProductRegisterAPI(ConfirmResultCallback, "confirm", updatedInput);
             }
             else {
                 setShowURLModal(true);
@@ -261,7 +261,7 @@ const ProductRegister: React.FC = () => {
             const updatedInput = {...prevInput};
             console.log(updatedInput);
             if (isValidUrl){
-                ProductAxios(parseResultCallback, "register/information", updatedInput);
+                ProductRegisterAPI(parseResultCallback, "information", updatedInput);
             }
             else {
                 setShowURLModal(true);

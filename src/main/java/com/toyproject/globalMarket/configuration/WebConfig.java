@@ -26,22 +26,22 @@ public class WebConfig implements WebMvcConfigurer{
                 .allowCredentials(true)
                 .allowedOrigins("http://" + this.ipAddress + ":" + this.frontEndPort);
 
-        registry.addMapping("/products/register/information")
+        registry.addMapping("/product-register/information")
                 .allowedMethods("GET")
                 .allowCredentials(true)
                 .allowedOrigins("http://" + this.ipAddress + ":" + this.frontEndPort);
 
-        registry.addMapping("/products/register/information/additional")
+        registry.addMapping("/product-register/information/additional")
                 .allowedMethods("GET")
                 .allowCredentials(true)
                 .allowedOrigins("http://" + this.ipAddress + ":" + this.frontEndPort);
 
-        registry.addMapping("/products/register/confirm")
+        registry.addMapping("/product-register/confirm")
                 .allowedMethods("POST")
                 .allowCredentials(true)
                 .allowedOrigins("http://" + this.ipAddress + ":" + this.frontEndPort);
 
-        registry.addMapping("/options/naver/standard-options")
+        registry.addMapping("/product/option/naver/standard-options")
                 .allowedMethods("GET")
                 .allowCredentials(true)
                 .allowedOrigins("http://" + this.ipAddress + ":" + this.frontEndPort);

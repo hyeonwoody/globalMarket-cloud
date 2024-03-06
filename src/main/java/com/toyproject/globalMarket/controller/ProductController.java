@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/options")
-public class OptionsController extends BaseObject {
+@RequestMapping("/product")
+public class ProductController extends BaseObject {
 
     private final OptionService optionService;
     private final CategoryService categoryService;
 
 
     @Autowired
-    protected OptionsController(OptionService optionService, CategoryService categoryService) {
+    protected ProductController(OptionService optionService, CategoryService categoryService) {
         super("CategoriesController", 0);
         this.optionService = optionService;
         this.categoryService = categoryService;
@@ -29,7 +29,7 @@ public class OptionsController extends BaseObject {
     @Autowired
     APINaver naver;
 
-    @GetMapping("/naver/standard-options")
+    @GetMapping("/option/naver/standard-options")
     public ResponseEntity<StandardOptionVO> NaverStandardOptions (HttpServletRequest request) {
         StandardOptionVO standardOption = new StandardOptionVO();
         standardOption.setCategory(request.getParameter("category"));

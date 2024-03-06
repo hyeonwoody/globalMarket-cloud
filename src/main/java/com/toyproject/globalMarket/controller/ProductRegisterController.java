@@ -27,8 +27,8 @@ import java.io.InputStreamReader;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/products")
-public class ProductsController extends BaseObject {
+@RequestMapping("/product-register")
+public class ProductRegisterController extends BaseObject {
     APIConfig platform;
 
     @Autowired
@@ -37,14 +37,14 @@ public class ProductsController extends BaseObject {
     @Autowired
     private final ProductService productService;
 
-    protected ProductsController(CategoryService categoryService, ProductService productService) {
+    protected ProductRegisterController(CategoryService categoryService, ProductService productService) {
         super("ProductController", 0);
         this.categoryService = categoryService;
         this.productService = productService;
     }
 
 
-    @GetMapping("/register/information")
+    @GetMapping("/information")
     public ResponseEntity<ProductRegisterVO> RegisterInformation (HttpServletRequest request) {
         // 요청을 보낸 클라이언트의 IP주소를 반환합니다.
         ProductRegisterVO productSource = new ProductRegisterVO();
@@ -68,7 +68,7 @@ public class ProductsController extends BaseObject {
         return ResponseEntity.ok(productSource);
     }
 
-    @GetMapping("/register/information/additional")
+    @GetMapping("/information/additional")
     public ResponseEntity<ArrayList<String>> RegisterInformationAdditional (HttpServletRequest request) {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
@@ -83,7 +83,7 @@ public class ProductsController extends BaseObject {
     }
 
 
-        @PostMapping("/register/confirm")
+        @PostMapping("/confirm")
     public ResponseEntity<String> RegisterConfirm (HttpServletRequest request) {
             // 요청을 보낸 클라이언트의 IP주소를 반환합니다.
             ProductRegisterVO productSource;
