@@ -5,10 +5,10 @@ import ProductRegisterCategoryAPI from "./ProductRegisterCategoryAPI";
 import Category from "./part/category/Category";
 import Image from "./part/images/Image"
 import {AxiosResponse} from "axios";
-import Keyword from "./part/Keyword";
-import Option from "./part/Option";
-import Platform from "./part/Platform";
-import AdditionalInfo from "./part/AdditionalInfo";
+import Keyword from "./part/keyword/Keyword";
+import Option from "./part/option/Option";
+import Platform from "./part/platform/Platform";
+import AdditionalInfo from "./part/additionalInfo/AdditionalInfo";
 
 
 

@@ -1,5 +1,5 @@
 import axios from "axios";
-import {My} from '../../../../../configuration/web/webConfig';
+import {My} from '../../../../../../configuration/web/webConfig';
 const my = new My();
 
 
@@ -7,7 +7,7 @@ const my = new My();
 export function OptionAxios(resultCallback: (data: any) => void, data : string[]) {
     let ret : boolean = false;
     axios({
-        url: `options/naver/standard-options?category=${encodeURIComponent(data.join(">"))}`,
+        url: `product/option/naver/standard-options?category=${encodeURIComponent(data.join(">"))}`,
         method: 'get',
         baseURL: `http://${my.ipAddress}:${my.backEndPort}`,
         withCredentials: true,

@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useEffect, useState} from 'react';
-import AdditionalInfoAPI, {AdditionalInfoAxios} from "./AdditionalInfoAPI";
+import AdditionalInfoAPI from "./AdditionalInfoAPI";
 
 interface AdditionalInfoProps{
     fetchData : boolean,
@@ -12,7 +12,7 @@ function AdditionalInfo(props:AdditionalInfoProps) {
     const [title, setTitle] = useState<string[]>([]);
 
     useEffect(() => {
-        AdditionalInfoAxios(AxiosCallback, props);
+        AdditionalInfoAPI(AxiosCallback, props);
     }, [props.category]);
 
     if (props.fetchData) {

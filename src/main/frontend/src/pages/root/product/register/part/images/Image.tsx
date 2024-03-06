@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
-import {CallbackStrategy, ProductImage} from "../../../ProductAPI";
-import Category from "../Category";
+import {CallbackStrategy, ProductImage} from "../../ProductRegisterAPI";
 
 interface ImageProps {
     fetchData : boolean,

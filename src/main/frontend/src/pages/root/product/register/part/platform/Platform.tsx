@@ -1,6 +1,6 @@
 import React, {useState} from "react";
-import {RegisterState} from "../../ProductAPI";
-import {platformList} from "../../../../../configuration/platform";
+import {RegisterState} from "../../ProductRegisterAPI";
+import {platformList} from "../../../../../../configuration/platform";
 
 interface PlatformProps {
     callback : (index : number) => void

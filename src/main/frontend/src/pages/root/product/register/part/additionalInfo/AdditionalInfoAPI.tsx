@@ -1,16 +1,16 @@
 import axios from "axios";
-import {My} from '../../../../../configuration/web/webConfig';
+import {My} from '../../../../../../configuration/web/webConfig';
 const my = new My();
 
 interface AdditionalInfoProps{
     platform : number,
     category :string[]
 }
-export function AdditionalInfoAxios(resultCallback: (data: any) => void, data : AdditionalInfoProps) {
+export function ProductAdditionalInfoAxios(resultCallback: (data: any) => void, data : AdditionalInfoProps) {
     switch (data.platform){
         case 0:
             axios({
-                url: `products/register/information/additional?category=${encodeURIComponent(data.category.join(">"))}`,
+                url: `product-register/information/additional?category=${encodeURIComponent(data.category.join(">"))}`,
                 method: 'get',
                 baseURL: `http://${my.ipAddress}:${my.backEndPort}`,
                 withCredentials: true,
@@ -23,4 +23,4 @@ export function AdditionalInfoAxios(resultCallback: (data: any) => void, data : 
             break;
     }
 }
-export default AdditionalInfoAxios;
+export default ProductAdditionalInfoAxios;

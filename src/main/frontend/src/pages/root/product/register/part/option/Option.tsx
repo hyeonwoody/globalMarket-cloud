@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useEffect, useState} from "react";
-import {ProductOption} from "../../ProductAPI"
+import {ProductOption} from "../../ProductRegisterAPI"
 import OptionAxios from "./OptionAPI";
 
 interface OptionProps {
