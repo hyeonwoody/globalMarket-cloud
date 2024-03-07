@@ -6,7 +6,7 @@ export function ProductRegisterCategoryAxios(resultCallback: (data: any) => void
     switch (platform){
         case 0:
             axios({
-                url: "categories/naver",
+                url: "product/category/naver",
                 method: 'get',
                 baseURL: `http://${my.ipAddress}:${my.backEndPort}`,
                 withCredentials: true,

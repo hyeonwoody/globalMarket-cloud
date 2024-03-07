@@ -16,10 +16,7 @@ public class WebConfig implements WebMvcConfigurer{
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/categories/naver")
-                .allowedMethods("GET")
-                .allowCredentials(true)
-                .allowedOrigins("http://" + this.ipAddress + ":" + this.frontEndPort);
+
 
         registry.addMapping("/test/ia")
                 .allowedMethods("POST")
@@ -42,6 +39,11 @@ public class WebConfig implements WebMvcConfigurer{
                 .allowedOrigins("http://" + this.ipAddress + ":" + this.frontEndPort);
 
         registry.addMapping("/product/option/naver/standard-options")
+                .allowedMethods("GET")
+                .allowCredentials(true)
+                .allowedOrigins("http://" + this.ipAddress + ":" + this.frontEndPort);
+
+        registry.addMapping("/product/category/naver")
                 .allowedMethods("GET")
                 .allowCredentials(true)
                 .allowedOrigins("http://" + this.ipAddress + ":" + this.frontEndPort);

@@ -2,7 +2,6 @@ package com.toyproject.globalMarket.controller;
 
 import com.toyproject.globalMarket.DTO.category.CategoryNaverDTO;
 import com.toyproject.globalMarket.configuration.platform.APINaver;
-import com.toyproject.globalMarket.libs.BaseObject;
 import com.toyproject.globalMarket.service.category.CategoryService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +16,14 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/categories")
-public class CategoriesController {
+@RequestMapping("/product/category")
+public class ProductCategoryController {
 
     private final CategoryService categoryService;
 
 
     @Autowired
-    protected CategoriesController(CategoryService categoryService) {
+    protected ProductCategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
 
