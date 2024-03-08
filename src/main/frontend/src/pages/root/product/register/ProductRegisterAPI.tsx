@@ -1,6 +1,8 @@
-import axios, {AxiosError} from 'axios';
+import axios from 'axios';
 import {My} from '../../../../configuration/web/webConfig';
 import {Platform} from '../../../../configuration/platform';
+import {ProductOptionSimple, ProductOptionStandard} from "./part/option/Option";
+
 const my = new My();
 
 export interface InvalidInput {
@@ -26,11 +28,6 @@ export interface ProductImage {
     optionalImages: {url: string}[]
 }
 
-export interface ProductOption {
-    groupName : string,
-    name : string
-}
-
 export interface RegisterState {
     platform : Platform,
     category : string[],
@@ -44,12 +41,12 @@ export interface RegisterState {
     pageTitle : string,
     metaDescription : string,
     tagList : string[],
-    optionList : ProductOption[] | undefined
+    optionType : number,
+    option : ProductOptionSimple[] | ProductOptionStandard | undefined
 }
 
 export function ProductRegisterAxios(resultCallback: (data: any) => void, type : string, data : RegisterState) {
     console.log ("Axios"+data);
-    console.log ("Axios"+data.optionList);
     switch (type){
 
         case "information":

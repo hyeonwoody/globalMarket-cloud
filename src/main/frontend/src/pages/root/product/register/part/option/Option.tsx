@@ -1,14 +1,22 @@
 import React, {ChangeEvent, useEffect, useState} from "react";
-import {ProductOption} from "../../ProductRegisterAPI"
 import OptionAxios from "./OptionAPI";
+import OptionStandard from "./OptionStandard";
 
 interface OptionProps {
     fetchData : boolean,
     category : string[],
-    callback : (value : ProductOption[] | undefined) => void
+    callback : (value : ProductOptionSimple[] | ProductOptionStandard | undefined) => void
 }
 
-interface StandardOptionCategoryGroup {
+export interface StandardOptionAttribute {
+    attributeId: number;
+    attributeValueId: number;
+    attributeValueName: string;
+    attributeColorCode: string;
+    imageUrls: string[];
+    usable: boolean | undefined,
+}
+export interface StandardOptionCategoryGroup {
     attributeId: number;
     attributeName: string;
     groupNames: string;
@@ -19,51 +27,78 @@ interface StandardOptionCategoryGroup {
 }
 
 // Interface for StandardOptionAttribute
-interface StandardOptionAttribute {
-    attributeId: number;
-    attributeValueId: number;
-    attributeValueName: string;
-    attributeColorCode: string;
-    imageUrls: string[];
-}
-interface StandardOption {
+
+export interface ProductOptionStandard {
     useStandardOption : boolean,
     standardOptionCategoryGroups : StandardOptionCategoryGroup[],
 }
 
+export interface ProductOptionSimple {
+    groupName: string,
+    name: string
+}
+
+export interface ProductOption{
+
+}
+
 function Option (props: OptionProps) {
-    const [optionUse, setOptionUse] = useState <boolean>(false);
-    const [optionList, setOptionList] = useState <ProductOption[]> ([
+    const [optionUse, setOptionUse] = useState <number>(1);
+    const [optionList, setOptionList] = useState <ProductOptionSimple[]> ([
         {
             groupName: "",
             name : ""
         }
     ]);
-
+    const [standardList, setStandardList] = useState <ProductOptionStandard>();
     useEffect(() => {
+        getStandaradInfo();
+    }, [props.category, props.fetchData]);
+
+    const getStandaradInfo = async () => {
         OptionAxios(AxiosCallback, props.category);
-    }, [props.category]);
-    const AxiosCallback = (data : StandardOption) => {
-        if (data.useStandardOption)
+    }
+    const fetchData = async () => {
+        console.log("Option Fetch : ", optionUse);
+        if (props.fetchData && (optionUse === 0)) {
+            console.log(optionList);
+            props.callback(optionList);
+        }
+        else if (props.fetchData && (optionUse === 1)){
+            props.callback(undefined);
+        }
+        else if (props.fetchData && (optionUse === 2)){
+            console.log(standardList);
+            props.callback(standardList);
+        }
+    };
+
+    const AxiosCallback = (data : ProductOptionStandard) => {
+        console.log("Option : ",data.useStandardOption);
+        console.log(data);
+        if (data.useStandardOption) {
             setStandardOptions(data);
+        }
         setStandardAble(data.useStandardOption);
     }
 
     const [standardAble, setStandardAble] = useState<boolean>();
-    const [standardOption, setStandardOptions] = useState<StandardOption>();
-    if (props.fetchData && optionUse) {
-        props.callback(optionList);
+    const [standardOption, setStandardOptions] = useState<ProductOptionStandard>();
+
+    const setStandardAttributesUsed = (value : ProductOptionStandard) => {
+        setStandardList(() => {
+            props.callback(value);
+            return value;
+        });
     }
-    else if (props.fetchData && (!optionUse)){
-        props.callback(undefined);
-    }
+    console.log("옵션패칭",props.fetchData);
 
     const handleInputOptionChange = (value : string, index : number) =>
         (event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>
         ) => {
         switch (value){
             case "name":
-                setOptionList((prevState : ProductOption[]) => {
+                setOptionList((prevState : ProductOptionSimple[]) => {
                     const updatedOptionList = [...prevState];
                     updatedOptionList[index].name = event.target.value;
                     return (
@@ -72,7 +107,7 @@ function Option (props: OptionProps) {
                 });
                 break;
             case "groupName":
-                setOptionList((prevState : ProductOption[]) => {
+                setOptionList((prevState : ProductOptionSimple[]) => {
                     const updatedOptionList = [...prevState];
                     updatedOptionList[index].groupName = event.target.value;
                     return (
@@ -91,44 +126,55 @@ function Option (props: OptionProps) {
         checked : boolean
     }
     const uses : Use[] = [
-        {label : "설정함" , value : 0, checked : optionUse},
-        {label : "설정안함", value : 1, checked : !optionUse},
+        {label : "설정함" , value : 0, checked : optionUse === 0},
+        {label : "설정안함", value : 1, checked : optionUse === 1},
+        {label : "표준 옵션", value : 2, checked : optionUse === 2},
     ]
+
+
 
     const handleUseChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value : number = Number(event.target.value);
         switch (value){
             case 0:
-                setOptionUse(true);
+                setOptionUse(value);
                 break;
             case 1:
-
-                setOptionUse(false);
+                setOptionUse(value);
+                break;
+            case 2:
+                setOptionUse(value);
                 break;
         }
     }
 
     return (
         <div className="Option-Container flex flex-wrap -mx-3 mb-2" id={"product-option"}>
-            <div className="w-full md:w-full px-3 mb-0 md:mb-2" id={"product-option-container"}>
+            <div key="0" className="w-full md:w-full px-3 mb-0 md:mb-2" id={"product-option-container"}>
                 <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                        htmlFor="product-option-label">
                     옵션
                 </label>
                 <div className="flex gap-7 justify-start" id={"product-option-uses"}>
                     {uses.map((use, index) => (
-                        <div id={"product-option-use-button-container" + index}>
-                            <input type="radio" id={"option"+index} name="useGrop" value={use.value}
+                        (index == 2) ? standardAble? <div id={"product-option-use-button-container" + index}>
+                            <input type="radio" id={"option" + index} name="useGrop" value={use.value}
                                    className="mr-2 appearance-none w-4 h-4 rounded-full bg-gray-300 checked:bg-blue-500 checked:border-blue-500"
                                    onChange={handleUseChange}
-                                   checked={use.checked}/>
+                                   checked={optionUse == use.value}/>
+                            <label htmlFor="use" className="text-gray-700">{use.label}</label>
+                        </div> : null
+                            : <div id={"product-option-use-button-container" + index}>
+                            <input type="radio" id={"option" + index} name="useGrop" value={use.value}
+                                   className="mr-2 appearance-none w-4 h-4 rounded-full bg-gray-300 checked:bg-blue-500 checked:border-blue-500"
+                                   onChange={handleUseChange}
+                                   checked={optionUse == use.value}/>
                             <label htmlFor="use" className="text-gray-700">{use.label}</label>
                         </div>
                     ))}
-                    {standardAble && <p>표준 가능</p>}
                 </div>
-                {optionUse && <div className="grid grid-row-3 gap-2">
-                    {optionList?.map ((option, index) => (
+                {uses[optionUse].label == "설정함" && <div className="grid grid-row-3 gap-2">
+                    {optionList?.map((option, index) => (
                         <div className={"flex justify-start gap-2"}>
                             <input
                                 className="appearance-none block bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
@@ -151,6 +197,7 @@ function Option (props: OptionProps) {
                         </div>
                     ))}
                 </div>}
+                {uses[optionUse].label == "표준 옵션" && standardOption != undefined && <OptionStandard fetchData={props.fetchData} standardOption={standardOption} callback={setStandardAttributesUsed}/>}
             </div>
         </div>
     );

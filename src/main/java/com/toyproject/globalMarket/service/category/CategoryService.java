@@ -33,7 +33,7 @@ public class CategoryService extends BaseObject {
     public int getCategoryId (StandardOptionVO standardOption){
         String category = standardOption.getCategory();
         Long idOptional = categoryRepository.findIdByWhole_category_name(category);
-        if (idOptional > 0L){
+        if (idOptional != null){
             standardOption.setCategoryId(idOptional);
             return 0;
         }

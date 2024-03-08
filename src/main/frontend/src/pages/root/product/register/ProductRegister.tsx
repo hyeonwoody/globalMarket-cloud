@@ -1,12 +1,12 @@
 import React, {ChangeEvent, useState} from 'react';
-    import ProductRegisterAPI, {CallbackStrategy, ErrorResponse, ProductImage, ProductOption, RegisterState} from "./ProductRegisterAPI";
+import ProductRegisterAPI, {ErrorResponse, ProductImage, RegisterState} from "./ProductRegisterAPI";
 import Modal from "../../part/Modal";
 import ProductRegisterCategoryAPI from "./ProductRegisterCategoryAPI";
 import Category from "./part/category/Category";
 import Image from "./part/images/Image"
 import {AxiosResponse} from "axios";
 import Keyword from "./part/keyword/Keyword";
-import Option from "./part/option/Option";
+import Option, {ProductOptionSimple,ProductOptionStandard} from "./part/option/Option";
 import Platform from "./part/platform/Platform";
 import AdditionalInfo from "./part/additionalInfo/AdditionalInfo";
 
@@ -31,7 +31,8 @@ const ProductRegister: React.FC = () => {
         pageTitle : "",
         metaDescription : "",
         tagList: [],
-        optionList: undefined
+        optionType: 1,
+        option: undefined
     };
     const [input, setInput] = useState<RegisterState>(initialState);
     const [inputCategory, setInputCategory] = useState<string[]> ([]);
@@ -45,7 +46,9 @@ const ProductRegister: React.FC = () => {
     const [inputPageTitle, setInputPageTitle] = useState<string>("");
     const [inputMetaDescription, setInputMetaDescription] = useState<string>("");
     const [inputTagList, setInputTagList] = useState<string[]>([]);
-    const [inputOptionList, setInputOptionList] = useState<ProductOption[] | undefined>();
+
+    const [inputOptionType, setInputOptionType] = useState<number>(1);
+    const [inputOptionList, setInputOptionList] = useState<ProductOptionSimple[] | ProductOptionStandard | undefined>(undefined);
 
     const [isFetchingData, setFetchingData] = useState<boolean>(false);
 
@@ -90,9 +93,29 @@ const ProductRegister: React.FC = () => {
         setInputAdditionalInfoList(value);
     }
 
-    const OptionCallback = (value : ProductOption[] | undefined) => {
-        console.log("OptionCallback");
-        setInputOptionList(value);
+    const OptionCallback = (value : ProductOptionSimple[] | ProductOptionStandard | undefined) => {
+        if (typeof value === 'object' && 'useStandardOption' in value){
+
+            setInputOptionType(()=> {
+                setInputOptionList(() => {
+                    value.standardOptionCategoryGroups.forEach(group => {
+                        group.standardOptionAttributes.forEach(attribute => attribute.usable = undefined);
+                    });
+                    console.log(value);
+                    return value;
+                });
+                return (2);
+            });
+        }
+        else if (typeof value === 'undefined'){
+            setInputOptionType(1);
+        }
+        else {
+            setInputOptionType(()=> {
+                setInputOptionList(value as ProductOptionSimple[]);
+                return (0);
+            });
+        }
     }
 
     const ImageCallback = (value : ProductImage) => {
@@ -212,7 +235,8 @@ const ProductRegister: React.FC = () => {
                     ["metaDescription"]: inputMetaDescription as string,
                     ["tagList"]: inputTagList as string[],
                     ["images"]:inputImages as ProductImage,
-                    ["optionList"]:inputOptionList
+                    ["optionType"]:inputOptionType,
+                    ["option"]:inputOptionList,
                 };
             if (isValidUrl){
                 ProductRegisterAPI(ConfirmResultCallback, "confirm", updatedInput);
@@ -250,13 +274,10 @@ const ProductRegister: React.FC = () => {
         let preview = document.getElementById('preview');
         if (preview != null)
             preview.innerHTML = data.detailContent;
-        console.log("DDDD");
-        console.log(input);
     }
 
     const onClickParse = (event : React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
-        console.log("EEEE   ");
         setInput((prevInput : RegisterState) => {
             const updatedInput = {...prevInput};
             console.log(updatedInput);
@@ -365,7 +386,7 @@ const ProductRegister: React.FC = () => {
                                         value={input.detailContent}
                                         onChange={handleInputChange("detailContent")}
                                         placeholder="이 상품은 해외구매대행 상품으로 7일 ~ 21일 (주말/공휴일 제외)의 배송기간이 소요됩니다."
-                                        rows={Math.max(3, input.detailContent.split('\n').length)}
+                                        rows={Math.max(3, input.detailContent?.split('\n').length)}
                                     />
                                     <div dangerouslySetInnerHTML={{__html: input.detailContent}}/>
                                 </div>
