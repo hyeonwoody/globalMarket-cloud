@@ -16,6 +16,7 @@ import com.toyproject.globalMarket.libs.FileManager;
 import com.toyproject.globalMarket.libs.HtmlManager;
 import com.toyproject.globalMarket.libs.HtmlParser;
 import com.toyproject.globalMarket.repository.ProductRepository;
+import com.toyproject.globalMarket.service.product.store.StoreFactory;
 import com.toyproject.globalMarket.service.product.store.StoreInterface;
 import com.toyproject.globalMarket.service.product.store.aliExpress.AliExpress;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +79,8 @@ public class ProductService extends BaseObject {
         productRegisterVO.setDBId(_id);
             if (productRegisterVO.getUrl().contains("aliexpress")){
                 LogOutput(LOG_LEVEL.INFO, this.getClass().getSimpleName(), Thread.currentThread().getStackTrace()[1].getMethodName(), 0, "aaaREGISTER: " + "HERE");
-                store = new AliExpress();
+                StoreFactory.registerStore("AliExpress", AliExpress::Create);
+                store = StoreFactory.createStore("AliExpress");
             }
             if (store != null){
                 try {

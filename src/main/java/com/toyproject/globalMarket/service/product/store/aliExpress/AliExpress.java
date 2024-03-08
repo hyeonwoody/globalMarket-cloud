@@ -34,7 +34,7 @@ public class AliExpress extends BaseObject implements StoreInterface {
     private static int objectId;
     JsonObject jsonObject;
 
-
+    public static StoreInterface Create() {return new AliExpress();}
     public AliExpress() {
         super("AlieExpress", objectId++);
     }
