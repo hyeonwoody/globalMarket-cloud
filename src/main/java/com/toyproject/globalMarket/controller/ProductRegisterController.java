@@ -95,9 +95,7 @@ public class ProductRegisterController extends BaseObject {
                 ObjectMapper objectMapper = new ObjectMapper();
                 LogOutput(LOG_LEVEL.INFO, ObjectName(), MethodName(), 0, "input {0}", requestBody);
                 productSource = objectMapper.readValue(requestBody, ProductRegisterVO.class);
-                if (true){
-                    productSource.setOptionType(0);
-                }
+
                 if (productSource.areMembersNotNull()) {
                     categoryService.getNewCategoryInfo(productSource);
                     productService.getProductRegisterInfo(productSource);

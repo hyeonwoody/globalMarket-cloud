@@ -1,6 +1,8 @@
 package com.toyproject.globalMarket.VO.product;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.gson.JsonObject;
 import com.toyproject.globalMarket.DTO.product.platform.naver.Images;
+import com.toyproject.globalMarket.DTO.product.platform.naver.OptionInfo;
 import com.toyproject.globalMarket.DTO.product.platform.naver.SeoInfo;
 import lombok.Data;
 import lombok.Getter;
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+@JsonDeserialize(using = ProductRegisterVODeserializer.class)
 @Data
 public class ProductRegisterVO {
 
@@ -35,20 +38,32 @@ public class ProductRegisterVO {
     private String detailContent;
 
     private int optionType;
-    private ArrayList<Option> optionList;
+    private Option option;
+
 
     @Getter
     @Setter
     public static class Option {
+        private Long id;
+        private ArrayList<Simple> simple;
+
+        @Getter
+        @Setter
+        public class Simple {
+            String groupName;
+            String name;
+        }
         private String groupName;
         private String name;
+        public OptionInfo.StandardOptionGroup[] standardOptionGroups;
     }
+
     private String[] category;
     private ArrayList<String> additionalInfoList;
 
     private String pageTitle;
     private String metaDescription;
-    private ArrayList<String> TagList;
+    private ArrayList<String> tagList;
 
     private int salePrice;
     private int saleQuantity;

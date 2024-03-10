@@ -44,7 +44,7 @@ public class Naver implements Platform  {
 
         setSeoInfo(object);
         setSellerCodeInfo(object);
-        if (object.getOptionType() != -1 && object.getOptionList() != null){
+        if (object.getOptionType() != 1 && object.getOption() != null){
             setOptionInfo(object);
         }
         setProductProvidedNotice(object);
