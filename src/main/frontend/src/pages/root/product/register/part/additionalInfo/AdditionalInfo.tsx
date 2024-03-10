@@ -16,6 +16,7 @@ function AdditionalInfo(props:AdditionalInfoProps) {
     }, [props.category]);
 
     if (props.fetchData) {
+        console.log("추가");
         props.callback(additionalInfoList);
     }
 
