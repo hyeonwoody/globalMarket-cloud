@@ -158,9 +158,15 @@ public class CategoryService extends BaseObject {
 
                 }
                 else if (productCategory[1].contains("카메라")){
-
-
-
+                    productSource.getAdditionalInfoList().add("품명");
+                    productSource.getAdditionalInfoList().add("모델명");
+                    productSource.getAdditionalInfoList().add("KC 인증정보");
+                    productSource.getAdditionalInfoList().add("동일 모델의 출시연월 'yyyy-MM'");
+                    productSource.getAdditionalInfoList().add("제조자");
+                    productSource.getAdditionalInfoList().add("크기");
+                    productSource.getAdditionalInfoList().add("크기");
+                    productSource.getAdditionalInfoList().add("중량");
+                    productSource.getAdditionalInfoList().add("주요 사양");
 
                 }
                 else if (productCategory[2].contains("MP3") || productCategory[2].contains("PMP")){

@@ -120,15 +120,7 @@ public class Naver implements Platform  {
                 }
                 else if (productCategory[1].contains("카메라")){
                     this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = ProductInfoProvidedNotice.ProductCategory.OPTICS_APPLIANCES.name();
-                    this.originProduct.getDetailAttribute().productInfoProvidedNotice.opticsAppliances = new OpticsAppliances();
-                    product = this.originProduct.getDetailAttribute().productInfoProvidedNotice.opticsAppliances;
-                    ((OpticsAppliances) product).setItemName("");
-                    ((OpticsAppliances) product).setModelName("");
-                    ((OpticsAppliances) product).setCertificationType("");
-                    product.setManufacturer("");
-                    product.setSize("");
-                    ((OpticsAppliances) product).setWeight("");
-                    ((OpticsAppliances) product).setSpecification("");
+                    this.originProduct.getDetailAttribute().productInfoProvidedNotice.opticsAppliances = new OpticsAppliances(object.getAdditionalInfoList());
                 }
                 else if (productCategory[2].contains("MP3") || productCategory[2].contains("PMP")){
                     this.originProduct.getDetailAttribute().productInfoProvidedNotice.productInfoProvidedNoticeType = ProductInfoProvidedNotice.ProductCategory.MICROELECTRONICS.name();
