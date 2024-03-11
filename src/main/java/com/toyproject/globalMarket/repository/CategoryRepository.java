@@ -19,6 +19,9 @@ public interface CategoryRepository extends JpaRepository<CategoryNaverEntity, L
     @Query("SELECT u.category_naver_id FROM CategoryNaverEntity u WHERE u.whole_category_name = :whole_category_name")
     Long findIdByWhole_category_name(@Param("whole_category_name") String wholeName);
 
+    @Query("SELECT u.category_naver_id FROM CategoryNaverEntity u WHERE u.name = :name AND u.last = TRUE")
+    Long findLastIdByName (@Param("name") String lastCategory);
+
     @Query("SELECT u.name FROM CategoryNaverEntity u WHERE u.category_naver_id = :category_naver_id")
     String findNameByCategory_naver_id(@Param("category_naver_id") Long id);
 

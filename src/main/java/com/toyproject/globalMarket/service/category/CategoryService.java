@@ -81,12 +81,10 @@ public class CategoryService extends BaseObject {
         if (m_categoryNaverDTOList == null)
             m_categoryNaverDTOList = categoryRepository.getCategoryNaverList();
         if (!m_categoryNaverDTOList.isEmpty()) {
-            for (CategoryNaverDTO categoryNaverDTO :m_categoryNaverDTOList){
-                if (categoryNaverDTO.getWholeCategoryName().equals(String.join(">", productSource.getCategory()))){
-                    productSource.setWholeCategoryName(categoryNaverDTO.getWholeCategoryName());
-                    productSource.setLeafCategoryId(categoryNaverDTO.getId());
-                }
-            }
+
+            Long id = categoryRepository.findLastIdByName(productSource.getCategory()[productSource.getCategory().length-1]);
+            productSource.setWholeCategoryName(String.join(">", productSource.getCategory()));
+            productSource.setLeafCategoryId(id.toString());
         }
     }
 
