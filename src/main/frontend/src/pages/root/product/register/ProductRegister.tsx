@@ -183,6 +183,12 @@ const ProductRegister: React.FC = () => {
                     [field]: event.target.value,
                 }));
                 break;
+            case "salePrice":
+                setInput((prevInput) => ({
+                    ...prevInput,
+                    [field]: Number(event.target.value),
+                }));
+                break;
             default :
                 setInput((prevInput) => ({
                     ...prevInput,
@@ -341,7 +347,7 @@ const ProductRegister: React.FC = () => {
                                 <input
                                     className="appearance-none block bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                     id="grid-last-name"
-                                    type="text"
+                                    type="number"
                                     value={input.salePrice}
                                     placeholder="20000"
                                     onChange={handleInputChange("salePrice")}/>
