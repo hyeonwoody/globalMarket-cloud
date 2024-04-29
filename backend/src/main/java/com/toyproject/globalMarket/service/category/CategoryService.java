@@ -1,6 +1,8 @@
 package com.toyproject.globalMarket.service.category;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toyproject.globalMarket.DTO.category.CategoryNaverDTO;
 import com.toyproject.globalMarket.VO.option.StandardOptionVO;
 import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
@@ -10,6 +12,9 @@ import com.toyproject.globalMarket.repository.CategoryRepository;
 
 import org.springframework.stereotype.Service;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +58,34 @@ public class CategoryService extends BaseObject {
         APINaver naver =new APINaver();
         naver.getCategory(categoryNaverDTOList);
         categoryRepository.APItoSave(categoryNaverDTOList);
+        return 0;
+    }
+
+    public int getCategoryNaverJson(List<CategoryNaverDTO> categoryNaverDTOList) {
+        FileReader fileReader = null;
+        try {
+            fileReader = new FileReader(System.getProperty("user.dir") + "/src/main/resources/categoryNaver.json");
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            JsonNode jsonNode = mapper.readTree(fileReader);
+            jsonNode = jsonNode.get("category_naver");
+            for (JsonNode element :jsonNode){
+                CategoryNaverDTO category = new CategoryNaverDTO();
+                category.setLast(element.get("last").asBoolean());
+                category.setWholeCategoryName(element.get("whole_category_name").asText());
+                category.setName(element.get("name").asText());
+                category.setWholeCategoryName(element.get("whole_category_name").asText());
+                categoryNaverDTOList.add(category);
+            }
+        }
+        catch (IOException e) {
+            // Handle the IOException here
+            // You can log the error, display a message to the user, or exit the program
+            System.err.println("Error reading file: " + e.getMessage());
+        }
         return 0;
     }
 
@@ -262,6 +295,8 @@ public class CategoryService extends BaseObject {
 
         return productSource.getAdditionalInfoList();
     }
+
+
 }
 
 

@@ -10,6 +10,7 @@ import com.toyproject.globalMarket.configuration.APIConfig;
 import com.toyproject.globalMarket.VO.product.ProductRegisterVO;
 import com.toyproject.globalMarket.libs.BaseObject;
 import com.toyproject.globalMarket.service.category.CategoryService;
+
 import com.toyproject.globalMarket.service.product.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;

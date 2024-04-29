@@ -1,4 +1,3 @@
-
 import Root from './pages/root/Root.tsx'
 
 import {Routes, Route, BrowserRouter} from 'react-router-dom';

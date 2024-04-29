@@ -39,6 +39,7 @@ public class ProductCategoryController {
         do {
             //responseCode = categoryService.getCategoryNaverAPI(categoryNaverDTOList);
             responseCode = categoryService.getCategoryNaverDB(categoryNaverDTOList);
+//            responseCode = categoryService.getCategoryNaverJson(categoryNaverDTOList);
         } while (responseCode == 401);
 
         do {

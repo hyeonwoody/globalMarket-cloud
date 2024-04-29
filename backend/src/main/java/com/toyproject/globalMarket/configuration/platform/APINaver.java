@@ -37,7 +37,7 @@ public class APINaver extends APIConfig {
         super("APINaver", 0);
         FileReader fileReader = null;
         try {
-            fileReader = new FileReader(System.getProperty("user.dir") + "/src/main/resources/naverCredentials.json");
+            fileReader = new FileReader(System.getProperty("user.dir") + "/backend/src/main/resources/naverCredentials.json");
             ObjectMapper mapper = new ObjectMapper();
             JsonNode jsonNode = mapper.readTree(fileReader);
             this.client = new Client();
