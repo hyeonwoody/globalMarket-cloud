@@ -2,14 +2,14 @@ package com.toyproject.globalMarket.entity;
 
 import com.toyproject.globalMarket.DTO.Product;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name="product")
 public class ProductEntity {
     @Id
+    @Column(name = "product_id")
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long product_id;
 
     private String platform_type;
@@ -40,7 +40,6 @@ public class ProductEntity {
 
     public void setId(Long id) {
         this.product_id = id;
-
     }
 
     public Long getId() {
