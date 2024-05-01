@@ -37,21 +37,23 @@ out/
 .vscode/
 
 ### Web Configuration ###
-/src/main/java/com/toyproject/crave/configuration/web/WebConfig.java
-/src/main/fronted/src/configuration/web/webConfig.ts
+backend/src/main/java/com/toyproject/crave/configuration/web/WebConfig.java
+frontend/src/main/fronted/src/configuration/web/webConfig.ts
 
 ### Special ###
-#/src/main/frontend/src/configuration/special/SpecialConfig.ts
+backend/src/main/frontend/src/configuration/special/SpecialConfig.ts
 
 ### Various properties ###
 *.properties
+!backend/src/main/resources/application.properties
+!backend/gradle/wrapper/gradle-wrapper.properties
 
-/src/main/frontend/tsconfig.json
+!frontend/tsconfig.json
 
-/src/main/frontend/nohup.out
+frontend/nohup.out
 
-### Test ###
-/src/test/*
+#### Test ###
+#backend/src/test/*
 
 ### special scripts
 scripts/*
@@ -59,14 +61,14 @@ app.sh
 react.log
 
 ###Resources
-src/main/resources
-src/main/resources/*
+!backend/src/main/resources
+!backend/src/main/resources/googleCredentials.json
 tokens/*
 
 lib/*
 
-### Images
-src/Images
-src/Images/*
+#### Images
+#backend/src/Images
+#backend/src/Images/*
 
 demo/*
