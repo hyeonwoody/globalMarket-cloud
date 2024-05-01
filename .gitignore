@@ -37,11 +37,11 @@ out/
 .vscode/
 
 ### Web Configuration ###
-backend/src/main/java/com/toyproject/crave/configuration/web/WebConfig.java
-frontend/src/main/fronted/src/configuration/web/webConfig.ts
+!backend/src/main/java/com/toyproject/globalMarket/configuration/web/WebConfig.java
+fronted/src/configuration/web/webConfig.ts
 
 ### Special ###
-backend/src/main/frontend/src/configuration/special/SpecialConfig.ts
+!frontend/src/configuration/special/SpecialConfig.ts
 
 ### Various properties ###
 *.properties
