@@ -37,8 +37,8 @@ out/
 .vscode/
 
 ### Web Configuration ###
-/src/main/java/com/toyproject/crave/configuration/web/WebConfig.java
-/src/main/fronted/src/configuration/web/webConfig.ts
+!backend/src/main/java/com/toyproject/crave/configuration/web/WebConfig.java
+!fronted/src/configuration/web/webConfig.ts
 
 ### Special ###
 #/src/main/frontend/src/configuration/special/SpecialConfig.ts
@@ -59,14 +59,14 @@ app.sh
 react.log
 
 ###Resources
-src/main/resources
-src/main/resources/*
+!src/main/resources
+!src/main/resources/*
 tokens/*
 
 lib/*
 
 ### Images
-src/Images
-src/Images/*
+!src/Images
+!src/Images/*
 
 demo/*
