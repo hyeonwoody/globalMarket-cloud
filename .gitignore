@@ -63,6 +63,11 @@ react.log
 ###Resources
 !backend/src/main/resources
 !backend/src/main/resources/googleCredentials.json
+
+!backend/src/Images/commit.sh
+!backend/src/Images/convert.sh
+!backend/src/Images/init.sh
+!backend/src/Images/master.sh
 tokens/*
 
 lib/*
