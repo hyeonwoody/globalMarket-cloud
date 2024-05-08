@@ -5,5 +5,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: TriggerAWSJenkinsJob
-        run: curl -X POST ${{ secrets.NAVER_JENKINS_URL }}/job/${{ secrets.NAVER_JENKINS_JOB }}/build?token=${{ secrets.NAVER_JENKINS_JOB_TOKEN }} --user ${{ secrets.NAVER_JENKINS_USER }}:${{ secrets.NAVER_JENKINS_API_TOKEN }}
+        run: curl -X POST ${{ secrets.AWS_JENKINS_URL }}/job/${{ secrets.AWS_JENKINS_JOB }}/build?token=${{ secrets.AWS_JENKINS_JOB_TOKEN }} --user ${{ secrets.AWS_JENKINS_USER }}:${{ secrets.AWS_JENKINS_API_TOKEN }}
         timeout-minutes: 1
